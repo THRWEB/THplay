@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Login | THplay</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     function handleCredentialResponse(response) {
       const data = parseJwt(response.credential);
-      localStorage.setItem('userName', data.name);
-      localStorage.setItem('userEmail', data.email);
-      localStorage.setItem('userPic', data.picture);
-      window.location.href = "main.html"; // redirect after login
+      localStorage.setItem("userName", data.name);
+      localStorage.setItem("userEmail", data.email);
+      localStorage.setItem("userPic", data.picture);
+      window.location.href = "main.html";
     }
 
     function parseJwt(token) {
@@ -22,22 +22,17 @@
       ).join(''));
       return JSON.parse(jsonPayload);
     }
+
+    window.onload = () => {
+      google.accounts.id.initialize({
+        client_id: "410787818265-eg2evm5uput7eb2d19fuq11nto3cge72.apps.googleusercontent.com",
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.prompt();
+    };
   </script>
 </head>
-<body style="font-family: Arial, sans-serif; background-color: #111; color: #fff; text-align: center; padding-top: 100px;">
-  <h1>Login to THplay</h1>
-  <div id="g_id_onload"
-       data-client_id="410787818265-eg2evm5uput7eb2d19fuq11nto3cge72.apps.googleusercontent.com"
-       data-callback="handleCredentialResponse"
-       data-auto_prompt="false">
-  </div>
-  <div class="g_id_signin" 
-       data-type="standard" 
-       data-shape="pill"
-       data-theme="outline"
-       data-text="sign_in_with"
-       data-size="large"
-       data-logo_alignment="left">
-  </div>
+<body style="background:#111;color:white;text-align:center;padding:50px;">
+  <h2>Signing you in...</h2>
 </body>
 </html>
