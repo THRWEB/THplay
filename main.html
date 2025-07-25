@@ -14,43 +14,39 @@
 </head>
 <body class="bg-gray-950 text-white">
 
-  <!-- Header with centered logo -->
+  <!-- Header -->
   <header class="bg-gray-900 p-4 sticky top-0 z-50 shadow-md">
     <div class="max-w-7xl mx-auto flex items-center justify-between relative">
-      <!-- User Icon -->
       <div class="absolute left-0 flex items-center space-x-2">
         <img id="userPic" src="" alt="User" class="w-10 h-10 rounded-full border-2 border-purple-400" />
       </div>
-      
-      <!-- Centered App Name -->
       <h1 class="text-xl md:text-2xl font-bold text-purple-400 mx-auto">THplay</h1>
-      
-      <!-- Wallet on the right -->
       <div class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
         Wallet: ₹0
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
+  <!-- Main -->
   <main class="p-6 md:px-20 py-10">
     <h2 class="text-3xl font-bold mb-8 text-center">Upcoming Tournaments</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
 
-      <!-- Clickable Card 1 -->
-      <a href="join.html" class="block">
+      <!-- Enhanced Card 1 -->
+      <div onclick="joinMatch()" class="cursor-pointer">
         <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
           <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
           <div class="p-4">
             <h3 class="text-xl font-bold mb-1">Free Fire Solo</h3>
             <p class="text-sm text-gray-300">Prize: ₹500 | Entry: Free</p>
             <p class="text-sm text-gray-400">Starts: 28 July, 8 PM</p>
-            <p class="text-sm text-green-400 mt-2">Slots Available: 48</p>
+            <p id="slotsText" class="text-sm text-green-400 mt-2">Slots Available: 48</p>
+            <button class="mt-3 bg-purple-600 hover:bg-purple-700 px-4 py-1 rounded-full text-sm font-semibold">Join</button>
           </div>
         </div>
-      </a>
+      </div>
 
-      <!-- Non-clickable Card 2 -->
+      <!-- Card 2 -->
       <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
         <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
         <div class="p-4">
@@ -60,7 +56,7 @@
         </div>
       </div>
 
-      <!-- Non-clickable Card 3 -->
+      <!-- Card 3 -->
       <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
         <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
         <div class="p-4">
@@ -70,7 +66,7 @@
         </div>
       </div>
 
-      <!-- Logout and Support Card -->
+      <!-- Logout & Support -->
       <div class="col-span-full">
         <div class="flex flex-col items-center gap-4 mt-10">
           <button onclick="logout()" class="px-5 py-2 bg-red-600 rounded-full hover:bg-red-700 transition text-white font-semibold">Logout</button>
@@ -86,8 +82,9 @@
     <p class="text-sm text-gray-400">&copy; 2025 THplay. All rights reserved.</p>
   </footer>
 
+  <!-- Scripts -->
   <script>
-    // Protect page: redirect if not logged in
+    // Protect page
     const name = localStorage.getItem('userName');
     const pic = localStorage.getItem('userPic');
 
@@ -100,6 +97,38 @@
     function logout() {
       localStorage.clear();
       window.location.href = "index.html";
+    }
+
+    // Join logic
+    const maxSlots = 48;
+    const joinedKey = 'soloJoined';
+    const slotKey = 'soloSlots';
+    const slotText = document.getElementById("slotsText");
+
+    let slots = localStorage.getItem(slotKey);
+    if (slots === null) {
+      slots = maxSlots;
+      localStorage.setItem(slotKey, slots);
+    }
+    slotText.textContent = `Slots Available: ${slots}`;
+
+    function joinMatch() {
+      const alreadyJoined = localStorage.getItem(joinedKey);
+      if (alreadyJoined) {
+        alert("You already joined this match!");
+        return;
+      }
+
+      if (slots > 0) {
+        slots--;
+        localStorage.setItem(slotKey, slots);
+        localStorage.setItem(joinedKey, true);
+        slotText.textContent = `Slots Available: ${slots}`;
+        alert("Successfully joined match!");
+        // window.location.href = "join.html"; // Optional redirect
+      } else {
+        alert("Sorry, no slots available!");
+      }
     }
   </script>
 </body>
