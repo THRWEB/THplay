@@ -19,7 +19,7 @@
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <h1 class="text-xl md:text-2xl font-bold text-purple-400">THplay</h1>
       <div class="flex items-center space-x-4">
-        <img id="userPic" src="" alt="User" class="w-10 h-10 rounded-full border-2 border-purple-400" />
+        <img id="userPic" src="" alt="User" class="w-10 h-10 rounded-full border-2 border-purple-400" onerror="this.src='https://via.placeholder.com/40x40?text=User'" />
         <span id="userName" class="font-semibold text-white text-sm md:text-base"></span>
         <button onclick="logout()" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Logout</button>
       </div>
@@ -59,7 +59,7 @@
     const pic = localStorage.getItem('userPic');
 
     if (!name || !pic) {
-      window.location.href = "index.html";
+      window.location.href = "index.html"; // Redirect to login page
     } else {
       document.getElementById('userName').textContent = name;
       document.getElementById('userPic').src = pic;
