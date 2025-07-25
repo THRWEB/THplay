@@ -5,6 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    /* Make video cover the entire background */
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -1;
+      object-fit: cover;
+    }
+
+    body {
+      margin: 0;
+      padding: 50px;
+      color: white;
+      text-align: center;
+      background: black;
+      font-family: sans-serif;
+      position: relative;
+      z-index: 1;
+    }
+
+    h2 {
+      position: relative;
+      z-index: 2;
+      font-size: 2em;
+    }
+  </style>
   <script>
     function handleCredentialResponse(response) {
       const data = parseJwt(response.credential);
@@ -32,7 +61,14 @@
     };
   </script>
 </head>
-<body style="background:#111;color:white;text-align:center;padding:50px;">
+<body>
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline id="bgVideo">
+    <source src="https://drive.google.com/uc?export=download&id=1wErpP3c-56CjCxIv85HB52ocSvoVkVwc" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Overlay Text -->
   <h2>Signing you in...</h2>
 </body>
 </html>
