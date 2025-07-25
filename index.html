@@ -6,7 +6,6 @@
   <title>THplay - Esports Platform</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -33,21 +32,7 @@
     <div class="relative z-10">
       <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight text-white drop-shadow-lg">Join the Battle Win Rewards</h1>
       <p class="text-base md:text-xl max-w-xl mb-6 text-white drop-shadow">Enter epic tournaments, earn cash prizes, and rise through the ranks on THplay.</p>
-
-      <div id="g_id_onload"
-        data-client_id="410787818265-eg2evm5uput7eb2d19fuq11nto3cge72.apps.googleusercontent.com"
-        data-context="signup"
-        data-callback="handleGoogleResponse"
-        data-auto_prompt="false">
-      </div>
-      <div class="g_id_signin"
-        data-type="standard"
-        data-shape="pill"
-        data-theme="outline"
-        data-text="signup_with"
-        data-size="large"
-        data-logo_alignment="left">
-      </div>
+      <button onclick="signInWithGoogle()" class="px-6 py-3 bg-purple-600 rounded-full hover:bg-purple-700 transition text-lg font-semibold">Join with Google</button>
     </div>
   </section>
 
@@ -58,17 +43,17 @@
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
         <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Solo</h3>
         <p class="mb-4 text-sm">Prize: ... | Entry: Free</p>
-        <button onclick="triggerGoogleSignIn()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
+        <button onclick="signInWithGoogle()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
         <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Duo</h3>
         <p class="mb-4 text-sm">Prize: ... | Entry: Free</p>
-        <button onclick="triggerGoogleSignIn()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
+        <button onclick="signInWithGoogle()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
         <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Squad</h3>
         <p class="mb-4 text-sm">Prize: ... | Entry: Free</p>
-        <button onclick="triggerGoogleSignIn()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
+        <button onclick="signInWithGoogle()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
     </div>
   </section>
@@ -91,34 +76,41 @@
     <p class="text-sm text-gray-400">&copy; 2025 THplay. All rights reserved.</p>
   </footer>
 
-  <script>
-  function triggerGoogleSignIn() {
-    document.querySelector('.g_id_signin button')?.click();
-  }
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-  function handleGoogleResponse(response) {
-    const data = parseJwt(response.credential);
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+      authDomain: "thplay-b3c68.firebaseapp.com",
+      projectId: "thplay-b3c68",
+      storageBucket: "thplay-b3c68.firebasestorage.app",
+      messagingSenderId: "243301774162",
+      appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+    };
 
-    // Store user details
-    localStorage.setItem("userName", data.name);
-    localStorage.setItem("userEmail", data.email);
-    localStorage.setItem("userPic", data.picture);
-    localStorage.setItem("isLoggedIn", "true");
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-    // Redirect
-    window.location.href = "https://thrweb.github.io/THplay/main.html";
-  }
+    window.signInWithGoogle = async function () {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
 
-  function parseJwt(token) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64).split('').map(c =>
-        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-      ).join('')
-    );
-    return JSON.parse(jsonPayload);
-  }
+        // Save user data
+        localStorage.setItem("userName", user.displayName);
+        localStorage.setItem("userEmail", user.email);
+        localStorage.setItem("userPic", user.photoURL);
+        localStorage.setItem("isLoggedIn", "true");
+
+        // Redirect to main.html
+        window.location.href = "https://thrweb.github.io/THplay/main.html";
+      } catch (error) {
+        console.error("Google sign-in failed:", error.message);
+      }
+    }
   </script>
 </body>
 </html>
