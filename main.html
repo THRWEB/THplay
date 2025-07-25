@@ -40,7 +40,7 @@
             <h3 class="text-xl font-bold mb-1">Free Fire Solo</h3>
             <p class="text-sm text-gray-300">Prize: ₹500 | Entry: Free</p>
             <p class="text-sm text-gray-400">Starts: 28 July, 8 PM</p>
-            <p id="slotsText" class="text-sm text-green-400 mt-2">Slots Available: 48</p>
+            <p id="slotsText" class="text-sm text-green-400 mt-2">Slots Available: ...</p>
             <button class="mt-3 bg-purple-600 hover:bg-purple-700 px-4 py-1 rounded-full text-sm font-semibold">Join</button>
           </div>
         </div>
@@ -84,7 +84,6 @@
 
   <!-- Scripts -->
   <script>
-    // Protect page
     const name = localStorage.getItem('userName');
     const pic = localStorage.getItem('userPic');
 
@@ -98,38 +97,66 @@
       localStorage.clear();
       window.location.href = "index.html";
     }
+  </script>
 
-    // Join logic
-    const maxSlots = 48;
-    const joinedKey = 'soloJoined';
-    const slotKey = 'soloSlots';
+  <!-- Firebase Firestore Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+      authDomain: "thplay-b3c68.firebaseapp.com",
+      projectId: "thplay-b3c68",
+      storageBucket: "thplay-b3c68.firebasestorage.app",
+      messagingSenderId: "243301774162",
+      appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const matchId = "match1"; // For Solo
+    const userKey = "joined_match1";
     const slotText = document.getElementById("slotsText");
 
-    let slots = localStorage.getItem(slotKey);
-    if (slots === null) {
-      slots = maxSlots;
-      localStorage.setItem(slotKey, slots);
+    async function loadSlots() {
+      const matchRef = doc(db, "matches", matchId);
+      const matchSnap = await getDoc(matchRef);
+      if (matchSnap.exists()) {
+        const data = matchSnap.data();
+        slotText.textContent = `Slots Available: ${data.slots}`;
+      } else {
+        await setDoc(matchRef, { slots: 48 }); // initial setup
+        slotText.textContent = `Slots Available: 48`;
+      }
     }
-    slotText.textContent = `Slots Available: ${slots}`;
 
-    function joinMatch() {
-      const alreadyJoined = localStorage.getItem(joinedKey);
-      if (alreadyJoined) {
+    async function joinMatch() {
+      if (localStorage.getItem(userKey)) {
         alert("You already joined this match!");
         return;
       }
 
-      if (slots > 0) {
-        slots--;
-        localStorage.setItem(slotKey, slots);
-        localStorage.setItem(joinedKey, true);
-        slotText.textContent = `Slots Available: ${slots}`;
-        alert("Successfully joined match!");
-        // window.location.href = "join.html"; // Optional redirect
-      } else {
-        alert("Sorry, no slots available!");
+      const matchRef = doc(db, "matches", matchId);
+      const matchSnap = await getDoc(matchRef);
+
+      if (matchSnap.exists()) {
+        let slots = matchSnap.data().slots;
+        if (slots > 0) {
+          slots--;
+          await updateDoc(matchRef, { slots });
+          localStorage.setItem(userKey, "true");
+          slotText.textContent = `Slots Available: ${slots}`;
+          alert("Successfully joined match!");
+        } else {
+          alert("Sorry, no slots available!");
+        }
       }
     }
+
+    // Load slots on page load
+    loadSlots();
   </script>
 </body>
 </html>
