@@ -92,17 +92,33 @@
   </footer>
 
   <script>
-    function triggerGoogleSignIn() {
-      document.querySelector('.g_id_signin button')?.click();
-    }
+  function triggerGoogleSignIn() {
+    document.querySelector('.g_id_signin button')?.click();
+  }
 
-    function handleGoogleResponse(response) {
-      // Save login status
-      localStorage.setItem("isLoggedIn", "true");
-      
-      // Redirect to main.html
-      window.location.href = "https://thrweb.github.io/THplay/main.html";
-    }
+  function handleGoogleResponse(response) {
+    const data = parseJwt(response.credential);
+
+    // Store user details
+    localStorage.setItem("userName", data.name);
+    localStorage.setItem("userEmail", data.email);
+    localStorage.setItem("userPic", data.picture);
+    localStorage.setItem("isLoggedIn", "true");
+
+    // Redirect
+    window.location.href = "https://thrweb.github.io/THplay/main.html";
+  }
+
+  function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64).split('').map(c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+      ).join('')
+    );
+    return JSON.parse(jsonPayload);
+  }
   </script>
 </body>
 </html>
