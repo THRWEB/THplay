@@ -56,17 +56,17 @@
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
         <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Solo</h3>
         <p class="mb-4 text-sm">Prize: ... | Entry: Free</p>
-        <button class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
+        <button onclick="handleGoogleLogin()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
         <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Duo</h3>
         <p class="mb-4 text-sm">Prize: ... | Entry: Free</p>
-        <button class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
+        <button onclick="handleGoogleLogin()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
         <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Squad</h3>
         <p class="mb-4 text-sm">Prize: ... | Entry: Free</p>
-        <button class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
+        <button onclick="handleGoogleLogin()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
     </div>
   </section>
@@ -88,5 +88,11 @@
   <footer class="bg-gray-950 py-8 text-center">
     <p class="text-sm text-gray-400">&copy; 2025 THplay. All rights reserved.</p>
   </footer>
+
+  <script>
+    function handleGoogleLogin() {
+      window.location.href = "https://thrplay.github.io/login.html";
+    }
+  </script>
 </body>
 </html>
