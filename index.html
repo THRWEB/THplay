@@ -97,7 +97,10 @@
     }
 
     function handleGoogleResponse(response) {
-      // Save token or decode as needed
+      // Save login status
+      localStorage.setItem("isLoggedIn", "true");
+      
+      // Redirect to main.html
       window.location.href = "https://thrweb.github.io/THplay/main.html";
     }
   </script>
