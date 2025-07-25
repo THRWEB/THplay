@@ -12,29 +12,26 @@
       height: 100%;
       overflow: hidden;
       font-family: Arial, sans-serif;
-    }
-
-    .video-bg {
-      position: fixed;
-      right: 0;
-      bottom: 0;
-      min-width: 100%;
-      min-height: 100%;
-      z-index: -1;
-      object-fit: cover;
-    }
-
-    .content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       color: white;
       text-align: center;
-      font-size: 2em;
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 20px 40px;
-      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #000;
+    }
+    video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+    h2 {
+      z-index: 1;
+      font-size: 2rem;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
     }
   </style>
   <script>
@@ -65,13 +62,11 @@
   </script>
 </head>
 <body>
-  <video class="video-bg" autoplay muted loop>
-    <source src="https://raw.githubusercontent.com/THRWEB/THplay/main/THplay.mp4" type="video/mp4" />
-    Your browser does not support HTML5 video.
+  <video autoplay muted loop playsinline>
+    <source src="https://files.catbox.moe/x8v3zv.mp4" type="video/mp4">
+    Your browser does not support the video tag.
   </video>
 
-  <div class="content">
-    <h2>Signing you in...</h2>
-  </div>
+  <h2>Signing you in...</h2>
 </body>
 </html>
