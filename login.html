@@ -4,19 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     body, html {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow: hidden;
-      font-family: sans-serif;
-      color: white;
-      text-align: center;
-      background: black;
+      font-family: Arial, sans-serif;
     }
 
-    #bgVideo {
+    .video-bg {
       position: fixed;
       right: 0;
       bottom: 0;
@@ -26,12 +24,19 @@
       object-fit: cover;
     }
 
-    h2 {
-      margin-top: 40vh;
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      text-align: center;
       font-size: 2em;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 20px 40px;
+      border-radius: 12px;
     }
   </style>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     function handleCredentialResponse(response) {
       const data = parseJwt(response.credential);
@@ -60,9 +65,13 @@
   </script>
 </head>
 <body>
-  <video autoplay muted loop playsinline id="bgVideo">
-    <source src="https://raw.githubusercontent.com/THRWEB/THplay/main/assets/login-bg.mp4" type="video/mp4" />
+  <video class="video-bg" autoplay muted loop>
+    <source src="https://raw.githubusercontent.com/THRWEB/THplay/main/THplay.mp4" type="video/mp4" />
+    Your browser does not support HTML5 video.
   </video>
-  <h2>Signing you in...</h2>
+
+  <div class="content">
+    <h2>Signing you in...</h2>
+  </div>
 </body>
 </html>
