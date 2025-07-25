@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>THRPLAY | Tournaments</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #0c0c0c 0%, #1a1a1a 100%);
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: #111;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #00bfff;
+    }
+
+    nav {
+      display: flex;
+      gap: 30px;
+    }
+
+    nav a {
+      color: gray;
+      text-decoration: none;
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    nav a.login {
+      pointer-events: auto;
+      color: white;
+      background-color: #00bfff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: calc(100vh - 80px);
+      text-align: center;
+      background-image: url('https://i.postimg.cc/VvTzMrYp/photostudio-1753393708734.jpg');
+      background-size: cover;
+      background-position: center;
+      background-blend-mode: overlay;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 20px;
+      margin-bottom: 30px;
+      color: #ddd;
+    }
+
+    .g_id_signin {
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">THRPLAY</div>
+    <nav>
+      <a href="#">Tournaments</a>
+      <a href="#">Wallet</a>
+      <a href="#">Leaderboard</a>
+      <a href="#">Support</a>
+      <a class="login">Sign Up</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Join Competitive Battles Now</h1>
+    <p>Login with Google and start competing for real rewards!</p>
+
+    <div id="g_id_onload"
+         data-client_id="410787818265-eg2evm5uput7eb2d19fuq11nto3cge72.apps.googleusercontent.com"
+         data-context="signin"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
+
+    <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-shape="rectangular"
+         data-logo_alignment="left">
+    </div>
+  </div>
+
+  <script>
+    function handleCredentialResponse(response) {
+      const data = parseJwt(response.credential);
+      localStorage.setItem("user", JSON.stringify({
+        name: data.name,
+        email: data.email,
+        picture: data.picture
+      }));
+      window.location.href = "match.html";
+    }
+
+    function parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    }
+  </script>
+</body>
+</html>
