@@ -3,104 +3,106 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>THRPLAY | Tournaments</title>
+  <title>THRPLAY | Tournaments & Wallet</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(180deg, #0c0c0c 0%, #1a1a1a 100%);
+      background-color: #0f0f1a;
       color: white;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 40px;
-      background-color: #111;
-    }
-
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-      color: #00bfff;
     }
 
     nav {
+      background-color: #121222;
+      padding: 1rem 2rem;
       display: flex;
-      gap: 30px;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1f1f2e;
     }
 
-    nav a {
-      color: gray;
-      text-decoration: none;
-      font-size: 16px;
-      pointer-events: none;
+    .nav-left {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #00bfff;
     }
 
-    nav a.login {
-      pointer-events: auto;
-      color: white;
-      background-color: #00bfff;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: bold;
+    .nav-right {
+      display: flex;
+      gap: 2rem;
+      font-size: 1rem;
+      color: #aaa;
+    }
+
+    .nav-right span {
+      cursor: not-allowed;
     }
 
     .hero {
+      height: 90vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      height: calc(100vh - 80px);
+      align-items: center;
       text-align: center;
+      padding: 2rem;
       background-image: url('https://i.postimg.cc/VvTzMrYp/photostudio-1753393708734.jpg');
       background-size: cover;
       background-position: center;
-      background-blend-mode: overlay;
-      background-color: rgba(0, 0, 0, 0.7);
     }
 
     .hero h1 {
-      font-size: 48px;
-      margin-bottom: 20px;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 2px 2px 5px #000;
+      margin-bottom: 1rem;
     }
 
     .hero p {
-      font-size: 20px;
-      margin-bottom: 30px;
-      color: #ddd;
+      font-size: 1.2rem;
+      color: #ccc;
+      margin-bottom: 2rem;
+      text-shadow: 1px 1px 3px #000;
     }
 
     .g_id_signin {
       z-index: 10;
     }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">THRPLAY</div>
-    <nav>
-      <a href="#">Tournaments</a>
-      <a href="#">Wallet</a>
-      <a href="#">Leaderboard</a>
-      <a href="#">Support</a>
-      <a class="login">Sign Up</a>
-    </nav>
-  </header>
+
+  <nav>
+    <div class="nav-left">THRPLAY</div>
+    <div class="nav-right">
+      <span>Home</span>
+      <span>Tournaments</span>
+      <span>Leaderboard</span>
+      <span>Wallet</span>
+      <span>Support</span>
+    </div>
+  </nav>
 
   <div class="hero">
-    <h1>Join Competitive Battles Now</h1>
-    <p>Login with Google and start competing for real rewards!</p>
+    <h1>Join Free Fire Tournaments</h1>
+    <p>Win cash rewards instantly | Entry from ₹5 only</p>
 
+    <!-- Google Sign-In -->
     <div id="g_id_onload"
          data-client_id="410787818265-eg2evm5uput7eb2d19fuq11nto3cge72.apps.googleusercontent.com"
          data-context="signin"
@@ -117,6 +119,10 @@
          data-logo_alignment="left">
     </div>
   </div>
+
+  <footer>
+    © 2025 THRPLAY. All rights reserved.
+  </footer>
 
   <script>
     function handleCredentialResponse(response) {
@@ -138,5 +144,6 @@
       return JSON.parse(jsonPayload);
     }
   </script>
+
 </body>
 </html>
