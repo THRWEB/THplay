@@ -19,7 +19,7 @@
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <h1 class="text-xl md:text-2xl font-bold text-purple-400">THplay</h1>
       <div class="flex items-center space-x-4">
-        <img id="userPic" src="" alt="User" class="w-10 h-10 rounded-full border-2 border-purple-400" onerror="this.src='https://via.placeholder.com/40x40?text=User'" />
+        <img id="userPic" src="" alt="User" class="w-10 h-10 rounded-full border-2 border-purple-400" />
         <span id="userName" class="font-semibold text-white text-sm md:text-base"></span>
         <button onclick="logout()" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Logout</button>
       </div>
@@ -30,21 +30,39 @@
   <main class="p-6 md:px-20 py-10">
     <h2 class="text-3xl font-bold mb-8 text-center">Upcoming Tournaments</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-      <div class="bg-gray-800 p-6 rounded-2xl shadow-lg">
-        <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Solo</h3>
-        <p class="mb-2 text-sm text-gray-300">Prize: ₹00 | Entry: Free</p>
-        <p class="text-sm text-gray-400">Starts: 28 July, 8 PM</p>
+
+      <!-- Card 1 -->
+      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-1">Free Fire Solo</h3>
+          <p class="text-sm text-gray-300">Prize: ₹500 | Entry: Free</p>
+          <p class="text-sm text-gray-400 mt-1">Starts: 28 July, 8 PM</p>
+        </div>
       </div>
-      <div class="bg-gray-800 p-6 rounded-2xl shadow-lg">
-        <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Duo</h3>
-        <p class="mb-2 text-sm text-gray-300">Prize: ₹00 | Entry: Free</p>
-        <p class="text-sm text-gray-400">Starts: 30 July, 6 PM</p>
+
+      <!-- Card 2 -->
+      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-1">Free Fire Duo</h3>
+          <p class="text-sm text-gray-300">Prize: ₹1000 | Entry: Free</p>
+          <p class="text-sm text-gray-400 mt-1">Starts: 30 July, 6 PM</p>
+        </div>
       </div>
-      <div class="bg-gray-800 p-6 rounded-2xl shadow-lg">
-        <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Squad</h3>
-        <p class="mb-2 text-sm text-gray-300">Prize: ₹00 | Entry: Free</p>
-        <p class="text-sm text-gray-400">Starts: 1 Aug, 9 PM</p>
+
+      <!-- Card 3 -->
+      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-1">Free Fire Squad</h3>
+          <p class="text-sm text-gray-300">Prize: ₹1500 | Entry: Free</p>
+          <p class="text-sm text-gray-400 mt-1">Starts: 1 Aug, 9 PM</p>
+        </div>
       </div>
+
+      <!-- Add more cards here if needed -->
+
     </div>
   </main>
 
@@ -59,7 +77,7 @@
     const pic = localStorage.getItem('userPic');
 
     if (!name || !pic) {
-      window.location.href = "index.html"; // Redirect to login page
+      window.location.href = "index.html";
     } else {
       document.getElementById('userName').textContent = name;
       document.getElementById('userPic').src = pic;
