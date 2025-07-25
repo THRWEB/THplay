@@ -6,33 +6,27 @@
   <title>Login</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    body, html {
+    body {
       margin: 0;
       padding: 0;
-      height: 100%;
-      overflow: hidden;
-      font-family: sans-serif;
+      background-image: url('https://i.postimg.cc/rsxZq2yz/Screenshot-20250725-202820-Gallery.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       color: white;
-    }
-
-    .bg-video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
-
-    .content {
-      position: relative;
-      z-index: 1;
       text-align: center;
-      top: 40%;
-      transform: translateY(-50%);
-      font-size: 2em;
-      font-weight: bold;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      backdrop-filter: brightness(0.7);
+    }
+
+    h2 {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px 30px;
+      border-radius: 10px;
     }
   </style>
   <script>
@@ -63,15 +57,6 @@
   </script>
 </head>
 <body>
-  <!-- Background Video -->
-  <video class="bg-video" autoplay muted loop playsinline>
-    <source src="https://files.catbox.moe/gj0zea.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-
-  <!-- Text Overlay -->
-  <div class="content">
-    Signing you in...
-  </div>
+  <h2>Signing you in...</h2>
 </body>
 </html>
