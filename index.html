@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>THplay - Esports Platform</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -27,15 +27,17 @@
     </div>
   </header>
 
-  <!-- Hero Section with Background Image -->
+  <!-- Hero Section -->
   <section class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 bg-cover bg-center" style="background-image: url('https://i.postimg.cc/kDPBb1rP/file-00000000f6b8622f83cf3191487cb4e0-2.png');">
     <div class="absolute inset-0 bg-black bg-opacity-50"></div>
     <div class="relative z-10">
       <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight text-white drop-shadow-lg">Join the Battle Win Rewards</h1>
       <p class="text-base md:text-xl max-w-xl mb-6 text-white drop-shadow">Enter epic tournaments, earn cash prizes, and rise through the ranks on THplay.</p>
+
       <div id="g_id_onload"
         data-client_id="410787818265-eg2evm5uput7eb2d19fuq11nto3cge72.apps.googleusercontent.com"
-        data-login_uri="https://thrplay.github.io/login.html"
+        data-context="signup"
+        data-callback="handleGoogleResponse"
         data-auto_prompt="false">
       </div>
       <div class="g_id_signin"
@@ -49,35 +51,35 @@
     </div>
   </section>
 
-  <!-- Tournaments Section -->
+  <!-- Tournaments -->
   <section id="tournaments" class="py-20 px-6 md:px-20 bg-gray-900">
     <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Upcoming Tournaments</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
         <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Solo</h3>
         <p class="mb-4 text-sm">Prize: ... | Entry: Free</p>
-        <button onclick="handleGoogleLogin()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
+        <button onclick="triggerGoogleSignIn()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
         <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Duo</h3>
         <p class="mb-4 text-sm">Prize: ... | Entry: Free</p>
-        <button onclick="handleGoogleLogin()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
+        <button onclick="triggerGoogleSignIn()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
         <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Squad</h3>
         <p class="mb-4 text-sm">Prize: ... | Entry: Free</p>
-        <button onclick="handleGoogleLogin()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
+        <button onclick="triggerGoogleSignIn()" class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
     </div>
   </section>
 
-  <!-- About Section -->
+  <!-- About -->
   <section id="about" class="py-20 px-6 md:px-32 bg-gray-950 text-center">
     <h2 class="text-3xl font-bold mb-6">What is THplay?</h2>
-    <p class="text-lg text-gray-300 max-w-3xl mx-auto">THplay is a next-generation esports platform where players from all over the India can participate in Free Fire tournaments, earn instant payouts, and build a lasting gaming legacy.</p>
+    <p class="text-lg text-gray-300 max-w-3xl mx-auto">THplay is a next-generation esports platform where players from all over India can participate in Free Fire tournaments, earn instant payouts, and build a lasting gaming legacy.</p>
   </section>
 
-  <!-- Contact Section -->
+  <!-- Contact -->
   <section id="contact" class="py-20 px-6 md:px-20 bg-gray-900 text-center">
     <h2 class="text-3xl font-bold mb-6">Get in Touch</h2>
     <p class="mb-4 text-gray-300">Join us on Telegram for queries & support:</p>
@@ -90,7 +92,12 @@
   </footer>
 
   <script>
-    function handleGoogleLogin() {
+    function triggerGoogleSignIn() {
+      document.querySelector('.g_id_signin button')?.click();
+    }
+
+    function handleGoogleResponse(response) {
+      // Save token or decode as needed
       window.location.href = "https://thrplay.github.io/login.html";
     }
   </script>
