@@ -11,16 +11,9 @@
     body {
       font-family: 'Poppins', sans-serif;
     }
-    .hero-bg {
-      background-image: url('https://i.postimg.cc/kDPBb1rP/file-00000000f6b8622f83cf3191487cb4e0-2.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
   </style>
 </head>
 <body class="bg-gray-950 text-white">
-  
   <!-- Navbar -->
   <header class="bg-gray-900 p-4 sticky top-0 z-50 shadow-md">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -34,13 +27,14 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero-bg min-h-screen flex flex-col items-center justify-center text-center px-6">
-    <div class="bg-black/70 p-6 rounded-xl max-w-xl w-full">
-      <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight text-white">Join the Battle. Win Rewards.</h1>
-      <p class="text-base md:text-xl text-gray-200 mb-6">Enter epic tournaments, earn crypto and cash prizes, and rise through the ranks on THRplay.</p>
+  <!-- Hero Section with Background Image -->
+  <section class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 bg-cover bg-center" style="background-image: url('https://i.postimg.cc/kDPBb1rP/file-00000000f6b8622f83cf3191487cb4e0-2.png');">
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    <div class="relative z-10">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight text-white drop-shadow-lg">Join the Battle. Win Rewards.</h1>
+      <p class="text-base md:text-xl max-w-xl mb-6 text-white drop-shadow">Enter epic tournaments, earn crypto and cash prizes, and rise through the ranks on THRplay.</p>
       <div id="g_id_onload"
-        data-client_id="YOUR_CLIENT_ID_HERE"
+        data-client_id="410787818265-eg2evm5uput7eb2d19fuq11nto3cge72.apps.googleusercontent.com"
         data-login_uri="https://thrplay.github.io/login.html"
         data-auto_prompt="false">
       </div>
@@ -87,13 +81,12 @@
   <section id="contact" class="py-20 px-6 md:px-20 bg-gray-900 text-center">
     <h2 class="text-3xl font-bold mb-6">Get in Touch</h2>
     <p class="mb-4 text-gray-300">Join us on Telegram for updates & support:</p>
-    <a href="https://t.me/your_telegram_username" class="text-purple-400 underline text-lg" target="_blank">https://t.me/your_telegram_username</a>
+    <a href="https://t.me/T7fiit4" class="text-purple-400 underline text-lg" target="_blank">https://t.me/T7fiit4</a>
   </section>
 
   <!-- Footer -->
   <footer class="bg-gray-950 py-8 text-center">
     <p class="text-sm text-gray-400">&copy; 2025 THRplay. All rights reserved.</p>
   </footer>
-
 </body>
 </html>
