@@ -82,26 +82,10 @@
     <p class="text-sm text-gray-400">&copy; 2025 THplay. All rights reserved.</p>
   </footer>
 
-  <!-- Scripts -->
-  <script>
-    const name = localStorage.getItem('userName');
-    const pic = localStorage.getItem('userPic');
-
-    if (!name || !pic) {
-      window.location.href = "index.html";
-    } else {
-      document.getElementById('userPic').src = pic;
-    }
-
-    function logout() {
-      localStorage.clear();
-      window.location.href = "index.html";
-    }
-  </script>
-
-  <!-- Firebase Firestore Logic -->
+  <!-- Firebase App + Auth -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -114,7 +98,26 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
+
+    // Save profile pic to localStorage if logged in
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        const pic = user.photoURL;
+        localStorage.setItem("userPic", pic);
+        document.getElementById('userPic').src = pic;
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    function logout() {
+      localStorage.clear();
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    }
 
     const matchId = "match1"; // For Solo
     const userKey = "joined_match1";
@@ -127,7 +130,7 @@
         const data = matchSnap.data();
         slotText.textContent = `Slots Available: ${data.slots}`;
       } else {
-        await setDoc(matchRef, { slots: 48 }); // initial setup
+        await setDoc(matchRef, { slots: 48 });
         slotText.textContent = `Slots Available: 48`;
       }
     }
@@ -155,8 +158,10 @@
       }
     }
 
-    // Load slots on page load
     loadSlots();
+    window.joinMatch = joinMatch;
+    window.logout = logout;
   </script>
+
 </body>
 </html>
