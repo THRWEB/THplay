@@ -16,9 +16,9 @@
 
   <!-- Navbar -->
   <header class="bg-gray-900 p-4 sticky top-0 z-50 shadow-md">
-    <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-purple-400">THRplay</h1>
-      <nav class="space-x-6">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-xl md:text-2xl font-bold text-purple-400">THRplay</h1>
+      <nav class="hidden md:flex space-x-6">
         <a href="#" class="hover:text-purple-400 transition">Home</a>
         <a href="#tournaments" class="hover:text-purple-400 transition">Tournaments</a>
         <a href="#about" class="hover:text-purple-400 transition">About</a>
@@ -29,28 +29,30 @@
 
   <!-- Hero Section -->
   <section class="bg-gradient-to-br from-purple-800 to-indigo-900 min-h-screen flex flex-col items-center justify-center text-center px-6">
-    <h1 class="text-5xl md:text-6xl font-bold mb-4">Join the Battle. Win Rewards.</h1>
-    <p class="text-lg md:text-xl max-w-2xl mb-6">Enter epic tournaments, earn crypto and cash prizes, and rise through the ranks on THRplay.</p>
-    <a href="#tournaments" class="px-6 py-3 bg-white text-indigo-800 font-bold rounded-full shadow-lg hover:shadow-2xl transition-all">Start Competing</a>
+    <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight">Join the Battle. Win Rewards.</h1>
+    <p class="text-base md:text-xl max-w-xl mb-6">Enter epic tournaments, earn crypto and cash prizes, and rise through the ranks on THRplay.</p>
+    
+    <!-- Sign Up with Google Button -->
+    <a href="login.html" class="px-6 py-3 bg-white text-indigo-800 font-bold rounded-full shadow-lg hover:shadow-2xl transition-all">Sign Up with Google</a>
   </section>
 
   <!-- Tournaments Section -->
   <section id="tournaments" class="py-20 px-6 md:px-20 bg-gray-900">
-    <h2 class="text-4xl font-bold text-center mb-12">Upcoming Tournaments</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Upcoming Tournaments</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
-        <h3 class="text-2xl font-bold mb-2">Valorant Clash</h3>
-        <p class="mb-4">Prize: $500 | Date: Aug 5</p>
+        <h3 class="text-xl md:text-2xl font-bold mb-2">Valorant Clash</h3>
+        <p class="mb-4 text-sm">Prize: ₹500 | Date: Aug 5</p>
         <button class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
-        <h3 class="text-2xl font-bold mb-2">Free Fire Frenzy</h3>
-        <p class="mb-4">Prize: $300 | Date: Aug 8</p>
+        <h3 class="text-xl md:text-2xl font-bold mb-2">Free Fire Frenzy</h3>
+        <p class="mb-4 text-sm">Prize: ₹300 | Date: Aug 8</p>
         <button class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
-        <h3 class="text-2xl font-bold mb-2">MLBB Masters</h3>
-        <p class="mb-4">Prize: $400 | Date: Aug 10</p>
+        <h3 class="text-xl md:text-2xl font-bold mb-2">MLBB Masters</h3>
+        <p class="mb-4 text-sm">Prize: ₹400 | Date: Aug 10</p>
         <button class="px-4 py-2 bg-purple-600 rounded-full hover:bg-purple-700">Register</button>
       </div>
     </div>
@@ -65,8 +67,8 @@
   <!-- Contact Section -->
   <section id="contact" class="py-20 px-6 md:px-20 bg-gray-900 text-center">
     <h2 class="text-3xl font-bold mb-6">Get in Touch</h2>
-    <p class="mb-4 text-gray-300">Have questions or want to host a tournament?</p>
-    <a href="mailto:support@thrplay.gg" class="text-purple-400 underline">support@thrplay.gg</a>
+    <p class="mb-4 text-gray-300">Join us on Telegram for updates & support:</p>
+    <a href="https://t.me/your_telegram_username" class="text-purple-400 underline text-lg">t.me/your_telegram_username</a>
   </section>
 
   <!-- Footer -->
