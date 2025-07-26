@@ -1,3 +1,4 @@
+<!-- Save as classic.html or index.html or your main page -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,7 +33,6 @@
       <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
       <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
       <div class="mt-10 flex flex-col space-y-3">
-        <a href="wallet.html" class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded-full font-semibold text-center">Wallet</a>
         <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">Logout</button>
         <a href="https://t.me/T7fiit4" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">Support</a>
       </div>
@@ -52,9 +52,12 @@
         </button>
       </div>
       <h1 class="text-xl font-bold text-purple-400 mx-auto">THplay</h1>
-      <div id="walletDisplay" class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
+
+      <!-- Clickable Wallet -->
+      <a href="wallet.html" id="walletDisplay"
+         class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-purple-800 transition-colors">
         Wallet: ₹0
-      </div>
+      </a>
     </div>
   </header>
 
@@ -62,11 +65,10 @@
   <main class="p-4 pt-8">
     <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
     <div class="grid grid-cols-1 gap-6">
-
+      <!-- Battle Cards -->
       <!-- Card 1 -->
       <a href="soloclassic.html" class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
-        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png"
-             alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
+        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
         <div class="p-4 space-y-1">
           <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
           <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
@@ -79,8 +81,7 @@
 
       <!-- Card 2 -->
       <a href="soloclassic.html" class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
-        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png"
-             alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
+        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
         <div class="p-4 space-y-1">
           <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
           <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
@@ -93,8 +94,7 @@
 
       <!-- Card 3 -->
       <a href="soloclassic.html" class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
-        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png"
-             alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
+        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
         <div class="p-4 space-y-1">
           <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
           <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
@@ -104,7 +104,6 @@
           <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
         </div>
       </a>
-
     </div>
   </main>
 
