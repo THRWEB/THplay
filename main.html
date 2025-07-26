@@ -33,13 +33,9 @@
       <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
 
       <div class="mt-10 flex flex-col space-y-3">
-        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">
-          Logout
-        </button>
+        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">Logout</button>
         <a href="https://t.me/T7fiit4" target="_blank"
-           class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">
-          Support
-        </a>
+           class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">Support</a>
       </div>
     </div>
   </aside>
@@ -50,16 +46,13 @@
       <div class="absolute left-0 flex items-center space-x-2">
         <button onclick="toggleSidebar()" class="text-white focus:outline-none z-50 relative">
           <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" stroke-width="2"
-               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M4 6h16M4 12h16M4 18h16"/>
+               viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
       </div>
       <h1 class="text-xl md:text-2xl font-bold text-purple-400 mx-auto">THplay</h1>
-      <div id="walletDisplay" class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
-        Wallet: ₹0
-      </div>
+      <div id="walletDisplay" class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold">Wallet: ₹0</div>
     </div>
   </header>
 
@@ -69,7 +62,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
 
       <!-- Card 1 -->
-      <div onclick="openModePopup()" class="cursor-pointer">
+      <div onclick="openModePopup('solo')" class="cursor-pointer">
         <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
           <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Solo" class="w-full h-40 object-cover">
           <div class="p-4 text-center">
@@ -79,7 +72,7 @@
       </div>
 
       <!-- Card 2 -->
-      <div onclick="openModePopup()" class="cursor-pointer">
+      <div onclick="openModePopup('duo')" class="cursor-pointer">
         <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
           <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Duo" class="w-full h-40 object-cover">
           <div class="p-4 text-center">
@@ -89,7 +82,7 @@
       </div>
 
       <!-- Card 3 -->
-      <div onclick="openModePopup()" class="cursor-pointer">
+      <div onclick="openModePopup('squad')" class="cursor-pointer">
         <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
           <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Squad" class="w-full h-40 object-cover">
           <div class="p-4 text-center">
@@ -115,7 +108,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -131,6 +124,7 @@
     const db = getFirestore();
     let currentUser = null;
     let sidebarOpen = false;
+    let currentCard = null;
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -148,18 +142,29 @@
       }
     });
 
-    // Placeholder functions
-    window.joinClassic = () => {
-      alert("Classic Mode Selected");
-      closeModePopup();
+    window.openModePopup = function (cardType) {
+      currentCard = cardType;
+      document.getElementById("modePopup").classList.remove("hidden");
     };
 
-    window.joinClashSquad = () => {
+    window.closeModePopup = function () {
+      document.getElementById("modePopup").classList.add("hidden");
+    };
+
+    window.joinClassic = function () {
+      if (currentCard === 'solo') {
+        window.location.href = "soloclassic.html";
+      } else {
+        alert("Classic Mode Selected");
+        closeModePopup();
+      }
+    };
+
+    window.joinClashSquad = function () {
       alert("Clash Squad Mode Selected");
       closeModePopup();
     };
 
-    // Sidebar toggle
     window.toggleSidebar = function () {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
@@ -192,14 +197,6 @@
       signOut(auth).then(() => {
         window.location.href = "index.html";
       });
-    };
-
-    window.openModePopup = function () {
-      document.getElementById("modePopup").classList.remove("hidden");
-    };
-
-    window.closeModePopup = function () {
-      document.getElementById("modePopup").classList.add("hidden");
     };
   </script>
 </body>
