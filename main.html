@@ -1,3 +1,4 @@
+<!-- Full main.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,9 +64,8 @@
   <!-- Header -->
   <header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
     <div class="max-w-7xl mx-auto flex items-center justify-between relative">
-      <!-- Hamburger -->
       <div class="absolute left-0 flex items-center space-x-2">
-        <button id="menuBtn" onclick="toggleSidebar()" class="text-white focus:outline-none z-50 relative">
+        <button onclick="toggleSidebar()" class="text-white focus:outline-none z-50 relative">
           <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" stroke-width="2"
                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -85,8 +85,8 @@
     <h2 class="text-3xl font-bold mb-8 text-center">Choose Your Battle Style</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
 
-      <!-- Card 1: Free Fire Solo (Active) -->
-      <div onclick="joinMatch()" class="cursor-pointer">
+      <!-- Card 1 -->
+      <div onclick="openModePopup()" class="cursor-pointer">
         <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
           <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Solo" class="w-full h-40 object-cover">
           <div class="p-4 text-center">
@@ -95,7 +95,7 @@
         </div>
       </div>
 
-      <!-- Card 2: Free Fire Duo (Coming Soon) -->
+      <!-- Card 2 -->
       <div class="coming-soon">
         <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
           <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Duo" class="w-full h-40 object-cover">
@@ -105,7 +105,7 @@
         </div>
       </div>
 
-      <!-- Card 3: Free Fire Squad (Coming Soon) -->
+      <!-- Card 3 -->
       <div class="coming-soon">
         <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
           <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Squad" class="w-full h-40 object-cover">
@@ -117,7 +117,17 @@
     </div>
   </main>
 
-  <!-- Firebase + Sidebar Logic -->
+  <!-- Modal -->
+  <div id="modePopup" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+    <div class="bg-gray-800 rounded-xl p-6 w-80 text-center relative">
+      <button onclick="closeModePopup()" class="absolute top-2 right-2 text-white text-xl font-bold">&times;</button>
+      <h3 class="text-xl font-bold mb-4 text-purple-400">Select Mode</h3>
+      <button onclick="joinClassic()" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full mb-3 font-semibold">Classic</button>
+      <button onclick="joinClashSquad()" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full font-semibold">Clash Squad</button>
+    </div>
+  </div>
+
+  <!-- Firebase + Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
@@ -154,42 +164,23 @@
       }
     });
 
-    window.joinMatch = async function () {
-      if (!currentUser) return alert("User not logged in!");
-      const userRef = doc(db, "users", currentUser.uid);
-      const matchRef = doc(db, "matches", "match1");
-
-      const [userSnap, matchSnap] = await Promise.all([getDoc(userRef), getDoc(matchRef)]);
-      if (!userSnap.exists()) return alert("User data missing!");
-      if (!matchSnap.exists()) return alert("Match data missing!");
-
-      const wallet = userSnap.data().wallet || 0;
-      const entryFee = matchSnap.data().entryFee || 50;
-      const slotsLeft = matchSnap.data().slot || 0;
-
-      if (wallet < entryFee) return alert("Not enough balance!");
-      if (slotsLeft <= 0) return alert("Match is full!");
-
-      await Promise.all([
-        updateDoc(userRef, { wallet: wallet - entryFee }),
-        updateDoc(matchRef, { slot: increment(-1) })
-      ]);
-
-      window.location.href = "join.html";
+    // Placeholder for mode buttons
+    window.joinClassic = () => {
+      alert("Classic Mode Selected");
+      closeModePopup();
     };
 
-    window.logout = function () {
-      signOut(auth).then(() => {
-        window.location.href = "index.html";
-      });
+    window.joinClashSquad = () => {
+      alert("Clash Squad Mode Selected");
+      closeModePopup();
     };
 
+    // Sidebar
     window.toggleSidebar = function () {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
 
       sidebarOpen = !sidebarOpen;
-
       if (sidebarOpen) {
         sidebar.classList.remove("sidebar-hidden");
         overlay.classList.remove("hidden");
@@ -203,16 +194,29 @@
       }
     };
 
-    // Close sidebar when back button is pressed
     window.onpopstate = function () {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
-
       if (sidebarOpen) {
         sidebar.classList.add("sidebar-hidden");
         overlay.classList.add("hidden");
         sidebarOpen = false;
       }
+    };
+
+    window.logout = function () {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    };
+
+    // Popup modal functions
+    window.openModePopup = function () {
+      document.getElementById("modePopup").classList.remove("hidden");
+    };
+
+    window.closeModePopup = function () {
+      document.getElementById("modePopup").classList.add("hidden");
     };
   </script>
 </body>
