@@ -65,57 +65,55 @@
 
   <!-- Main -->
   <main class="p-6 md:px-20 py-10">
-    <h2 class="text-3xl font-bold mb-8 text-center">Choose Your Battle Style</h2>
+    <h2 class="text-3xl font-bold mb-8 text-center">One Man Army Battle</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
 
-      <!-- Card 1 -->
-      <div onclick="openModePopup()" class="cursor-pointer">
-        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
-          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Solo" class="w-full h-40 object-cover">
-          <div class="p-4 text-center">
-            <h3 class="text-xl font-bold text-purple-400">Free Fire Solo</h3>
-          </div>
+      <!-- Card Template -->
+      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
+        <img src="https://i.postimg.cc/Sxy5g2FH/1753567472281.png" alt="Battle Card" class="w-full h-40 object-cover">
+        <div class="p-4 space-y-2">
+          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
+          <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
+          <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
+          <p><span class="font-bold text-purple-400">Time:</span> 5:00 PM</p>
+          <p><span class="font-bold text-purple-400">Slot:</span> 1/12</p>
+          <button onclick="window.location.href='soloclassic.html'" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full font-semibold mt-2">Join</button>
         </div>
       </div>
 
-      <!-- Card 2 -->
-      <div onclick="openModePopup()" class="cursor-pointer">
-        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
-          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Duo" class="w-full h-40 object-cover">
-          <div class="p-4 text-center">
-            <h3 class="text-xl font-bold text-purple-400">Free Fire Duo</h3>
-          </div>
+      <!-- Duplicate the same card for card 2 and 3 -->
+      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
+        <img src="https://i.postimg.cc/Sxy5g2FH/1753567472281.png" alt="Battle Card" class="w-full h-40 object-cover">
+        <div class="p-4 space-y-2">
+          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
+          <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
+          <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
+          <p><span class="font-bold text-purple-400">Time:</span> 6:00 PM</p>
+          <p><span class="font-bold text-purple-400">Slot:</span> 2/12</p>
+          <button onclick="window.location.href='soloclassic.html'" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full font-semibold mt-2">Join</button>
         </div>
       </div>
 
-      <!-- Card 3 -->
-      <div onclick="openModePopup()" class="cursor-pointer">
-        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
-          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Squad" class="w-full h-40 object-cover">
-          <div class="p-4 text-center">
-            <h3 class="text-xl font-bold text-purple-400">Free Fire Squad</h3>
-          </div>
+      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
+        <img src="https://i.postimg.cc/Sxy5g2FH/1753567472281.png" alt="Battle Card" class="w-full h-40 object-cover">
+        <div class="p-4 space-y-2">
+          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
+          <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
+          <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
+          <p><span class="font-bold text-purple-400">Time:</span> 7:00 PM</p>
+          <p><span class="font-bold text-purple-400">Slot:</span> 3/12</p>
+          <button onclick="window.location.href='soloclassic.html'" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full font-semibold mt-2">Join</button>
         </div>
       </div>
 
     </div>
   </main>
 
-  <!-- Modal -->
-  <div id="modePopup" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-    <div class="bg-gray-800 rounded-xl p-6 w-80 text-center relative">
-      <button onclick="closeModePopup()" class="absolute top-2 right-2 text-white text-xl font-bold">&times;</button>
-      <h3 class="text-xl font-bold mb-4 text-purple-400">Select Mode</h3>
-      <button onclick="joinClassic()" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full mb-3 font-semibold">Classic</button>
-      <button onclick="joinClashSquad()" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full font-semibold">Clash Squad</button>
-    </div>
-  </div>
-
   <!-- Firebase + Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -148,18 +146,6 @@
       }
     });
 
-    // Placeholder functions
-    window.joinClassic = () => {
-      alert("Classic Mode Selected");
-      closeModePopup();
-    };
-
-    window.joinClashSquad = () => {
-      alert("Clash Squad Mode Selected");
-      closeModePopup();
-    };
-
-    // Sidebar toggle
     window.toggleSidebar = function () {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
@@ -192,14 +178,6 @@
       signOut(auth).then(() => {
         window.location.href = "index.html";
       });
-    };
-
-    window.openModePopup = function () {
-      document.getElementById("modePopup").classList.remove("hidden");
-    };
-
-    window.closeModePopup = function () {
-      document.getElementById("modePopup").classList.add("hidden");
     };
   </script>
 </body>
