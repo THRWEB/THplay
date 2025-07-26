@@ -26,23 +26,50 @@
       padding: 2px 6px;
       border-radius: 6px;
     }
-    .telegram-button {
-      transition: all 0.3s ease-in-out;
-      box-shadow: 0 0 10px #3b82f6;
+    .sidebar {
+      transition: transform 0.3s ease;
     }
-    .telegram-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #3b82f6;
+    .sidebar-hidden {
+      transform: translateX(-100%);
+    }
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.5);
     }
   </style>
 </head>
 <body class="bg-gray-950 text-white">
 
+  <!-- Sidebar -->
+  <div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div>
+  <aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50">
+    <div class="p-6">
+      <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
+      <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
+
+      <div class="mt-10 flex flex-col space-y-3">
+        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">
+          Logout
+        </button>
+        <a href="https://t.me/T7fiit4" target="_blank"
+           class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">
+          Support
+        </a>
+      </div>
+    </div>
+  </aside>
+
   <!-- Header -->
-  <header class="bg-gray-900 p-4 sticky top-0 z-50 shadow-md">
+  <header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
     <div class="max-w-7xl mx-auto flex items-center justify-between relative">
+      <!-- Hamburger -->
       <div class="absolute left-0 flex items-center space-x-2">
-        <img id="userPic" src="https://i.postimg.cc/DZfGbnrg/user.png" alt="User" class="w-10 h-10 rounded-full border-2 border-purple-400"/>
+        <button onclick="toggleSidebar()" class="text-white focus:outline-none">
+          <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
       </div>
       <h1 class="text-xl md:text-2xl font-bold text-purple-400 mx-auto">THplay</h1>
       <div id="walletDisplay" class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
@@ -86,17 +113,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Logout & Support Buttons -->
-    <div class="flex flex-col items-center mt-10 space-y-4">
-      <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-full font-semibold">
-        Logout
-      </button>
-      <a href="https://t.me/T7fiit4" target="_blank"
-         class="telegram-button bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full font-semibold text-center">
-        Contact Support on Telegram
-      </a>
-    </div>
   </main>
 
   <!-- Firebase + Logic -->
@@ -122,7 +138,9 @@
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUser = user;
-        document.getElementById("userPic").src = user.photoURL;
+        document.getElementById("sidebarPic").src = user.photoURL;
+        document.getElementById("username").textContent = user.displayName || "User";
+
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           const wallet = userDoc.data().wallet || 0;
@@ -161,6 +179,20 @@
       signOut(auth).then(() => {
         window.location.href = "index.html";
       });
+    };
+
+    window.toggleSidebar = function () {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const isHidden = sidebar.classList.contains("sidebar-hidden");
+
+      if (isHidden) {
+        sidebar.classList.remove("sidebar-hidden");
+        overlay.classList.remove("hidden");
+      } else {
+        sidebar.classList.add("sidebar-hidden");
+        overlay.classList.add("hidden");
+      }
     };
   </script>
 </body>
