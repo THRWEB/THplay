@@ -62,7 +62,8 @@
         </div>
       </div>
 
-      <!-- Card 2–6 (Inactive) -->
+      <!-- Other Tournament Cards (Coming Soon) -->
+      <!-- Repeatable Template Below -->
       <div class="coming-soon bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
         <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
         <div class="p-4">
@@ -108,7 +109,7 @@
         </div>
       </div>
 
-      <!-- Logout & Support -->
+      <!-- Logout & Support Buttons -->
       <div class="col-span-full">
         <div class="flex flex-col items-center gap-4 mt-10">
           <button onclick="logout()" class="px-5 py-2 bg-red-600 rounded-full hover:bg-red-700 transition text-white font-semibold">Logout</button>
@@ -128,13 +129,13 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
       authDomain: "thplay-b3c68.firebaseapp.com",
       projectId: "thplay-b3c68",
-      storageBucket: "thplay-b3c68.firebasestorage.app",
+      storageBucket: "thplay-b3c68.appspot.com",
       messagingSenderId: "243301774162",
       appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
     };
@@ -151,9 +152,7 @@
 
     function logout() {
       localStorage.clear();
-      signOut(auth).then(() => {
-        window.location.href = "index.html";
-      });
+      signOut(auth).then(() => window.location.href = "index.html");
     }
 
     async function loadSlots() {
@@ -174,17 +173,21 @@
         return;
       }
 
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Please log in first!");
+        return;
+      }
+
       const matchRef = doc(db, "matches", matchId);
       const matchSnap = await getDoc(matchRef);
-
       if (matchSnap.exists()) {
         let slots = matchSnap.data().slots;
         if (slots > 0) {
-          slots--;
-          await updateDoc(matchRef, { slots });
+          await updateDoc(matchRef, { slots: slots - 1 });
           localStorage.setItem(userKey, "true");
-          slotText.textContent = `Slots Available: ${slots}`;
-          alert("Successfully joined match!");
+          slotText.textContent = `Slots Available: ${slots - 1}`;
+          alert("Successfully joined the match!");
         } else {
           alert("Sorry, no slots available!");
         }
