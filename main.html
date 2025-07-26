@@ -30,124 +30,136 @@
 </head>
 <body class="bg-gray-950 text-white">
 
-<!-- Header -->
-<header class="bg-gray-900 p-4 sticky top-0 z-50 shadow-md">
-  <div class="max-w-7xl mx-auto flex items-center justify-between relative">
-    <div class="absolute left-0 flex items-center space-x-2">
-      <img id="userPic" src="https://i.postimg.cc/DZfGbnrg/user.png" alt="User" class="w-10 h-10 rounded-full border-2 border-purple-400"/>
+  <!-- Header -->
+  <header class="bg-gray-900 p-4 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between relative">
+      <div class="absolute left-0 flex items-center space-x-2">
+        <img id="userPic" src="https://i.postimg.cc/DZfGbnrg/user.png" alt="User" class="w-10 h-10 rounded-full border-2 border-purple-400"/>
+      </div>
+      <h1 class="text-xl md:text-2xl font-bold text-purple-400 mx-auto">THplay</h1>
+      <div id="walletDisplay" class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
+        Wallet: ₹0
+      </div>
     </div>
-    <h1 class="text-xl md:text-2xl font-bold text-purple-400 mx-auto">THplay</h1>
-    <div id="walletDisplay" class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
-      Wallet: ₹0
-    </div>
-  </div>
-</header>
+  </header>
 
-<!-- Main -->
-<main class="p-6 md:px-20 py-10">
-  <h2 class="text-3xl font-bold mb-8 text-center">Upcoming Tournaments</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+  <!-- Main -->
+  <main class="p-6 md:px-20 py-10">
+    <h2 class="text-3xl font-bold mb-8 text-center">Upcoming Tournaments</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
 
-    <!-- Card 1 (Active) -->
-    <div onclick="joinMatch()" class="cursor-pointer">
-      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
-        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
-        <div class="p-4">
-          <h3 class="text-xl font-bold text-purple-400">Match #1</h3>
-          <p class="text-sm text-gray-300 mt-2">Prize Pool: ₹1000</p>
-          <p class="text-sm text-gray-400">Entry Fee: ₹50</p>
+      <!-- Card 1 (Active) -->
+      <div onclick="joinMatch()" class="cursor-pointer">
+        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
+          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h3 class="text-xl font-bold text-purple-400">Free Fire</h3>
+            <p class="text-sm text-gray-300 mt-2">Prize Pool: ₹1000</p>
+            <p class="text-sm text-gray-400">Entry Fee: ₹50</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="coming-soon">
+        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h3 class="text-xl font-bold text-purple-400">Free Fire</h3>
+            <p class="text-sm text-gray-300 mt-2">Prize Pool: ₹2000</p>
+            <p class="text-sm text-gray-400">Entry Fee: ₹70</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="coming-soon">
+        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h3 class="text-xl font-bold text-purple-400">Free Fire</h3>
+            <p class="text-sm text-gray-300 mt-2">Prize Pool: ₹1500</p>
+            <p class="text-sm text-gray-400">Entry Fee: ₹60</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Card 2 (Coming Soon) -->
-    <div class="coming-soon">
-      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
-        <img src="https://i.postimg.cc/yYLyYmRj/card2.jpg" alt="Tournament" class="w-full h-40 object-cover">
-        <div class="p-4">
-          <h3 class="text-xl font-bold text-purple-400">Match #2</h3>
-          <p class="text-sm text-gray-300 mt-2">Prize Pool: ₹2000</p>
-          <p class="text-sm text-gray-400">Entry Fee: ₹70</p>
-        </div>
-      </div>
+    <!-- Logout & Support Buttons -->
+    <div class="flex flex-col items-center mt-10 space-y-4">
+      <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-full font-semibold">
+        Logout
+      </button>
+      <a href="https://t.me/YourTelegramUsername" target="_blank"
+         class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full font-semibold text-center">
+        Contact Support
+      </a>
     </div>
+  </main>
 
-    <!-- Card 3 (Coming Soon) -->
-    <div class="coming-soon">
-      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
-        <img src="https://i.postimg.cc/7YxdqGRK/card3.jpg" alt="Tournament" class="w-full h-40 object-cover">
-        <div class="p-4">
-          <h3 class="text-xl font-bold text-purple-400">Match #3</h3>
-          <p class="text-sm text-gray-300 mt-2">Prize Pool: ₹1500</p>
-          <p class="text-sm text-gray-400">Entry Fee: ₹60</p>
-        </div>
-      </div>
-    </div>
+  <!-- Firebase + Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-  </div>
-</main>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+      authDomain: "thplay-b3c68.firebaseapp.com",
+      projectId: "thplay-b3c68",
+      storageBucket: "thplay-b3c68.appspot.com",
+      messagingSenderId: "243301774162",
+      appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+    };
 
-<!-- Firebase + Logic -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore();
+    let currentUser = null;
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
-    authDomain: "thplay-b3c68.firebaseapp.com",
-    projectId: "thplay-b3c68",
-    storageBucket: "thplay-b3c68.appspot.com",
-    messagingSenderId: "243301774162",
-    appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth();
-  const db = getFirestore();
-
-  let currentUser = null;
-
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      currentUser = user;
-      document.getElementById("userPic").src = user.photoURL;
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        const wallet = userDoc.data().wallet || 0;
-        document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        document.getElementById("userPic").src = user.photoURL;
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const wallet = userDoc.data().wallet || 0;
+          document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+        }
+      } else {
+        window.location.href = "index.html";
       }
-    } else {
-      window.location.href = "index.html";
-    }
-  });
+    });
 
-  window.joinMatch = async function () {
-    if (!currentUser) return alert("User not logged in!");
+    window.joinMatch = async function () {
+      if (!currentUser) return alert("User not logged in!");
+      const userRef = doc(db, "users", currentUser.uid);
+      const matchRef = doc(db, "matches", "match1");
 
-    const userRef = doc(db, "users", currentUser.uid);
-    const matchRef = doc(db, "matches", "match1");
+      const [userSnap, matchSnap] = await Promise.all([getDoc(userRef), getDoc(matchRef)]);
+      if (!userSnap.exists()) return alert("User data missing!");
+      if (!matchSnap.exists()) return alert("Match data missing!");
 
-    const [userSnap, matchSnap] = await Promise.all([getDoc(userRef), getDoc(matchRef)]);
+      const wallet = userSnap.data().wallet || 0;
+      const entryFee = matchSnap.data().entryFee || 50;
+      const slotsLeft = matchSnap.data().slot || 0;
 
-    if (!userSnap.exists()) return alert("User data missing!");
-    if (!matchSnap.exists()) return alert("Match data missing!");
+      if (wallet < entryFee) return alert("Not enough balance!");
+      if (slotsLeft <= 0) return alert("Match is full!");
 
-    const wallet = userSnap.data().wallet || 0;
-    const entryFee = matchSnap.data().entryFee || 50;
-    const slotsLeft = matchSnap.data().slot || 0;
+      await Promise.all([
+        updateDoc(userRef, { wallet: wallet - entryFee }),
+        updateDoc(matchRef, { slot: increment(-1) })
+      ]);
 
-    if (wallet < entryFee) return alert("Not enough balance!");
-    if (slotsLeft <= 0) return alert("Match is full!");
+      window.location.href = "join.html";
+    };
 
-    await Promise.all([
-      updateDoc(userRef, { wallet: wallet - entryFee }),
-      updateDoc(matchRef, { slot: increment(-1) })
-    ]);
-
-    window.location.href = "join.html";
-  };
-</script>
-
+    window.logout = function () {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    };
+  </script>
 </body>
 </html>
