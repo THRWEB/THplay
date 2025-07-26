@@ -10,6 +10,22 @@
     body {
       font-family: 'Poppins', sans-serif;
     }
+    .coming-soon {
+      pointer-events: none;
+      opacity: 0.6;
+      position: relative;
+    }
+    .coming-soon::after {
+      content: "Coming Soon";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #9333ea;
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
   </style>
 </head>
 <body class="bg-gray-950 text-white">
@@ -32,7 +48,7 @@
     <h2 class="text-3xl font-bold mb-8 text-center">Upcoming Tournaments</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
 
-      <!-- Card 1 (Clickable) -->
+      <!-- Card 1 (Active) -->
       <div onclick="joinMatch()" class="cursor-pointer">
         <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
           <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
@@ -46,8 +62,8 @@
         </div>
       </div>
 
-      <!-- Card 2–6 (Non-clickable) -->
-      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+      <!-- Card 2–6 (Inactive) -->
+      <div class="coming-soon bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
         <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
         <div class="p-4">
           <h3 class="text-xl font-bold mb-1">Free Fire Duo</h3>
@@ -56,7 +72,7 @@
         </div>
       </div>
 
-      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+      <div class="coming-soon bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
         <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
         <div class="p-4">
           <h3 class="text-xl font-bold mb-1">Free Fire Squad</h3>
@@ -65,7 +81,7 @@
         </div>
       </div>
 
-      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+      <div class="coming-soon bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
         <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
         <div class="p-4">
           <h3 class="text-xl font-bold mb-1">FF MAX Solo</h3>
@@ -74,7 +90,7 @@
         </div>
       </div>
 
-      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+      <div class="coming-soon bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
         <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
         <div class="p-4">
           <h3 class="text-xl font-bold mb-1">FF MAX Duo</h3>
@@ -83,7 +99,7 @@
         </div>
       </div>
 
-      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+      <div class="coming-soon bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
         <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
         <div class="p-4">
           <h3 class="text-xl font-bold mb-1">FF MAX Squad</h3>
