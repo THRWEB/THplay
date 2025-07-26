@@ -6,6 +6,89 @@
   <title>THplay - Main Page</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <script type="module">
+    // Firebase config
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+      authDomain: "thplay-b3c68.firebaseapp.com",
+      projectId: "thplay-b3c68",
+      storageBucket: "thplay-b3c68.appspot.com",
+      messagingSenderId: "243301774162",
+      appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const walletDisplay = document.getElementById("walletDisplay");
+    const userPic = document.getElementById("userPic");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Set profile pic
+        userPic.src = user.photoURL;
+
+        const userDoc = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userDoc);
+
+        if (userSnap.exists()) {
+          const wallet = userSnap.data().wallet || 0;
+          walletDisplay.textContent = `Wallet: ₹${wallet}`;
+        } else {
+          walletDisplay.textContent = `Wallet: ₹0`;
+        }
+
+        // Enable join match logic
+        window.joinMatch = async () => {
+          const matchDoc = doc(db, "matches", "match1");
+          const matchSnap = await getDoc(matchDoc);
+
+          if (!matchSnap.exists()) {
+            alert("Match not found.");
+            return;
+          }
+
+          const matchData = matchSnap.data();
+          const entryFee = matchData.entryFee || 0;
+          const maxSlots = matchData.maxSlots || 0;
+          const filledSlots = matchData.filledSlots || 0;
+
+          if (filledSlots >= maxSlots) {
+            alert("No slots left.");
+            return;
+          }
+
+          const walletSnap = await getDoc(userDoc);
+          const walletData = walletSnap.data();
+          const wallet = walletData.wallet || 0;
+
+          if (wallet < entryFee) {
+            alert("Not enough balance.");
+            return;
+          }
+
+          // Deduct wallet and fill slot
+          await updateDoc(userDoc, {
+            wallet: wallet - entryFee
+          });
+
+          await updateDoc(matchDoc, {
+            filledSlots: increment(1)
+          });
+
+          alert("Match joined!");
+          window.location.href = "join.html";
+        };
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -84,49 +167,7 @@
         </div>
       </div>
 
-      <!-- Card 4 (Coming Soon) -->
-      <div class="coming-soon">
-        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
-          <img src="https://i.postimg.cc/wT8m5S3x/card4.jpg" alt="Tournament" class="w-full h-40 object-cover">
-          <div class="p-4">
-            <h3 class="text-xl font-bold text-purple-400">Match #4</h3>
-            <p class="text-sm text-gray-300 mt-2">Prize Pool: ₹1200</p>
-            <p class="text-sm text-gray-400">Entry Fee: ₹55</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 5 (Coming Soon) -->
-      <div class="coming-soon">
-        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
-          <img src="https://i.postimg.cc/Sxqz5DqF/card5.jpg" alt="Tournament" class="w-full h-40 object-cover">
-          <div class="p-4">
-            <h3 class="text-xl font-bold text-purple-400">Match #5</h3>
-            <p class="text-sm text-gray-300 mt-2">Prize Pool: ₹1800</p>
-            <p class="text-sm text-gray-400">Entry Fee: ₹65</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 6 (Coming Soon) -->
-      <div class="coming-soon">
-        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
-          <img src="https://i.postimg.cc/T2ZB7q7N/card6.jpg" alt="Tournament" class="w-full h-40 object-cover">
-          <div class="p-4">
-            <h3 class="text-xl font-bold text-purple-400">Match #6</h3>
-            <p class="text-sm text-gray-300 mt-2">Prize Pool: ₹2500</p>
-            <p class="text-sm text-gray-400">Entry Fee: ₹80</p>
-          </div>
-        </div>
-      </div>
-
     </div>
   </main>
-
-  <script>
-    function joinMatch() {
-      window.location.href = "join.html";
-    }
-  </script>
 </body>
 </html>
