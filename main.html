@@ -223,13 +223,165 @@
       const userRef = doc(db, "users", user.uid);
       const matchSnap = await getDoc(matchRef);
       const userSnap = await getDoc(userRef);
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    setPersistence,
+    browserLocalPersistence,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc
+  } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-      if (!matchSnap.exists()) {
+  const firebaseConfig = {
+    apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+    authDomain: "thplay-b3c68.firebaseapp.com",
+    projectId: "thplay-b3c68",
+    storageBucket: "thplay-b3c68.appspot.com",
+    messagingSenderId: "243301774162",
+    appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  setPersistence(auth, browserLocalPersistence).catch(console.error);
+
+  const matchId = "match1";
+  const userKey = "joined_match1";
+  const slotText = document.getElementById("slotsText");
+  const walletDisplay = document.getElementById("walletDisplay");
+
+  let currentUserUID = null;
+  let userCoins = 0;
+  const entryFee = 0; // set to actual fee if match is paid
+
+  function logout() {
+    localStorage.clear();
+    signOut(auth).then(() => window.location.href = "index.html");
+  }
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    setPersistence,
+    browserLocalPersistence,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc
+  } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+    authDomain: "thplay-b3c68.firebaseapp.com",
+    projectId: "thplay-b3c68",
+    storageBucket: "thplay-b3c68.appspot.com",
+    messagingSenderId: "243301774162",
+    appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  setPersistence(auth, browserLocalPersistence).catch(console.error);
+
+  const matchId = "match1";
+  const userKey = "joined_match1";
+  const slotText = document.getElementById("slotsText");
+  const walletDisplay = document.getElementById("walletDisplay");
+
+  let currentUserUID = null;
+  let userCoins = 0;
+  const entryFee = 0; // Set to actual fee if needed
+
+  function logout() {
+    localStorage.clear();
+    signOut(auth).then(() => window.location.href = "index.html");
+  }
+
+  async function loadUserWallet(uid) {
+    try {
+      const userRef = doc(db, "users", uid);
+      const snap = await getDoc(userRef);
+      if (snap.exists()) {
+        userCoins = snap.data().coins ?? 0;
+        walletDisplay.textContent = `Wallet: ₹${userCoins}`;
+      } else {
+        await setDoc(userRef, { coins: 0 });
+        userCoins = 0;
+        walletDisplay.textContent = `Wallet: ₹0`;
+      }
+    } catch (e) {
+      console.error("Wallet load error", e);
+    }
+  }
+
+  async function loadSlots() {
+    try {
+      const matchRef = doc(db, "matches", matchId);
+      const matchSnap = await getDoc(matchRef);
+
+      if (matchSnap.exists()) {
+        const data = matchSnap.data();
+        const slots = data.slots ?? 48;
+        slotText.textContent = `Slots Available: ${slots}`;
+      } else {
         await setDoc(matchRef, { slots: 48 });
+        slotText.textContent = `Slots Available: 48`;
+      }
+    } catch (err) {
+      console.error("Error loading slots:", err);
+      slotText.textContent = `Error loading slots`;
+    }
+  }
+
+  async function joinMatch() {
+    try {
+      if (localStorage.getItem(userKey)) {
+        alert("You already joined this match!");
+        return;
       }
 
-      let slots = matchSnap.data().slots;
-      let coins = userSnap.data().coins;
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Please log in first!");
+        return;
+      }
+
+      const matchRef = doc(db, "matches", matchId);
+      const userRef = doc(db, "users", user.uid);
+
+      const [matchSnap, userSnap] = await Promise.all([
+        getDoc(matchRef),
+        getDoc(userRef)
+      ]);
+
+      let slots = 48;
+
+      if (matchSnap.exists()) {
+        const matchData = matchSnap.data();
+        slots = matchData.slots ?? 48;
+      } else {
+        await setDoc(matchRef, { slots });
+      }
+
+      const coins = userSnap.exists() ? (userSnap.data().coins ?? 0) : 0;
 
       if (slots <= 0) {
         alert("Sorry, no slots available!");
@@ -241,7 +393,6 @@
         return;
       }
 
-      // All good, proceed to join
       await updateDoc(matchRef, { slots: slots - 1 });
       await updateDoc(userRef, { coins: coins - entryFee });
 
@@ -249,6 +400,10 @@
       slotText.textContent = `Slots Available: ${slots - 1}`;
       walletDisplay.textContent = `Wallet: ₹${coins - entryFee}`;
       alert("Successfully joined the match!");
+
+      // Optional: Redirect to another page
+      // window.location.href = "join.html";
+
     } catch (error) {
       console.error("Join error:", error);
       alert("Error joining match. Try again later.");
@@ -256,17 +411,15 @@
   }
 
   onAuthStateChanged(auth, async (user) => {
-    setTimeout(async () => {
-      if (user) {
-        currentUserUID = user.uid;
-        const pic = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
-        document.getElementById("userPic").src = pic;
-        await loadUserWallet(user.uid);
-        await loadSlots();
-      } else {
-        window.location.href = "index.html";
-      }
-    }, 300);
+    if (user) {
+      currentUserUID = user.uid;
+      const pic = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
+      document.getElementById("userPic").src = pic;
+      await loadUserWallet(user.uid);
+      await loadSlots();
+    } else {
+      window.location.href = "index.html";
+    }
   });
 
   window.joinMatch = joinMatch;
