@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -27,49 +28,105 @@
     }
   </style>
 </head>
-<body class="bg-gray-950 text-white">  <!-- Header -->  <header class="bg-gray-900 p-4 sticky top-0 z-50 shadow-md">
+<body class="bg-gray-950 text-white">
+
+  <!-- Header -->
+  <header class="bg-gray-900 p-4 sticky top-0 z-50 shadow-md">
     <div class="max-w-7xl mx-auto flex items-center justify-between relative">
       <div class="absolute left-0 flex items-center space-x-2">
         <img id="userPic" src="https://i.postimg.cc/DZfGbnrg/user.png" alt="User" class="w-10 h-10 rounded-full border-2 border-purple-400"/>
       </div>
       <h1 class="text-xl md:text-2xl font-bold text-purple-400 mx-auto">THplay</h1>
-      <div class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold" id="walletAmount">
+      <div class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
         Wallet: ₹0
       </div>
     </div>
-  </header>  <!-- Main -->  <main class="p-6 md:px-20 py-10">
+  </header>
+
+  <!-- Main -->
+  <main class="p-6 md:px-20 py-10">
     <h2 class="text-3xl font-bold mb-8 text-center">Upcoming Tournaments</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10"><!-- Card 1 (Active) -->
-  <div onclick="joinMatch()" class="cursor-pointer">
-    <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
-      <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
-      <div class="p-4">
-        <h3 class="text-xl font-bold mb-1">Free Fire Solo</h3>
-        <p class="text-sm text-gray-300">Prize: ₹500 | Entry: Free</p>
-        <p class="text-sm text-gray-400">Starts: 28 July, 8 PM</p>
-        <p id="slotsText" class="text-sm text-green-400 mt-2">Slots Available: ...</p>
-        <button class="mt-3 bg-purple-600 hover:bg-purple-700 px-4 py-1 rounded-full text-sm font-semibold">Join</button>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+
+      <!-- Card 1 (Active) -->
+      <div onclick="joinMatch()" class="cursor-pointer">
+        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
+          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h3 class="text-xl font-bold mb-1">Free Fire Solo</h3>
+            <p class="text-sm text-gray-300">Prize: ₹500 | Entry: Free</p>
+            <p class="text-sm text-gray-400">Starts: 28 July, 8 PM</p>
+            <p id="slotsText" class="text-sm text-green-400 mt-2">Slots Available: ...</p>
+            <button class="mt-3 bg-purple-600 hover:bg-purple-700 px-4 py-1 rounded-full text-sm font-semibold">Join</button>
+          </div>
+        </div>
       </div>
+
+      <!-- Other Tournament Cards (Coming Soon) -->
+      <!-- Repeatable Template Below -->
+      <div class="coming-soon bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-1">Free Fire Duo</h3>
+          <p class="text-sm text-gray-300">Prize: ₹1000 | Entry: Free</p>
+          <p class="text-sm text-gray-400 mt-1">Starts: 30 July, 6 PM</p>
+        </div>
+      </div>
+
+      <div class="coming-soon bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-1">Free Fire Squad</h3>
+          <p class="text-sm text-gray-300">Prize: ₹1500 | Entry: Free</p>
+          <p class="text-sm text-gray-400 mt-1">Starts: 1 Aug, 9 PM</p>
+        </div>
+      </div>
+
+      <div class="coming-soon bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-1">FF MAX Solo</h3>
+          <p class="text-sm text-gray-300">Prize: ₹700 | Entry: Free</p>
+          <p class="text-sm text-gray-400 mt-1">Starts: 2 Aug, 7 PM</p>
+        </div>
+      </div>
+
+      <div class="coming-soon bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-1">FF MAX Duo</h3>
+          <p class="text-sm text-gray-300">Prize: ₹1200 | Entry: Free</p>
+          <p class="text-sm text-gray-400 mt-1">Starts: 4 Aug, 5 PM</p>
+        </div>
+      </div>
+
+      <div class="coming-soon bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Tournament" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-1">FF MAX Squad</h3>
+          <p class="text-sm text-gray-300">Prize: ₹1800 | Entry: Free</p>
+          <p class="text-sm text-gray-400 mt-1">Starts: 5 Aug, 8 PM</p>
+        </div>
+      </div>
+
+      <!-- Logout & Support Buttons -->
+      <div class="col-span-full">
+        <div class="flex flex-col items-center gap-4 mt-10">
+          <button onclick="logout()" class="px-5 py-2 bg-red-600 rounded-full hover:bg-red-700 transition text-white font-semibold">Logout</button>
+          <a href="https://t.me/T7fiit4" target="_blank" class="px-5 py-2 bg-blue-600 rounded-full hover:bg-blue-700 transition text-white font-semibold">Support</a>
+        </div>
+      </div>
+
     </div>
-  </div>
+  </main>
 
-  <!-- Other Tournament Cards (Coming Soon) -->
-  <!-- Repeatable Template Below -->
-  <!-- ... (Same coming-soon cards remain unchanged) ... -->
-
-  <!-- Logout & Support Buttons -->
-  <div class="col-span-full">
-    <div class="flex flex-col items-center gap-4 mt-10">
-      <button onclick="logout()" class="px-5 py-2 bg-red-600 rounded-full hover:bg-red-700 transition text-white font-semibold">Logout</button>
-      <a href="https://t.me/T7fiit4" target="_blank" class="px-5 py-2 bg-blue-600 rounded-full hover:bg-blue-700 transition text-white font-semibold">Support</a>
-    </div>
-  </div>
-
-</div>
-
-  </main>  <!-- Footer -->  <footer class="bg-gray-900 py-6 text-center mt-10">
+  <!-- Footer -->
+  <footer class="bg-gray-900 py-6 text-center mt-10">
     <p class="text-sm text-gray-400">&copy; 2025 THplay. All rights reserved.</p>
-  </footer>  <!-- Firebase -->  <script type="module">
+  </footer>
+
+  <!-- Firebase -->
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
@@ -137,19 +194,12 @@
       }
     }
 
-    onAuthStateChanged(auth, async (user) => {
-      setTimeout(async () => {
+    onAuthStateChanged(auth, user => {
+      setTimeout(() => {
         if (user) {
           const pic = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
           document.getElementById("userPic").src = pic;
-          await loadSlots();
-
-          const userRef = doc(db, "users", user.uid);
-          const userSnap = await getDoc(userRef);
-          if (userSnap.exists()) {
-            const walletAmount = userSnap.data().wallet || 0;
-            document.getElementById("walletAmount").textContent = `Wallet: ₹${walletAmount}`;
-          }
+          loadSlots();
         } else {
           window.location.href = "index.html";
         }
@@ -158,5 +208,6 @@
 
     window.joinMatch = joinMatch;
     window.logout = logout;
-  </script></body>
+  </script>
+</body>
 </html>
