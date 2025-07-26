@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <!-- Card 2 -->
+    <!-- Card 2 (Coming Soon) -->
     <div class="coming-soon">
       <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
         <img src="https://i.postimg.cc/yYLyYmRj/card2.jpg" alt="Tournament" class="w-full h-40 object-cover">
@@ -72,7 +72,7 @@
       </div>
     </div>
 
-    <!-- Card 3 -->
+    <!-- Card 3 (Coming Soon) -->
     <div class="coming-soon">
       <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
         <img src="https://i.postimg.cc/7YxdqGRK/card3.jpg" alt="Tournament" class="w-full h-40 object-cover">
@@ -89,7 +89,6 @@
 
 <!-- Firebase + Logic -->
 <script type="module">
-  // Firebase Config
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
@@ -141,7 +140,6 @@
     if (wallet < entryFee) return alert("Not enough balance!");
     if (slotsLeft <= 0) return alert("Match is full!");
 
-    // Deduct money and reduce slot
     await Promise.all([
       updateDoc(userRef, { wallet: wallet - entryFee }),
       updateDoc(matchRef, { slot: increment(-1) })
