@@ -1,363 +1,182 @@
+<!-- Save as classic.html or index.html or your main page -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>THplay@thrweb</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      /* Basic Poppins font application */
-      body {
-        font-family: 'Poppins', sans-serif;
-      }
-      /* Sidebar transition for smooth slide-in/out */
-      .sidebar {
-        transition: transform 0.3s ease;
-      }
-      .sidebar-hidden {
-        transform: translateX(-100%);
-      }
-      /* Overlay for dimming background when sidebar is open */
-      .overlay {
-        background-color: rgba(0, 0, 0, 0.5);
-      }
-      /* Ensure main content scrolls properly without header/footer interference */
-      main {
-        overflow-y: auto; /* Enable vertical scrolling */
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-        /* max-height: calc(100vh - (height of header + height of potential footer));
-           Adjust this if your header/footer are fixed and have specific heights */
-      }
-      /* Optional: Hide scrollbar for a cleaner look */
-      main::-webkit-scrollbar {
-        display: none;
-      }
-      main {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
-      }
-    </style>
-  </head>
-  <body class="bg-gray-950 text-white">
-    <div
-      id="overlay"
-      class="fixed inset-0 z-40 hidden overlay"
-      onclick="toggleSidebar()"
-    ></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>THplay@thrweb</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .sidebar {
+      transition: transform 0.3s ease;
+    }
+    .sidebar-hidden {
+      transform: translateX(-100%);
+    }
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-white">
 
-    <aside
-      id="sidebar"
-      class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50"
-    >
-      <div class="p-6">
-        <img
-          id="sidebarPic"
-          src="https://i.postimg.cc/DZfGbnrg/user.png"
-          class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400"
-          alt="User Profile"
-        />
-        <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">
-          User
-        </h2>
-        <div class="mt-10 flex flex-col space-y-3">
-          <button
-            onclick="logout()"
-            class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold"
-          >
-            Logout
-          </button>
-          <a
-            href="https://t.me/T7fiit4"
-            target="_blank"
-            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center"
-            >Support</a
-          >
+  <!-- Sidebar Overlay -->
+  <div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50">
+    <div class="p-6">
+      <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
+      <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
+      <div class="mt-10 flex flex-col space-y-3">
+        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">Logout</button>
+        <a href="https://t.me/T7fiit4" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">Support</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Header -->
+  <header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between relative">
+      <div class="absolute left-0 flex items-center space-x-2">
+        <button onclick="toggleSidebar()" class="text-white focus:outline-none z-50 relative">
+          <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+      <h1 class="text-xl font-bold text-purple-400 mx-auto">THplay</h1>
+
+      <!-- Clickable Wallet -->
+      <a href="wallet.html" id="walletDisplay"
+         class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-purple-800 transition-colors">
+        Wallet: ₹0
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="p-4 pt-8">
+    <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
+    <div class="grid grid-cols-1 gap-6">
+      <!-- Battle Cards -->
+      <!-- Card 1 -->
+      <a href="soloclassic.html" class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
+        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
+        <div class="p-4 space-y-1">
+          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
+          <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
+          <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
+          <p><span class="font-bold text-purple-400">Time:</span> 5:00 PM</p>
+          <p><span class="font-bold text-purple-400">Slot:</span> 1/12</p>
+          <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
         </div>
-      </div>
-    </aside>
+      </a>
 
-    <header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
-      <div class="max-w-7xl mx-auto flex items-center justify-between relative">
-        <div class="absolute left-0 flex items-center space-x-2">
-          <button
-            onclick="toggleSidebar()"
-            class="text-white focus:outline-none z-50 relative"
-          >
-            <svg
-              class="w-8 h-8 text-purple-400"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
+      <!-- Card 2 -->
+      <a href="soloclassic.html" class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
+        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
+        <div class="p-4 space-y-1">
+          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
+          <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
+          <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
+          <p><span class="font-bold text-purple-400">Time:</span> 6:00 PM</p>
+          <p><span class="font-bold text-purple-400">Slot:</span> 2/12</p>
+          <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
         </div>
-        <h1 class="text-xl font-bold text-purple-400 mx-auto">THplay</h1>
-        <a
-          href="wallet.html"
-          id="walletDisplay"
-          class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-purple-800 transition-colors"
-        >
-          Wallet: ₹0
-        </a>
-      </div>
-    </header>
+      </a>
 
-    <main class="p-4 pt-8">
-      <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
-      <div id="battleCardsContainer" class="grid grid-cols-1 gap-6">
-        <p class="text-center text-gray-500" id="loadingMessage">Loading battles...</p>
-      </div>
-    </main>
+      <!-- Card 3 -->
+      <a href="soloclassic.html" class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
+        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
+        <div class="p-4 space-y-1">
+          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
+          <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
+          <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
+          <p><span class="font-bold text-purple-400">Time:</span> 7:00 PM</p>
+          <p><span class="font-bold text-purple-400">Slot:</span> 3/12</p>
+          <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
+        </div>
+      </a>
+    </div>
+  </main>
 
-    <script type="module">
-      // Import necessary Firebase modules
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-      import {
-        getAuth,
-        onAuthStateChanged,
-        signOut,
-      } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-      import {
-        getFirestore,
-        doc,
-        getDoc,
-        collection,
-        query,
-        orderBy,
-        onSnapshot,
-        updateDoc,
-        increment,
-      } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+  <!-- Firebase + Sidebar Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-      // Your Firebase configuration (REPLACE WITH YOUR ACTUAL CONFIG IF DIFFERENT)
-      const firebaseConfig = {
-        apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
-        authDomain: "thplay-b3c68.firebaseapp.com",
-        projectId: "thplay-b3c68",
-        storageBucket: "thplay-b3c68.appspot.com",
-        messagingSenderId: "243301774162",
-        appId: "1:243301774162:web:be1d08fd88dd3edb90008b",
-      };
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+      authDomain: "thplay-b3c68.firebaseapp.com",
+      projectId: "thplay-b3c68",
+      storageBucket: "thplay-b3c68.appspot.com",
+      messagingSenderId: "243301774162",
+      appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+    };
 
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth();
-      const db = getFirestore(); // Get Firestore instance
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore();
+    let currentUser = null;
+    let sidebarOpen = false;
 
-      let currentUser = null; // To store the currently logged-in user
-      let sidebarOpen = false; // State for sidebar visibility
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        document.getElementById("sidebarPic").src = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
+        document.getElementById("username").textContent = user.displayName || "User";
 
-      // --- Sidebar and Authentication Logic ---
-
-      // Listens for authentication state changes (login/logout)
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          // User is signed in
-          currentUser = user;
-          // Update sidebar with user's photo and display name
-          document.getElementById("sidebarPic").src =
-            user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png"; // Fallback image
-          document.getElementById("username").textContent =
-            user.displayName || "User"; // Fallback name
-
-          // Fetch and display user's wallet balance from Firestore
-          const userDoc = await getDoc(doc(db, "users", user.uid));
-          if (userDoc.exists()) {
-            const wallet = userDoc.data().wallet || 0;
-            document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
-          }
-          // Once authenticated, load the battle cards
-          loadBattles();
-        } else {
-          // User is signed out, redirect to login page
-          window.location.href = "index.html";
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const wallet = userDoc.data().wallet || 0;
+          document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
         }
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    window.toggleSidebar = function () {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+
+      sidebarOpen = !sidebarOpen;
+      if (sidebarOpen) {
+        sidebar.classList.remove("sidebar-hidden");
+        overlay.classList.remove("hidden");
+        history.pushState({ sidebar: true }, "");
+      } else {
+        sidebar.classList.add("sidebar-hidden");
+        overlay.classList.add("hidden");
+        if (history.state && history.state.sidebar) {
+          history.back();
+        }
+      }
+    };
+
+    window.onpopstate = function () {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      if (sidebarOpen) {
+        sidebar.classList.add("sidebar-hidden");
+        overlay.classList.add("hidden");
+        sidebarOpen = false;
+      }
+    };
+
+    window.logout = function () {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
       });
-
-      // Toggles the sidebar visibility
-      window.toggleSidebar = function () {
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.getElementById("overlay");
-
-        sidebarOpen = !sidebarOpen; // Toggle sidebar state
-        if (sidebarOpen) {
-          sidebar.classList.remove("sidebar-hidden"); // Show sidebar
-          overlay.classList.remove("hidden"); // Show overlay
-          history.pushState({ sidebar: true }, ""); // Add history state for back button
-        } else {
-          sidebar.classList.add("sidebar-hidden"); // Hide sidebar
-          overlay.classList.add("hidden"); // Hide overlay
-          // If the history state was set by sidebar, go back
-          if (history.state && history.state.sidebar) {
-            history.back();
-          }
-        }
-      };
-
-      // Handles browser's back button for sidebar (if sidebar was opened via pushState)
-      window.onpopstate = function () {
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.getElementById("overlay");
-        if (sidebarOpen) {
-          // If sidebar was open, hide it when back button is pressed
-          sidebar.classList.add("sidebar-hidden");
-          overlay.classList.add("hidden");
-          sidebarOpen = false;
-        }
-      };
-
-      // Logs out the user from Firebase
-      window.logout = function () {
-        signOut(auth).then(() => {
-          window.location.href = "index.html"; // Redirect to login page
-        });
-      };
-
-      // --- Battle Loading and Slot Management Logic ---
-
-      const battleCardsContainer = document.getElementById("battleCardsContainer");
-
-      // Function to dynamically create HTML for a single battle card
-      function createBattleCard(battle) {
-        // Construct the HTML string for the battle card
-        const cardHtml = `
-          <a href="${battle.link}" data-battle-id="${battle.id}" class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
-            <img src="${battle.imageUrl}" alt="Battle Thumbnail" class="w-full aspect-video object-cover bg-black" />
-            <div class="p-4 space-y-1">
-              <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹${battle.entryFees}</p>
-              <p><span class="font-bold text-purple-400">Prize:</span> ₹${battle.prize}</p>
-              <p><span class="font-bold text-purple-400">Date:</span> ${battle.date}</p>
-              <p><span class="font-bold text-purple-400">Time:</span> ${battle.time}</p>
-              <p><span class="font-bold text-purple-400" id="slots-${battle.id}">Slot:</span> ${battle.slotsAvailable}/${battle.initialSlots}</p>
-              <p><span class="font-bold text-purple-400">Map:</span> ${battle.map}</p>
-              ${
-                battle.slotsAvailable > 0
-                  ? `<button class="join-button mt-2 w-full bg-green-600 hover:bg-green-700 px-4 py-2 rounded-full font-semibold" data-battle-id="${battle.id}">Join Battle</button>`
-                  : `<button class="mt-2 w-full bg-red-600 px-4 py-2 rounded-full font-semibold cursor-not-allowed" disabled>Slots Full</button>`
-              }
-            </div>
-          </a>
-        `;
-        // Create a temporary div to parse the HTML string into a DOM element
-        const div = document.createElement('div');
-        div.innerHTML = cardHtml.trim();
-        return div.firstChild; // Return the actual card element
-      }
-
-      // Function to handle joining a battle
-      // This function includes basic wallet deduction and slot decrement.
-      // NOTE: For a real application, the payment and slot deduction should involve server-side logic
-      // to prevent client-side manipulation and ensure security.
-      window.joinBattle = async function (battleId) {
-        if (!currentUser) {
-          alert("You must be logged in to join a battle.");
-          return;
-        }
-
-        const battleRef = doc(db, "battles", battleId);
-        const battleDoc = await getDoc(battleRef);
-
-        if (battleDoc.exists()) {
-          const battleData = battleDoc.data();
-          if (battleData.slotsAvailable > 0) {
-            const userWalletRef = doc(db, "users", currentUser.uid);
-            const userDoc = await getDoc(userWalletRef);
-            const userWallet = userDoc.data().wallet || 0;
-
-            if (userWallet >= battleData.entryFees) {
-              try {
-                // Deduct from user wallet and decrement battle slots
-                // Using increment() ensures atomic updates in Firestore
-                await updateDoc(userWalletRef, {
-                  wallet: increment(-battleData.entryFees)
-                });
-                await updateDoc(battleRef, {
-                  slotsAvailable: increment(-1)
-                });
-
-                alert(`Successfully joined ${battleId}! Your wallet has been debited ₹${battleData.entryFees}.`);
-                // You might want to redirect the user or show a success message here
-                // Example: window.location.href = `soloclassic.html?battleId=${battleId}`;
-              } catch (error) {
-                console.error("Error joining battle or updating wallet: ", error);
-                alert("Failed to join battle. Please try again.");
-              }
-            } else {
-              alert(`Insufficient balance. You need ₹${battleData.entryFees} to join this battle.`);
-              window.location.href = "wallet.html"; // Redirect user to add money
-            }
-          } else {
-            alert("Sorry, this battle is full.");
-          }
-        } else {
-          console.error("Battle not found:", battleId);
-          alert("Battle not found.");
-        }
-      };
-
-      // Function to fetch and display battles from Firestore in real-time
-      function loadBattles() {
-        // Create a query to get documents from the 'battles' collection, ordered by time
-        const q = query(collection(db, "battles"), orderBy("time", "asc"));
-
-        // Set up a real-time listener (onSnapshot)
-        // This function executes initially and whenever data in the 'battles' collection changes
-        onSnapshot(q, (snapshot) => {
-          battleCardsContainer.innerHTML = ''; // Clear all existing cards to re-render
-          const loadingMessage = document.getElementById("loadingMessage");
-          if (loadingMessage) loadingMessage.remove(); // Remove loading message once data arrives
-
-          if (snapshot.empty) {
-            // If no battles are found, display a message
-            battleCardsContainer.innerHTML = '<p class="text-center text-gray-500">No battles available at the moment.</p>';
-            return;
-          }
-
-          // Iterate over each battle document
-          snapshot.forEach((doc) => {
-            const battleData = doc.data();
-            const battleId = doc.id; // Get the document ID, which will serve as the battle's unique ID
-
-            // Construct a battle object with an ID and a link, adding fallback for imageUrl
-            const battle = {
-              id: battleId,
-              link: `soloclassic.html?battleId=${battleId}`, // Example: Link to a generic battle page with battle ID
-              ...battleData, // Spread all other data from Firestore
-              imageUrl: battleData.imageUrl || "https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" // Fallback image if not in Firestore
-            };
-            // Append the created battle card to the container
-            battleCardsContainer.appendChild(createBattleCard(battle));
-          });
-
-          // Attach click event listeners to all "Join Battle" buttons after they are rendered
-          document.querySelectorAll('.join-button').forEach(button => {
-            button.onclick = (event) => {
-              event.preventDefault(); // Prevent default anchor tag behavior if button is inside <a>
-              const battleId = event.target.dataset.battleId; // Get the battle ID from data attribute
-              joinBattle(battleId); // Call the joinBattle function
-            };
-          });
-        }, (error) => {
-          // Handle errors during data fetching
-          console.error("Error fetching battles: ", error);
-          battleCardsContainer.innerHTML = '<p class="text-center text-red-500">Error loading battles. Please try again later.</p>';
-        });
-      }
-
-      // The loadBattles() function is now called inside onAuthStateChanged,
-      // ensuring that battles are loaded only after the user's authentication status is confirmed.
-    </script>
-  </body>
+    };
+  </script>
+</body>
 </html>
