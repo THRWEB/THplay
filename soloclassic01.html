@@ -63,7 +63,7 @@
   <main class="p-4 pt-8 space-y-8">
     <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
 
-    <!-- Battle Info Card (Non-Clickable) -->
+    <!-- Battle Info Card -->
     <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-left text-sm">
       <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
       <div class="p-4 space-y-1">
@@ -76,6 +76,20 @@
       </div>
     </div>
 
+    <!-- Join Match Section (above rules now) -->
+    <form id="joinForm" class="space-y-4 bg-gray-900 p-4 rounded-lg shadow border border-purple-700">
+      <h3 class="text-lg font-bold text-purple-400">🎮 Join Match</h3>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Free Fire Username</label>
+        <input type="text" id="playerName" required class="w-full bg-gray-800 text-white p-2 rounded border border-gray-600 focus:outline-none focus:border-purple-500" />
+      </div>
+
+      <button type="submit" class="w-full bg-purple-700 hover:bg-purple-800 text-white py-2 rounded font-bold transition-colors">
+        Join Now
+      </button>
+    </form>
+
     <!-- Rules Section -->
     <section class="bg-gray-900 p-4 rounded-lg shadow border border-purple-700">
       <h3 class="text-lg font-bold text-purple-400 mb-2">⚠️ Rules</h3>
@@ -87,33 +101,9 @@
         <li>Use only one device to play the match.</li>
       </ul>
     </section>
-
-    <!-- Join Form -->
-    <form id="joinForm" class="space-y-4 bg-gray-900 p-4 rounded-lg shadow border border-purple-700">
-      <h3 class="text-lg font-bold text-purple-400">🎮 Join Match</h3>
-
-      <div>
-        <label class="block text-sm font-medium mb-1">Player Name</label>
-        <input type="text" id="playerName" required class="w-full bg-gray-800 text-white p-2 rounded border border-gray-600 focus:outline-none focus:border-purple-500" />
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium mb-1">Free Fire UID</label>
-        <input type="text" id="ffuid" required class="w-full bg-gray-800 text-white p-2 rounded border border-gray-600 focus:outline-none focus:border-purple-500" />
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium mb-1">Phone Number</label>
-        <input type="tel" id="phone" required class="w-full bg-gray-800 text-white p-2 rounded border border-gray-600 focus:outline-none focus:border-purple-500" />
-      </div>
-
-      <button type="submit" class="w-full bg-purple-700 hover:bg-purple-800 text-white py-2 rounded font-bold transition-colors">
-        Join Now
-      </button>
-    </form>
   </main>
 
-  <!-- Firebase + Sidebar + Join Logic -->
+  <!-- Firebase Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
@@ -163,15 +153,13 @@
       });
     };
 
-    // Join Form Handler
+    // Join Match
     document.getElementById("joinForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const name = document.getElementById("playerName").value.trim();
-      const uid = document.getElementById("ffuid").value.trim();
-      const phone = document.getElementById("phone").value.trim();
 
-      if (!name || !uid || !phone) {
-        alert("Please fill in all details.");
+      if (!name) {
+        alert("Please enter your Free Fire username.");
         return;
       }
 
@@ -184,14 +172,11 @@
         return;
       }
 
-      // Deduct ₹10 and store participation
       await updateDoc(userRef, {
         wallet: wallet - 10,
         matches: arrayUnion({
           match: "Solo Classic 5:00PM",
           name,
-          uid,
-          phone,
           joinedAt: new Date()
         })
       });
