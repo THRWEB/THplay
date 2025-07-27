@@ -56,18 +56,30 @@
 <main class="p-4 pt-8">
   <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
   <div class="grid grid-cols-1 gap-6">
+    <div class="space-y-4">
 
-    <!-- Match Cards -->
-    <div id="cardsContainer" class="space-y-4"></div>
+      <!-- Only Card 1 Enabled -->
+      <div class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform cursor-pointer" onclick="window.location.href='soloclassic01.html'">
+        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
+        <div class="p-4 space-y-1">
+          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹5</p>
+          <p><span class="font-bold text-purple-400">Prize:</span> ₹4 per kill</p>
+          <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
+          <p><span class="font-bold text-purple-400">Time:</span> 5:00 PM</p>
+          <p><span class="font-bold text-purple-400">Slot:</span> 0/48</p>
+          <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
+        </div>
+      </div>
 
+    </div>
   </div>
 </main>
 
-<!-- Firebase + Sidebar + Dynamic Cards -->
+<!-- Firebase + Auth -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -81,87 +93,16 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth();
   const db = getFirestore();
-  let currentUser = null;
-  let sidebarOpen = false;
-
-  const matches = [
-    { id: "match1", time: "5:00 PM" },
-    { id: "match2", time: "6:00 PM" },
-    { id: "match3", time: "7:00 PM" }
-  ];
-
-  function renderCards() {
-    const container = document.getElementById("cardsContainer");
-    matches.forEach(async ({ id, time }) => {
-      const matchRef = doc(db, "matches", id);
-      const matchSnap = await getDoc(matchRef);
-      let slotText = "Loading...";
-      if (matchSnap.exists()) {
-        const data = matchSnap.data();
-        const joinedCount = data.joined?.length || 0;
-        const total = data.totalSlots || 48;
-        slotText = `${joinedCount}/${total}`;
-      }
-
-      const card = document.createElement("div");
-      card.innerHTML = `
-        <div class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
-          <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
-          <div class="p-4 space-y-1">
-            <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
-            <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
-            <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
-            <p><span class="font-bold text-purple-400">Time:</span> ${time}</p>
-            <p><span class="font-bold text-purple-400">Slot:</span> <span id="slot-${id}">${slotText}</span></p>
-            <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
-            <button class="mt-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 rounded-full font-semibold w-full" onclick="joinMatch('${id}')">Join</button>
-          </div>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  }
-
-  window.joinMatch = async function (matchId) {
-    if (!currentUser) return alert("Please log in first.");
-
-    const matchRef = doc(db, "matches", matchId);
-    const matchSnap = await getDoc(matchRef);
-    if (matchSnap.exists()) {
-      const data = matchSnap.data();
-      const joined = data.joined || [];
-      const totalSlots = data.totalSlots || 48;
-
-      if (joined.includes(currentUser.uid)) {
-        return alert("You already joined this match.");
-      }
-
-      if (joined.length >= totalSlots) {
-        return alert("No slots available.");
-      }
-
-      await updateDoc(matchRef, {
-        joined: arrayUnion(currentUser.uid)
-      });
-
-      document.getElementById(`slot-${matchId}`).textContent = `${joined.length + 1}/${totalSlots}`;
-      alert("Joined successfully!");
-    }
-  };
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      currentUser = user;
       document.getElementById("sidebarPic").src = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
       document.getElementById("username").textContent = user.displayName || "User";
-
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
         const wallet = userDoc.data().wallet || 0;
         document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
       }
-
-      renderCards();
     } else {
       window.location.href = "index.html";
     }
@@ -170,28 +111,8 @@
   window.toggleSidebar = function () {
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
-    sidebarOpen = !sidebarOpen;
-    if (sidebarOpen) {
-      sidebar.classList.remove("sidebar-hidden");
-      overlay.classList.remove("hidden");
-      history.pushState({ sidebar: true }, "");
-    } else {
-      sidebar.classList.add("sidebar-hidden");
-      overlay.classList.add("hidden");
-      if (history.state && history.state.sidebar) {
-        history.back();
-      }
-    }
-  };
-
-  window.onpopstate = function () {
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
-    if (sidebarOpen) {
-      sidebar.classList.add("sidebar-hidden");
-      overlay.classList.add("hidden");
-      sidebarOpen = false;
-    }
+    sidebar.classList.toggle("sidebar-hidden");
+    overlay.classList.toggle("hidden");
   };
 
   window.logout = function () {
