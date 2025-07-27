@@ -60,30 +60,64 @@
   </header>
 
   <!-- Main Content -->
-  <main class="p-4 pt-8">
+  <main class="p-4 pt-8 space-y-8">
     <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
-    <div class="grid grid-cols-1 gap-6">
 
-      <!-- Only One Card Left -->
-      <button onclick="confirmJoin()" class="block w-full bg-gray-800 rounded-xl overflow-hidden shadow-lg text-left text-sm hover:scale-[1.01] transition-transform">
-        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
-        <div class="p-4 space-y-1">
-          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
-          <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
-          <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
-          <p><span class="font-bold text-purple-400">Time:</span> 5:00 PM</p>
-          <p><span class="font-bold text-purple-400">Slot:</span> 1/12</p>
-          <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
-        </div>
-      </button>
+    <!-- Battle Info Card (Non-Clickable) -->
+    <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-left text-sm">
+      <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
+      <div class="p-4 space-y-1">
+        <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
+        <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
+        <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
+        <p><span class="font-bold text-purple-400">Time:</span> 5:00 PM</p>
+        <p><span class="font-bold text-purple-400">Slot:</span> 1/12</p>
+        <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
+      </div>
     </div>
+
+    <!-- Rules Section -->
+    <section class="bg-gray-900 p-4 rounded-lg shadow border border-purple-700">
+      <h3 class="text-lg font-bold text-purple-400 mb-2">⚠️ Rules</h3>
+      <ul class="list-disc ml-5 space-y-1 text-sm text-purple-200">
+        <li>No hacking or cheating allowed.</li>
+        <li>Strictly solo mode only.</li>
+        <li>Entry fee: ₹10 will be deducted from your wallet.</li>
+        <li>Disrespect or abuse will lead to disqualification.</li>
+        <li>Use only one device to play the match.</li>
+      </ul>
+    </section>
+
+    <!-- Join Form -->
+    <form id="joinForm" class="space-y-4 bg-gray-900 p-4 rounded-lg shadow border border-purple-700">
+      <h3 class="text-lg font-bold text-purple-400">🎮 Join Match</h3>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Player Name</label>
+        <input type="text" id="playerName" required class="w-full bg-gray-800 text-white p-2 rounded border border-gray-600 focus:outline-none focus:border-purple-500" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Free Fire UID</label>
+        <input type="text" id="ffuid" required class="w-full bg-gray-800 text-white p-2 rounded border border-gray-600 focus:outline-none focus:border-purple-500" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Phone Number</label>
+        <input type="tel" id="phone" required class="w-full bg-gray-800 text-white p-2 rounded border border-gray-600 focus:outline-none focus:border-purple-500" />
+      </div>
+
+      <button type="submit" class="w-full bg-purple-700 hover:bg-purple-800 text-white py-2 rounded font-bold transition-colors">
+        Join Now
+      </button>
+    </form>
   </main>
 
-  <!-- Firebase + Sidebar Logic -->
+  <!-- Firebase + Sidebar + Join Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -98,7 +132,6 @@
     const auth = getAuth();
     const db = getFirestore();
     let currentUser = null;
-    let sidebarOpen = false;
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -120,28 +153,8 @@
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("overlay");
 
-      sidebarOpen = !sidebarOpen;
-      if (sidebarOpen) {
-        sidebar.classList.remove("sidebar-hidden");
-        overlay.classList.remove("hidden");
-        history.pushState({ sidebar: true }, "");
-      } else {
-        sidebar.classList.add("sidebar-hidden");
-        overlay.classList.add("hidden");
-        if (history.state && history.state.sidebar) {
-          history.back();
-        }
-      }
-    };
-
-    window.onpopstate = function () {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      if (sidebarOpen) {
-        sidebar.classList.add("sidebar-hidden");
-        overlay.classList.add("hidden");
-        sidebarOpen = false;
-      }
+      sidebar.classList.toggle("sidebar-hidden");
+      overlay.classList.toggle("hidden");
     };
 
     window.logout = function () {
@@ -150,18 +163,42 @@
       });
     };
 
-    window.confirmJoin = function () {
-      const confirmed = confirm(
-        `⚠️ Rules Before Joining:\n\n` +
-        `1. No hacking or cheating allowed.\n` +
-        `2. Strictly solo mode only.\n` +
-        `3. Entry fee: ₹10 will be deducted.\n\n` +
-        `Do you agree to continue?`
-      );
-      if (confirmed) {
-        window.location.href = "join.html";
+    // Join Form Handler
+    document.getElementById("joinForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("playerName").value.trim();
+      const uid = document.getElementById("ffuid").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+
+      if (!name || !uid || !phone) {
+        alert("Please fill in all details.");
+        return;
       }
-    };
+
+      const userRef = doc(db, "users", currentUser.uid);
+      const userDoc = await getDoc(userRef);
+      const wallet = userDoc.data().wallet || 0;
+
+      if (wallet < 10) {
+        alert("Insufficient wallet balance. Minimum ₹10 required.");
+        return;
+      }
+
+      // Deduct ₹10 and store participation
+      await updateDoc(userRef, {
+        wallet: wallet - 10,
+        matches: arrayUnion({
+          match: "Solo Classic 5:00PM",
+          name,
+          uid,
+          phone,
+          joinedAt: new Date()
+        })
+      });
+
+      alert("✅ You have successfully joined the match!");
+      window.location.reload();
+    });
   </script>
 </body>
 </html>
