@@ -10,25 +10,29 @@
       rel="stylesheet"
     />
     <style>
+      /* Basic Poppins font application */
       body {
         font-family: 'Poppins', sans-serif;
       }
+      /* Sidebar transition for smooth slide-in/out */
       .sidebar {
         transition: transform 0.3s ease;
       }
       .sidebar-hidden {
         transform: translateX(-100%);
       }
+      /* Overlay for dimming background when sidebar is open */
       .overlay {
         background-color: rgba(0, 0, 0, 0.5);
       }
-      /* Custom scrollbar for main content to avoid scrollbar over header/footer */
+      /* Ensure main content scrolls properly without header/footer interference */
       main {
-        overflow-y: auto; /* Enable vertical scrolling for main content */
+        overflow-y: auto; /* Enable vertical scrolling */
         -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-        max-height: calc(100vh - 8rem); /* Adjust based on header/footer height if they become fixed */
+        /* max-height: calc(100vh - (height of header + height of potential footer));
+           Adjust this if your header/footer are fixed and have specific heights */
       }
-      /* Optional: Hide scrollbar but keep functionality */
+      /* Optional: Hide scrollbar for a cleaner look */
       main::-webkit-scrollbar {
         display: none;
       }
@@ -54,6 +58,7 @@
           id="sidebarPic"
           src="https://i.postimg.cc/DZfGbnrg/user.png"
           class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400"
+          alt="User Profile"
         />
         <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">
           User
@@ -117,6 +122,7 @@
     </main>
 
     <script type="module">
+      // Import necessary Firebase modules
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
       import {
         getAuth,
@@ -135,6 +141,7 @@
         increment,
       } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+      // Your Firebase configuration (REPLACE WITH YOUR ACTUAL CONFIG IF DIFFERENT)
       const firebaseConfig = {
         apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
         authDomain: "thplay-b3c68.firebaseapp.com",
@@ -144,76 +151,90 @@
         appId: "1:243301774162:web:be1d08fd88dd3edb90008b",
       };
 
+      // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const auth = getAuth();
-      const db = getFirestore();
-      let currentUser = null;
-      let sidebarOpen = false;
+      const db = getFirestore(); // Get Firestore instance
 
-      // --- Sidebar and Auth Logic ---
+      let currentUser = null; // To store the currently logged-in user
+      let sidebarOpen = false; // State for sidebar visibility
+
+      // --- Sidebar and Authentication Logic ---
+
+      // Listens for authentication state changes (login/logout)
       onAuthStateChanged(auth, async (user) => {
         if (user) {
+          // User is signed in
           currentUser = user;
+          // Update sidebar with user's photo and display name
           document.getElementById("sidebarPic").src =
-            user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
+            user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png"; // Fallback image
           document.getElementById("username").textContent =
-            user.displayName || "User";
+            user.displayName || "User"; // Fallback name
 
+          // Fetch and display user's wallet balance from Firestore
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (userDoc.exists()) {
             const wallet = userDoc.data().wallet || 0;
             document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
           }
-          // Load battles once user is authenticated
+          // Once authenticated, load the battle cards
           loadBattles();
         } else {
+          // User is signed out, redirect to login page
           window.location.href = "index.html";
         }
       });
 
+      // Toggles the sidebar visibility
       window.toggleSidebar = function () {
         const sidebar = document.getElementById("sidebar");
         const overlay = document.getElementById("overlay");
 
-        sidebarOpen = !sidebarOpen;
+        sidebarOpen = !sidebarOpen; // Toggle sidebar state
         if (sidebarOpen) {
-          sidebar.classList.remove("sidebar-hidden");
-          overlay.classList.remove("hidden");
-          history.pushState({ sidebar: true }, "");
+          sidebar.classList.remove("sidebar-hidden"); // Show sidebar
+          overlay.classList.remove("hidden"); // Show overlay
+          history.pushState({ sidebar: true }, ""); // Add history state for back button
         } else {
-          sidebar.classList.add("sidebar-hidden");
-          overlay.classList.add("hidden");
+          sidebar.classList.add("sidebar-hidden"); // Hide sidebar
+          overlay.classList.add("hidden"); // Hide overlay
+          // If the history state was set by sidebar, go back
           if (history.state && history.state.sidebar) {
             history.back();
           }
         }
       };
 
+      // Handles browser's back button for sidebar (if sidebar was opened via pushState)
       window.onpopstate = function () {
         const sidebar = document.getElementById("sidebar");
         const overlay = document.getElementById("overlay");
         if (sidebarOpen) {
+          // If sidebar was open, hide it when back button is pressed
           sidebar.classList.add("sidebar-hidden");
           overlay.classList.add("hidden");
           sidebarOpen = false;
         }
       };
 
+      // Logs out the user from Firebase
       window.logout = function () {
         signOut(auth).then(() => {
-          window.location.href = "index.html";
+          window.location.href = "index.html"; // Redirect to login page
         });
       };
 
-      // --- Battle Loading and Slot Logic ---
+      // --- Battle Loading and Slot Management Logic ---
 
       const battleCardsContainer = document.getElementById("battleCardsContainer");
 
-      // Function to dynamically create a battle card HTML
+      // Function to dynamically create HTML for a single battle card
       function createBattleCard(battle) {
+        // Construct the HTML string for the battle card
         const cardHtml = `
           <a href="${battle.link}" data-battle-id="${battle.id}" class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
-            <img src="${battle.imageUrl}" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
+            <img src="${battle.imageUrl}" alt="Battle Thumbnail" class="w-full aspect-video object-cover bg-black" />
             <div class="p-4 space-y-1">
               <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹${battle.entryFees}</p>
               <p><span class="font-bold text-purple-400">Prize:</span> ₹${battle.prize}</p>
@@ -221,16 +242,24 @@
               <p><span class="font-bold text-purple-400">Time:</span> ${battle.time}</p>
               <p><span class="font-bold text-purple-400" id="slots-${battle.id}">Slot:</span> ${battle.slotsAvailable}/${battle.initialSlots}</p>
               <p><span class="font-bold text-purple-400">Map:</span> ${battle.map}</p>
-              ${battle.slotsAvailable > 0 ? `<button class="join-button mt-2 w-full bg-green-600 hover:bg-green-700 px-4 py-2 rounded-full font-semibold" data-battle-id="${battle.id}">Join Battle</button>` : `<button class="mt-2 w-full bg-red-600 px-4 py-2 rounded-full font-semibold cursor-not-allowed" disabled>Slots Full</button>`}
+              ${
+                battle.slotsAvailable > 0
+                  ? `<button class="join-button mt-2 w-full bg-green-600 hover:bg-green-700 px-4 py-2 rounded-full font-semibold" data-battle-id="${battle.id}">Join Battle</button>`
+                  : `<button class="mt-2 w-full bg-red-600 px-4 py-2 rounded-full font-semibold cursor-not-allowed" disabled>Slots Full</button>`
+              }
             </div>
           </a>
         `;
+        // Create a temporary div to parse the HTML string into a DOM element
         const div = document.createElement('div');
         div.innerHTML = cardHtml.trim();
-        return div.firstChild;
+        return div.firstChild; // Return the actual card element
       }
 
-      // Function to handle joining a battle (placeholder for payment logic)
+      // Function to handle joining a battle
+      // This function includes basic wallet deduction and slot decrement.
+      // NOTE: For a real application, the payment and slot deduction should involve server-side logic
+      // to prevent client-side manipulation and ensure security.
       window.joinBattle = async function (battleId) {
         if (!currentUser) {
           alert("You must be logged in to join a battle.");
@@ -243,15 +272,14 @@
         if (battleDoc.exists()) {
           const battleData = battleDoc.data();
           if (battleData.slotsAvailable > 0) {
-            // Simulate payment success (replace with actual payment gateway integration)
             const userWalletRef = doc(db, "users", currentUser.uid);
             const userDoc = await getDoc(userWalletRef);
             const userWallet = userDoc.data().wallet || 0;
 
             if (userWallet >= battleData.entryFees) {
               try {
-                // Deduct from user wallet and decrement battle slots in a transaction
-                // For simplicity, we are doing it directly here. For production, consider Firestore transactions.
+                // Deduct from user wallet and decrement battle slots
+                // Using increment() ensures atomic updates in Firestore
                 await updateDoc(userWalletRef, {
                   wallet: increment(-battleData.entryFees)
                 });
@@ -260,15 +288,15 @@
                 });
 
                 alert(`Successfully joined ${battleId}! Your wallet has been debited ₹${battleData.entryFees}.`);
-                // Optionally redirect or update UI further
-                // window.location.href = `soloclassic.html?battleId=${battleId}`; // Example
+                // You might want to redirect the user or show a success message here
+                // Example: window.location.href = `soloclassic.html?battleId=${battleId}`;
               } catch (error) {
                 console.error("Error joining battle or updating wallet: ", error);
                 alert("Failed to join battle. Please try again.");
               }
             } else {
               alert(`Insufficient balance. You need ₹${battleData.entryFees} to join this battle.`);
-              window.location.href = "wallet.html"; // Redirect to wallet to add money
+              window.location.href = "wallet.html"; // Redirect user to add money
             }
           } else {
             alert("Sorry, this battle is full.");
@@ -279,50 +307,57 @@
         }
       };
 
-      // Function to load battles from Firestore
+      // Function to fetch and display battles from Firestore in real-time
       function loadBattles() {
-        const q = query(collection(db, "battles"), orderBy("time", "asc")); // Order by time or any other relevant field
+        // Create a query to get documents from the 'battles' collection, ordered by time
+        const q = query(collection(db, "battles"), orderBy("time", "asc"));
 
-        // Real-time listener for battle updates
+        // Set up a real-time listener (onSnapshot)
+        // This function executes initially and whenever data in the 'battles' collection changes
         onSnapshot(q, (snapshot) => {
-          battleCardsContainer.innerHTML = ''; // Clear existing cards
+          battleCardsContainer.innerHTML = ''; // Clear all existing cards to re-render
           const loadingMessage = document.getElementById("loadingMessage");
-          if (loadingMessage) loadingMessage.remove(); // Remove loading message once data starts coming
+          if (loadingMessage) loadingMessage.remove(); // Remove loading message once data arrives
 
           if (snapshot.empty) {
+            // If no battles are found, display a message
             battleCardsContainer.innerHTML = '<p class="text-center text-gray-500">No battles available at the moment.</p>';
             return;
           }
 
+          // Iterate over each battle document
           snapshot.forEach((doc) => {
             const battleData = doc.data();
-            const battleId = doc.id; // Get the document ID as battleId
+            const battleId = doc.id; // Get the document ID, which will serve as the battle's unique ID
 
+            // Construct a battle object with an ID and a link, adding fallback for imageUrl
             const battle = {
               id: battleId,
-              link: `soloclassic.html?battleId=${battleId}`, // Example: pass battleId to the next page
-              ...battleData,
-              imageUrl: battleData.imageUrl || "https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" // Fallback image
+              link: `soloclassic.html?battleId=${battleId}`, // Example: Link to a generic battle page with battle ID
+              ...battleData, // Spread all other data from Firestore
+              imageUrl: battleData.imageUrl || "https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" // Fallback image if not in Firestore
             };
+            // Append the created battle card to the container
             battleCardsContainer.appendChild(createBattleCard(battle));
           });
 
-          // Attach event listeners to join buttons after cards are rendered
+          // Attach click event listeners to all "Join Battle" buttons after they are rendered
           document.querySelectorAll('.join-button').forEach(button => {
             button.onclick = (event) => {
-              event.preventDefault(); // Prevent default link behavior
-              const battleId = event.target.dataset.battleId;
-              joinBattle(battleId);
+              event.preventDefault(); // Prevent default anchor tag behavior if button is inside <a>
+              const battleId = event.target.dataset.battleId; // Get the battle ID from data attribute
+              joinBattle(battleId); // Call the joinBattle function
             };
           });
         }, (error) => {
+          // Handle errors during data fetching
           console.error("Error fetching battles: ", error);
           battleCardsContainer.innerHTML = '<p class="text-center text-red-500">Error loading battles. Please try again later.</p>';
         });
       }
 
-      // Initial load of battles when the page is accessed (after user authentication check)
-      // This is now called inside onAuthStateChanged to ensure user is logged in first.
+      // The loadBattles() function is now called inside onAuthStateChanged,
+      // ensuring that battles are loaded only after the user's authentication status is confirmed.
     </script>
   </body>
 </html>
