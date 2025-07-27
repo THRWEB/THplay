@@ -1,4 +1,4 @@
-<!-- Save as classic.html or index.html or your main page -->
+<!-- Save as classic.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,8 +52,6 @@
         </button>
       </div>
       <h1 class="text-xl font-bold text-purple-400 mx-auto">THplay</h1>
-
-      <!-- Clickable Wallet -->
       <a href="wallet.html" id="walletDisplay"
          class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-purple-800 transition-colors">
         Wallet: ₹0
@@ -65,9 +63,9 @@
   <main class="p-4 pt-8">
     <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
     <div class="grid grid-cols-1 gap-6">
-      <!-- Battle Cards -->
-      <!-- Card 1 -->
-      <a href="soloclassic.html" class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
+
+      <!-- Only One Card Left -->
+      <button onclick="confirmJoin()" class="block w-full bg-gray-800 rounded-xl overflow-hidden shadow-lg text-left text-sm hover:scale-[1.01] transition-transform">
         <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
         <div class="p-4 space-y-1">
           <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
@@ -77,33 +75,7 @@
           <p><span class="font-bold text-purple-400">Slot:</span> 1/12</p>
           <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
         </div>
-      </a>
-
-      <!-- Card 2 -->
-      <a href="soloclassic.html" class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
-        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
-        <div class="p-4 space-y-1">
-          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
-          <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
-          <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
-          <p><span class="font-bold text-purple-400">Time:</span> 6:00 PM</p>
-          <p><span class="font-bold text-purple-400">Slot:</span> 2/12</p>
-          <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
-        </div>
-      </a>
-
-      <!-- Card 3 -->
-      <a href="soloclassic.html" class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform">
-        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
-        <div class="p-4 space-y-1">
-          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
-          <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
-          <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
-          <p><span class="font-bold text-purple-400">Time:</span> 7:00 PM</p>
-          <p><span class="font-bold text-purple-400">Slot:</span> 3/12</p>
-          <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
-        </div>
-      </a>
+      </button>
     </div>
   </main>
 
@@ -176,6 +148,19 @@
       signOut(auth).then(() => {
         window.location.href = "index.html";
       });
+    };
+
+    window.confirmJoin = function () {
+      const confirmed = confirm(
+        `⚠️ Rules Before Joining:\n\n` +
+        `1. No hacking or cheating allowed.\n` +
+        `2. Strictly solo mode only.\n` +
+        `3. Entry fee: ₹10 will be deducted.\n\n` +
+        `Do you agree to continue?`
+      );
+      if (confirmed) {
+        window.location.href = "join.html";
+      }
     };
   </script>
 </body>
