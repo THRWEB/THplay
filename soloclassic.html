@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -12,7 +13,13 @@
     .overlay { background-color: rgba(0, 0, 0, 0.5); }
   </style>
 </head>
-<body class="bg-gray-950 text-white"><!-- Sidebar Overlay --><div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div><!-- Sidebar --><aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50">
+<body class="bg-gray-950 text-white">
+
+<!-- Sidebar Overlay -->
+<div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50">
   <div class="p-6">
     <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
     <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
@@ -21,7 +28,10 @@
       <a href="https://t.me/T7fiit4" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">Support</a>
     </div>
   </div>
-</aside><!-- Header --><header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
+</aside>
+
+<!-- Header -->
+<header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
   <div class="max-w-7xl mx-auto flex items-center justify-between relative">
     <div class="absolute left-0 flex items-center space-x-2">
       <button onclick="toggleSidebar()" class="text-white focus:outline-none z-50 relative">
@@ -32,51 +42,56 @@
         </svg>
       </button>
     </div>
-    <h1 class="text-xl font-bold text-purple-400 mx-auto">THplay</h1><!-- Clickable Wallet -->
-<a href="wallet.html" id="walletDisplay"
-   class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-purple-800 transition-colors">
-  Wallet: ₹0
-</a>
-
+    <h1 class="text-xl font-bold text-purple-400 mx-auto">THplay</h1>
+    <a href="wallet.html" id="walletDisplay"
+       class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-purple-800 transition-colors">
+      Wallet: ₹0
+    </a>
   </div>
-</header><!-- Main Content --><main class="p-4 pt-8">
+</header>
+
+<!-- Main Content -->
+<main class="p-4 pt-8">
   <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
   <div class="grid grid-cols-1 gap-6">
-    <div class="space-y-4"><!-- Card 1: Active -->
-  <div class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform cursor-pointer" onclick="window.location.href='soloclassic01.html'">
-    <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
-    <div class="p-4 space-y-1">
-      <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹5</p>
-      <p><span class="font-bold text-purple-400">Prize:</span> ₹4 per kill</p>
-      <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
-      <p><span class="font-bold text-purple-400">Time:</span> 5:00 PM</p>
-      <p><span class="font-bold text-purple-400">Slot:</span> 0/48</p>
-      <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
+    <div class="space-y-4">
+
+      <!-- Card 1: Active -->
+      <div class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform cursor-pointer" onclick="window.location.href='soloclassic01.html'">
+        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
+        <div class="p-4 space-y-1">
+          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹<span id="entryFee">--</span></p>
+          <p><span class="font-bold text-purple-400">Prize:</span> ₹<span id="prizePerKill">--</span> per kill</p>
+          <p><span class="font-bold text-purple-400">Date:</span> <span id="matchDate">--</span></p>
+          <p><span class="font-bold text-purple-400">Time:</span> <span id="matchTime">--</span></p>
+          <p><span class="font-bold text-purple-400">Slot:</span> <span id="slotCount">--</span></p>
+          <p><span class="font-bold text-purple-400">Map:</span> <span id="matchMap">--</span></p>
+        </div>
+      </div>
+
+      <!-- Card 2 & 3: Coming Soon -->
+      <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm opacity-60 cursor-not-allowed">
+        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
+        <div class="p-4 space-y-1">
+          <p class="text-purple-400 font-bold">Coming Soon</p>
+          <p>Entry Fees: ₹5 | Prize: ₹4/kill | Slot: 0/48</p>
+        </div>
+      </div>
+
+      <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm opacity-60 cursor-not-allowed">
+        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
+        <div class="p-4 space-y-1">
+          <p class="text-purple-400 font-bold">Coming Soon</p>
+          <p>Entry Fees: ₹5 | Prize: ₹4/kill | Slot: 0/48</p>
+        </div>
+      </div>
+
     </div>
   </div>
+</main>
 
-  <!-- Card 2: Coming Soon -->
-  <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm opacity-60 cursor-not-allowed">
-    <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
-    <div class="p-4 space-y-1">
-      <p class="text-purple-400 font-bold">Coming Soon</p>
-      <p>Entry Fees: ₹5 | Prize: ₹4/kill | Slot: 0/48</p>
-    </div>
-  </div>
-
-  <!-- Card 3: Coming Soon -->
-  <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm opacity-60 cursor-not-allowed">
-    <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
-    <div class="p-4 space-y-1">
-      <p class="text-purple-400 font-bold">Coming Soon</p>
-      <p>Entry Fees: ₹5 | Prize: ₹4/kill | Slot: 0/48</p>
-    </div>
-  </div>
-
-</div>
-
-  </div>
-</main><!-- Firebase + Auth --><script type="module">
+<!-- Firebase + Auth -->
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
   import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
@@ -98,11 +113,25 @@
     if (user) {
       document.getElementById("sidebarPic").src = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
       document.getElementById("username").textContent = user.displayName || "User";
+
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
         const wallet = userDoc.data().wallet || 0;
         document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
       }
+
+      // ✅ Fetch match data from Firestore
+      const matchDoc = await getDoc(doc(db, "matches", "match1"));
+      if (matchDoc.exists()) {
+        const data = matchDoc.data();
+        document.getElementById("entryFee").textContent = data.entryfees || "--";
+        document.getElementById("prizePerKill").textContent = data.prizeperkill || "--";
+        document.getElementById("matchDate").textContent = data.date || "--";
+        document.getElementById("matchTime").textContent = data.time || "--";
+        document.getElementById("matchMap").textContent = data.map || "--";
+        document.getElementById("slotCount").textContent = `${data.slot || 0}/${data.maxslots || 48}`;
+      }
+
     } else {
       window.location.href = "index.html";
     }
@@ -120,5 +149,6 @@
       window.location.href = "index.html";
     });
   };
-</script></body>
+</script>
+</body>
 </html>
