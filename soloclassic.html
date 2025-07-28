@@ -71,9 +71,9 @@
         window.location.href = "wallet.html";
       };
 
-      // Fetch all matches from "solocs"
+      // Fetch all matches from "matches" collection
       const container = document.getElementById("matchesContainer");
-      const snapshot = await getDocs(collection(db, "solocs"));
+      const snapshot = await getDocs(collection(db, "matches"));
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         const id = docSnap.id;
@@ -86,7 +86,7 @@
           matchtime: data.matchtime || "--",
           map: data.map || "--",
           slot: `${data.slot || 0}/48`,
-          image: "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png"
+          image: "https://i.postimg.cc/Gtc1nVjV/file-00000000ad90622f81015bdfb65ca95f.png"
         };
 
         const card = document.createElement("div");
