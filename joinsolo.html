@@ -5,17 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Join Solo Match - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-[#111] text-white font-sans">
 
   <!-- Header -->
-  <div class="flex justify-between items-center px-4 py-2 bg-gray-900">
-    <div class="flex items-center cursor-pointer" onclick="window.location.href='main.html'">
+  <div class="relative bg-gray-900 py-3 flex items-center justify-center">
+    <div class="absolute left-4 cursor-pointer" onclick="window.location.href='main.html'">
       <i data-lucide="home" class="text-white w-6 h-6"></i>
     </div>
-    <div id="walletDisplay" class="text-yellow-400 font-bold text-sm sm:text-base">Wallet: ₹0</div>
+    <h1 class="text-xl md:text-2xl font-bold text-purple-400">THplay</h1>
+    <div id="walletDisplay" class="absolute right-4 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer">
+      Wallet: ₹0
+    </div>
   </div>
 
   <!-- Selected Match Card Display -->
@@ -81,7 +83,6 @@
           document.getElementById("matchCard").innerHTML = "<p class='text-center text-red-500'>No match selected!</p>";
         }
 
-        // Join button logic
         document.getElementById("joinBtn").addEventListener("click", () => {
           const name = document.getElementById("inGameName").value.trim();
           if (name === "") {
@@ -89,7 +90,7 @@
             return;
           }
           alert(`Joining match as "${name}"...`);
-          // TODO: Implement match joining logic here
+          // TODO: Add match join logic here
         });
 
       } else {
@@ -97,7 +98,6 @@
       }
     });
 
-    // Load Lucide icons
     lucide.createIcons();
   </script>
 </body>
