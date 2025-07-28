@@ -10,11 +10,14 @@
 
   <!-- TOP NAVBAR -->
   <div class="flex justify-between items-center px-4 py-3 bg-gray-900 shadow">
-    <a href="main.html" class="text-yellow-400 text-2xl font-bold">THplay</a>
-    <div class="flex items-center space-x-4">
-      <div id="walletDisplay" class="text-yellow-400 font-bold">Wallet: ₹0</div>
-      <img id="sidebarPic" src="" alt="Profile" class="w-10 h-10 rounded-full" />
-    </div>
+    <!-- Left: Home -->
+    <a href="main.html" class="text-yellow-400 text-xl font-bold">🏠</a>
+
+    <!-- Center: THplay -->
+    <div class="text-yellow-400 text-2xl font-bold">THplay</div>
+
+    <!-- Right: Wallet -->
+    <div id="walletDisplay" class="text-yellow-400 font-bold">Wallet: ₹0</div>
   </div>
 
   <!-- Match Cards Grid -->
@@ -72,8 +75,6 @@
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        document.getElementById("sidebarPic").src = user.photoURL || "";
-
         // Show wallet balance
         const userRef = doc(db, "users", user.uid);
         onSnapshot(userRef, (docSnap) => {
