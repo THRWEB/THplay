@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Classic Solo - THplay</title>
+  <title>Clash Squad Solo - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body { font-family: 'Poppins', sans-serif; }
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
   </style>
 </head>
 <body class="bg-[#111] text-white font-sans">
@@ -24,16 +26,16 @@
     </div>
   </div>
 
-  <!-- Match Cards -->
+  <!-- Content Grid -->
   <div class="pt-20 grid grid-cols-1 gap-4 p-4" id="matchesContainer">
-    <!-- Match card will be inserted here -->
+    <!-- Match cards will be inserted here dynamically -->
   </div>
 
-  <!-- Firebase & Logic -->
+  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, getDocs, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -56,10 +58,11 @@
         return;
       }
 
+      // Wallet fetch
       const userRef = doc(db, "users", user.uid);
-      onSnapshot(userRef, (snap) => {
-        if (snap.exists()) {
-          const wallet = snap.data().wallet || 0;
+      onSnapshot(userRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const wallet = docSnap.data().wallet || 0;
           document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
         }
       });
@@ -68,38 +71,29 @@
         window.location.href = "wallet.html";
       };
 
+      // Fetch all matches from "matches" collection
       const container = document.getElementById("matchesContainer");
-      const docRef = doc(db, "matches", "match1");
-
-      onSnapshot(docRef, (docSnap) => {
-        if (!docSnap.exists()) return;
-
+      const snapshot = await getDocs(collection(db, "matches"));
+      snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         const id = docSnap.id;
-        const slotCount = data.slot || 0;
+
+        const slotValue = data.slot || 0;
 
         matchDataMap[id] = {
           matchId: id,
-          title: "Clash Squad Solo",
+          title: data.title || "Clash Squad Solo",
           entryFee: data.entryfees || 0,
           prize: data.prize || 0,
           matchtime: data.matchtime || "--",
           map: data.map || "--",
-          slot: slotCount,  // as number, not "x/48"
-          image: "https://i.postimg.cc/Gtc1nVjV/file-00000000ad90622f81015bdfb65ca95f.png"
+          slot: slotValue,
+          image: "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png"
         };
 
-        let card = document.getElementById(`match-${id}`);
-        const slotFull = slotCount >= 48;
-
-        if (!card) {
-          card = document.createElement("div");
-          card.className = "bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition relative";
-          card.id = `match-${id}`;
-          card.onclick = () => selectMatch(id);
-          container.appendChild(card);
-        }
-
+        const card = document.createElement("div");
+        card.className = "bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700";
+        card.onclick = () => selectMatch(id);
         card.innerHTML = `
           <img src="${matchDataMap[id].image}" class="w-full rounded mb-2">
           <h2 class="text-xl font-bold">${matchDataMap[id].title}</h2>
@@ -107,30 +101,18 @@
           <p>Prize: ₹${matchDataMap[id].prize}</p>
           <p>Time: ${matchDataMap[id].matchtime}</p>
           <p>Map: ${matchDataMap[id].map}</p>
-          <p id="slot-${id}">Slots: ${slotCount}/48</p>
+          <p>Slots: ${slotValue}/48</p>
         `;
-
-        if (slotFull) {
-          card.classList.add("opacity-50", "cursor-not-allowed");
-          card.onclick = null;
-        } else {
-          card.classList.remove("opacity-50", "cursor-not-allowed");
-          card.onclick = () => selectMatch(id);
-        }
+        container.appendChild(card);
       });
     });
 
+    // Match select function
     window.selectMatch = function (matchId) {
-      const data = matchDataMap[matchId];
-      if (!data) return;
-
-      if (data.slot >= 48) {
-        alert("This match is full.");
-        return;
+      if (matchDataMap[matchId]) {
+        localStorage.setItem("selectedMatch", JSON.stringify(matchDataMap[matchId]));
+        window.location.href = "joinsolo.html";
       }
-
-      localStorage.setItem("selectedMatch", JSON.stringify(data));
-      window.location.href = "joinsolo.html";
     };
 
     lucide.createIcons();
