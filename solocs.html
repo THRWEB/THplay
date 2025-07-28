@@ -26,24 +26,16 @@
     </div>
   </div>
 
-  <!-- Content Padding -->
-  <div class="pt-20 grid grid-cols-1 gap-4 p-4">
-    <!-- Match Card -->
-    <div class="bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700" onclick="selectMatch()">
-      <img src="https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png" class="w-full rounded mb-2">
-      <h2 class="text-xl font-bold">Solo Classic</h2>
-      <p>Entry Fee: ₹<span id="entryFee">--</span></p>
-      <p>Prize: ₹<span id="prize">--</span></p>
-      <p>Match Time: <span id="matchTime">--</span></p>
-      <p>Slots: <span id="slotCount">--</span></p>
-    </div>
+  <!-- Content Grid -->
+  <div class="pt-20 grid grid-cols-1 gap-4 p-4" id="matchesContainer">
+    <!-- Match cards will be inserted here dynamically -->
   </div>
 
   <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, getDocs, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -58,50 +50,62 @@
     const auth = getAuth();
     const db = getFirestore();
 
-    const matchData = {};
+    const matchDataMap = {};
 
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // Show wallet
-        const userRef = doc(db, "users", user.uid);
-        onSnapshot(userRef, (docSnap) => {
-          if (docSnap.exists()) {
-            const wallet = docSnap.data().wallet || 0;
-            document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
-          }
-        });
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
 
-        document.getElementById("walletDisplay").onclick = () => {
-          window.location.href = "wallet.html";
+      // Wallet fetch
+      const userRef = doc(db, "users", user.uid);
+      onSnapshot(userRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const wallet = docSnap.data().wallet || 0;
+          document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+        }
+      });
+
+      document.getElementById("walletDisplay").onclick = () => {
+        window.location.href = "wallet.html";
+      };
+
+      // Fetch all matches from "solocs"
+      const container = document.getElementById("matchesContainer");
+      const snapshot = await getDocs(collection(db, "solocs"));
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const id = docSnap.id;
+
+        matchDataMap[id] = {
+          matchId: id,
+          entryFee: data.entryfees || 0,
+          prize: data.prize || 0,
+          matchtime: data.matchtime || "--",
+          slot: `${data.slot || 0}/48`,
+          image: "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png"
         };
 
-        // Load match data from solocs/match01
-        const matchDoc = await getDoc(doc(db, "solocs", "match01"));
-        if (matchDoc.exists()) {
-          const data = matchDoc.data();
-          document.getElementById("entryFee").textContent = data.entryfees || 0;
-          document.getElementById("prize").textContent = data.prize || 0;
-          document.getElementById("matchTime").textContent = data.matchtime || "--";
-          document.getElementById("slotCount").textContent = `${data.slot || 0}/48`;
-
-          matchData["selected"] = {
-            matchId: "match01",
-            entryFee: data.entryfees || 0,
-            prize: data.prize || 0,
-            matchtime: data.matchtime || "--",
-            slot: `${data.slot || 0}/48`,
-            image: "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png"
-          };
-        }
-      } else {
-        window.location.href = "index.html";
-      }
+        const card = document.createElement("div");
+        card.className = "bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700";
+        card.onclick = () => selectMatch(id);
+        card.innerHTML = `
+          <img src="${matchDataMap[id].image}" class="w-full rounded mb-2">
+          <h2 class="text-xl font-bold">Solo Classic</h2>
+          <p>Entry Fee: ₹${matchDataMap[id].entryFee}</p>
+          <p>Prize: ₹${matchDataMap[id].prize}</p>
+          <p>Match Time: ${matchDataMap[id].matchtime}</p>
+          <p>Slots: ${matchDataMap[id].slot}</p>
+        `;
+        container.appendChild(card);
+      });
     });
 
-    // Select match and go to join page
-    window.selectMatch = function () {
-      if (matchData["selected"]) {
-        localStorage.setItem("selectedMatch", JSON.stringify(matchData["selected"]));
+    // Match select function
+    window.selectMatch = function (matchId) {
+      if (matchDataMap[matchId]) {
+        localStorage.setItem("selectedMatch", JSON.stringify(matchDataMap[matchId]));
         window.location.href = "joinsolo.html";
       }
     };
