@@ -14,132 +14,155 @@
   </style>
 </head>
 <body class="bg-gray-950 text-white">
+  <!-- Sidebar Overlay -->
+  <div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div>
 
-<!-- Sidebar Overlay -->
-<div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div>
-
-<!-- Sidebar -->
-<aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50">
-  <div class="p-6">
-    <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
-    <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
-    <div class="mt-10 flex flex-col space-y-3">
-      <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">Logout</button>
-      <a href="https://t.me/T7fiit4" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">Support</a>
-    </div>
-  </div>
-</aside>
-
-<!-- Header -->
-<header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
-  <div class="max-w-7xl mx-auto flex items-center justify-between relative">
-    <div class="absolute left-0 flex items-center space-x-2">
-      <button onclick="toggleSidebar()" class="text-white focus:outline-none z-50 relative">
-        <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" stroke-width="2"
-             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
-    </div>
-    <h1 class="text-xl font-bold text-purple-400 mx-auto">THplay</h1>
-    <a href="wallet.html" id="walletDisplay"
-       class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-purple-800 transition-colors">
-      Wallet: ₹0
-    </a>
-  </div>
-</header>
-
-<!-- Main Content -->
-<main class="p-4 pt-8">
-  <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
-  <div class="grid grid-cols-1 gap-6">
-    <div class="space-y-4" id="matchCardsContainer">
-      <!-- Match cards will be injected here by JS -->
-    </div>
-  </div>
-</main>
-
-<!-- Firebase + Auth -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
-    authDomain: "thplay-b3c68.firebaseapp.com",
-    projectId: "thplay-b3c68",
-    storageBucket: "thplay-b3c68.appspot.com",
-    messagingSenderId: "243301774162",
-    appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth();
-  const db = getFirestore();
-
-  const matchCardsContainer = document.getElementById("matchCardsContainer");
-
-  const matchIds = ["match1", "match2", "match3"];
-  const matchLinks = ["soloclassic01.html", "soloclassic02.html", "soloclassic03.html"];
-
-  function createMatchCard(data, link) {
-    return `
-      <div class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform cursor-pointer"
-           onclick="window.location.href='${link}'">
-        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
-        <div class="p-4 space-y-1">
-          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹${data.entryfees || "--"}</p>
-          <p><span class="font-bold text-purple-400">Prize:</span> ₹${data.prizeperkill || "--"} per kill</p>
-          <p><span class="font-bold text-purple-400">Date:</span> ${data.date || "--"}</p>
-          <p><span class="font-bold text-purple-400">Time:</span> ${data.time || "--"}</p>
-          <p><span class="font-bold text-purple-400">Slot:</span> ${data.slot || 0}/${data.maxslots || 48}</p>
-          <p><span class="font-bold text-purple-400">Map:</span> ${data.map || "--"}</p>
-        </div>
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50">
+    <div class="p-6">
+      <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
+      <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
+      <div class="mt-10 flex flex-col space-y-3">
+        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">Logout</button>
+        <a href="https://t.me/T7fiit4" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">Support</a>
       </div>
-    `;
-  }
+    </div>
+  </aside>
 
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      document.getElementById("sidebarPic").src = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
-      document.getElementById("username").textContent = user.displayName || "User";
+  <!-- Header -->
+  <header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between relative">
+      <div class="absolute left-0 flex items-center space-x-2">
+        <button onclick="toggleSidebar()" class="text-white focus:outline-none z-50 relative">
+          <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+      <h1 class="text-xl font-bold text-purple-400 mx-auto">THplay</h1>
+      <a href="wallet.html" id="walletDisplay"
+         class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-purple-800 transition-colors">
+        Wallet: ₹0
+      </a>
+    </div>
+  </header>
 
-      // Real-time wallet update
-      const userRef = doc(db, "users", user.uid);
-      onSnapshot(userRef, (docSnap) => {
-        if (docSnap.exists()) {
-          const wallet = docSnap.data().wallet || 0;
-          document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
-        }
-      });
+  <!-- Main Content -->
+  <main class="p-4 pt-8">
+    <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
+    <div class="grid grid-cols-1 gap-6">
+      <div class="space-y-4">
 
-      // Fetch all 3 match documents
-      for (let i = 0; i < matchIds.length; i++) {
-        const matchDoc = await getDoc(doc(db, "matches", matchIds[i]));
+        <!-- Match Card 1 -->
+        <div class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform cursor-pointer"
+             onclick="window.location.href='joinsolo.html?match=match1'">
+          <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
+          <div class="p-4 space-y-1">
+            <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹<span id="entryFee">--</span></p>
+            <p><span class="font-bold text-purple-400">Prize:</span> ₹<span id="prizePerKill">--</span> per kill</p>
+            <p><span class="font-bold text-purple-400">Date:</span> <span id="matchDate">--</span></p>
+            <p><span class="font-bold text-purple-400">Time:</span> <span id="matchTime">--</span></p>
+            <p><span class="font-bold text-purple-400">Slot:</span> <span id="slotCount">--</span></p>
+            <p><span class="font-bold text-purple-400">Map:</span> <span id="matchMap">--</span></p>
+          </div>
+        </div>
+
+        <!-- Match Card 2 -->
+        <div class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform cursor-pointer"
+             onclick="window.location.href='joinsolo.html?match=match2'">
+          <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
+          <div class="p-4 space-y-1">
+            <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹--</p>
+            <p><span class="font-bold text-purple-400">Prize:</span> ₹-- per kill</p>
+            <p><span class="font-bold text-purple-400">Date:</span> --</p>
+            <p><span class="font-bold text-purple-400">Time:</span> --</p>
+            <p><span class="font-bold text-purple-400">Slot:</span> --</p>
+            <p><span class="font-bold text-purple-400">Map:</span> --</p>
+          </div>
+        </div>
+
+        <!-- Match Card 3 -->
+        <div class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform cursor-pointer"
+             onclick="window.location.href='joinsolo.html?match=match3'">
+          <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
+          <div class="p-4 space-y-1">
+            <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹--</p>
+            <p><span class="font-bold text-purple-400">Prize:</span> ₹-- per kill</p>
+            <p><span class="font-bold text-purple-400">Date:</span> --</p>
+            <p><span class="font-bold text-purple-400">Time:</span> --</p>
+            <p><span class="font-bold text-purple-400">Slot:</span> --</p>
+            <p><span class="font-bold text-purple-400">Map:</span> --</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Firebase + Auth -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+      authDomain: "thplay-b3c68.firebaseapp.com",
+      projectId: "thplay-b3c68",
+      storageBucket: "thplay-b3c68.appspot.com",
+      messagingSenderId: "243301774162",
+      appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore();
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        document.getElementById("sidebarPic").src = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
+        document.getElementById("username").textContent = user.displayName || "User";
+
+        // Real-time wallet balance
+        const userRef = doc(db, "users", user.uid);
+        onSnapshot(userRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const wallet = docSnap.data().wallet || 0;
+            document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+          }
+        });
+
+        // Match 1 data
+        const matchDoc = await getDoc(doc(db, "matches", "match1"));
         if (matchDoc.exists()) {
-          matchCardsContainer.innerHTML += createMatchCard(matchDoc.data(), matchLinks[i]);
+          const data = matchDoc.data();
+          document.getElementById("entryFee").textContent = data.entryfees || "--";
+          document.getElementById("prizePerKill").textContent = data.prizeperkill || "--";
+          document.getElementById("matchDate").textContent = data.date || "--";
+          document.getElementById("matchTime").textContent = data.time || "--";
+          document.getElementById("matchMap").textContent = data.map || "--";
+          document.getElementById("slotCount").textContent = `${data.slot || 0}/${data.maxslots || 48}`;
         }
+
+      } else {
+        window.location.href = "index.html";
       }
-
-    } else {
-      window.location.href = "index.html";
-    }
-  });
-
-  window.toggleSidebar = function () {
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
-    sidebar.classList.toggle("sidebar-hidden");
-    overlay.classList.toggle("hidden");
-  };
-
-  window.logout = function () {
-    signOut(auth).then(() => {
-      window.location.href = "index.html";
     });
-  };
-</script>
+
+    window.toggleSidebar = function () {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      sidebar.classList.toggle("sidebar-hidden");
+      overlay.classList.toggle("hidden");
+    };
+
+    window.logout = function () {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    };
+  </script>
 </body>
 </html>
