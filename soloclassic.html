@@ -8,18 +8,17 @@
 </head>
 <body class="bg-[#111] text-white font-sans">
 
-  <!-- Wallet and user info -->
-  <div class="flex justify-between items-center px-4 py-2 bg-gray-900">
-    <div class="flex items-center">
-      <img id="sidebarPic" src="" class="w-10 h-10 rounded-full mr-2" />
-      <span id="username">Loading...</span>
+  <!-- TOP NAVBAR -->
+  <div class="flex justify-between items-center px-4 py-3 bg-gray-900 shadow">
+    <a href="main.html" class="text-yellow-400 text-2xl font-bold">THplay</a>
+    <div class="flex items-center space-x-4">
+      <div id="walletDisplay" class="text-yellow-400 font-bold">Wallet: ₹0</div>
+      <img id="sidebarPic" src="" alt="Profile" class="w-10 h-10 rounded-full" />
     </div>
-    <div id="walletDisplay" class="text-yellow-400 font-bold">Wallet: ₹0</div>
   </div>
 
-  <!-- Match Cards -->
+  <!-- Match Cards Grid -->
   <div class="grid grid-cols-1 gap-4 p-4">
-    
     <!-- Match 1 -->
     <div class="bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700" onclick="selectMatch('1')">
       <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full rounded mb-2">
@@ -49,13 +48,12 @@
       <p>Map: <span id="matchMap3">--</span></p>
       <p>Slots: <span id="slotCount3">--</span></p>
     </div>
-    
   </div>
 
-  <!-- Firebase & Match Logic -->
+  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -75,8 +73,8 @@
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         document.getElementById("sidebarPic").src = user.photoURL || "";
-        document.getElementById("username").textContent = user.displayName || "User";
 
+        // Show wallet balance
         const userRef = doc(db, "users", user.uid);
         onSnapshot(userRef, (docSnap) => {
           if (docSnap.exists()) {
@@ -85,6 +83,7 @@
           }
         });
 
+        // Load match info
         const loadMatch = async (matchId, suffix) => {
           const matchDoc = await getDoc(doc(db, "matches", matchId));
           if (matchDoc.exists()) {
@@ -95,14 +94,14 @@
             document.getElementById(`slotCount${suffix}`).textContent = `${data.slot || 0}/${data.maxslots || 48}`;
 
             matchData[`match${suffix}`] = {
-              matchId: matchId,
+              matchId,
               entryFee: data.entryfees || "--",
               prize: data.prizeperkill || "--",
-              date: data.date || "--",
-              time: data.time || "--",
               map: data.map || "--",
               slot: `${data.slot || 0}/${data.maxslots || 48}`,
-              image: "https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png"
+              image: "https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png",
+              time: data.time || "--",
+              date: data.date || "--"
             };
           }
         };
@@ -111,7 +110,7 @@
         await loadMatch("match2", "2");
         await loadMatch("match3", "3");
 
-        window.selectMatch = function (suffix) {
+        window.selectMatch = function(suffix) {
           const selected = matchData[`match${suffix}`];
           if (selected) {
             localStorage.setItem("selectedMatch", JSON.stringify(selected));
@@ -119,7 +118,7 @@
           }
         };
       } else {
-        window.location.href = "index.html";
+        window.location.href = "index.html"; // redirect to login
       }
     });
   </script>
