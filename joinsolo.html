@@ -1,4 +1,4 @@
-<!-- Save as classic.html -->
+<!-- Save as joinsolo.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,7 +76,7 @@
       </div>
     </div>
 
-    <!-- Join Match Section (above rules now) -->
+    <!-- Join Match Section -->
     <form id="joinForm" class="space-y-4 bg-gray-900 p-4 rounded-lg shadow border border-purple-700">
       <h3 class="text-lg font-bold text-purple-400">🎮 Join Match</h3>
 
@@ -123,6 +123,8 @@
     const db = getFirestore();
     let currentUser = null;
 
+    const walletDisplay = document.getElementById("walletDisplay");
+
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUser = user;
@@ -132,7 +134,7 @@
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           const wallet = userDoc.data().wallet || 0;
-          document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+          walletDisplay.textContent = `Wallet: ₹${wallet}`;
         }
       } else {
         window.location.href = "index.html";
@@ -172,8 +174,10 @@
         return;
       }
 
+      const newWallet = wallet - 10;
+
       await updateDoc(userRef, {
-        wallet: wallet - 10,
+        wallet: newWallet,
         matches: arrayUnion({
           match: "Solo Classic 5:00PM",
           name,
@@ -181,8 +185,8 @@
         })
       });
 
+      walletDisplay.textContent = `Wallet: ₹${newWallet}`;
       alert("✅ You have successfully joined the match!");
-      window.location.reload();
     });
   </script>
 </body>
