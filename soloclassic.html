@@ -8,9 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
+    body { font-family: 'Poppins', sans-serif; }
   </style>
 </head>
 <body class="bg-[#111] text-white font-sans">
@@ -34,7 +32,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, getDocs, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, getDocs, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -57,7 +55,6 @@
         return;
       }
 
-      // Show wallet
       const userRef = doc(db, "users", user.uid);
       onSnapshot(userRef, (snap) => {
         if (snap.exists()) {
@@ -70,9 +67,11 @@
         window.location.href = "wallet.html";
       };
 
-      // Get matches from Firestore
       const container = document.getElementById("matchesContainer");
-      const snapshot = await getDocs(collection(db, "solocs"));
+
+      // 🔄 Only fetch Solo Classic matches from "matches"
+      const q = query(collection(db, "matches"), where("type", "==", "soloclassic"));
+      const snapshot = await getDocs(q);
 
       snapshot.forEach((docSnap) => {
         const id = docSnap.id;
@@ -89,7 +88,6 @@
           image: "https://i.postimg.cc/Gtc1nVjV/file-00000000ad90622f81015bdfb65ca95f.png"
         };
 
-        // Create card
         const card = document.createElement("div");
         card.className = "bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition relative";
         card.id = `match-${id}`;
@@ -107,8 +105,8 @@
 
         container.appendChild(card);
 
-        // Live update slot
-        onSnapshot(doc(db, "solocs", id), (updatedDoc) => {
+        // 🔄 Real-time updates
+        onSnapshot(doc(db, "matches", id), (updatedDoc) => {
           const slots = updatedDoc.data().slot || 0;
           matchDataMap[id].slot = `${slots}/48`;
 
@@ -123,7 +121,6 @@
       });
     });
 
-    // Match select
     window.selectMatch = function (matchId) {
       const data = matchDataMap[matchId];
       if (!data) return;
