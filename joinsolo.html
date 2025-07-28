@@ -1,113 +1,47 @@
-<!-- Save as joinsolo.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>THplay@thrweb</title>
+  <title>Join Solo Match - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
-    .sidebar {
-      transition: transform 0.3s ease;
-    }
-    .sidebar-hidden {
-      transform: translateX(-100%);
-    }
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-  </style>
 </head>
-<body class="bg-gray-950 text-white">
-
-  <!-- Sidebar Overlay -->
-  <div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div>
-
-  <!-- Sidebar -->
-  <aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50">
-    <div class="p-6">
-      <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
-      <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
-      <div class="mt-10 flex flex-col space-y-3">
-        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">Logout</button>
-        <a href="https://t.me/T7fiit4" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">Support</a>
-      </div>
-    </div>
-  </aside>
+<body class="bg-[#111] text-white font-sans">
 
   <!-- Header -->
-  <header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
-    <div class="max-w-7xl mx-auto flex items-center justify-between relative">
-      <div class="absolute left-0 flex items-center space-x-2">
-        <button onclick="toggleSidebar()" class="text-white focus:outline-none z-50 relative">
-          <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" stroke-width="2"
-               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
-        </button>
-      </div>
-      <h1 class="text-xl font-bold text-purple-400 mx-auto">THplay</h1>
-      <a href="wallet.html" id="walletDisplay"
-         class="absolute right-0 bg-purple-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-purple-800 transition-colors">
-        Wallet: ₹0
-      </a>
+  <div class="flex justify-between items-center px-4 py-2 bg-gray-900">
+    <div class="flex items-center">
+      <img id="sidebarPic" src="" class="w-10 h-10 rounded-full mr-2" />
+      <span id="username">Loading...</span>
     </div>
-  </header>
+    <div id="walletDisplay" class="text-yellow-400 font-bold">Wallet: ₹0</div>
+  </div>
 
-  <!-- Main Content -->
-  <main class="p-4 pt-8 space-y-8">
-    <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
+  <!-- Selected Match Card Display -->
+  <div id="matchCard" class="bg-gray-800 rounded-xl p-4 m-4">
+    <img id="matchImage" src="" class="w-full rounded mb-2">
+    <h2 id="matchTitle" class="text-xl font-bold">Loading Match...</h2>
+    <p>Entry Fee: ₹<span id="matchEntryFee">--</span></p>
+    <p>Prize Per Kill: ₹<span id="matchPrize">--</span></p>
+    <p>Map: <span id="matchMap">--</span></p>
+    <p>Time: <span id="matchTime">--</span></p>
+    <p>Slots: <span id="matchSlot">--</span></p>
+  </div>
 
-    <!-- Battle Info Card -->
-    <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-left text-sm">
-      <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" alt="Battle Card" class="w-full aspect-video object-cover bg-black" />
-      <div class="p-4 space-y-1">
-        <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹10</p>
-        <p><span class="font-bold text-purple-400">Prize:</span> ₹100</p>
-        <p><span class="font-bold text-purple-400">Date:</span> 25 July 2025</p>
-        <p><span class="font-bold text-purple-400">Time:</span> 5:00 PM</p>
-        <p><span class="font-bold text-purple-400">Slot:</span> 1/12</p>
-        <p><span class="font-bold text-purple-400">Map:</span> Bermuda</p>
-      </div>
-    </div>
+  <!-- Join Form (you can expand this part as needed) -->
+  <div class="m-4 p-4 bg-gray-900 rounded">
+    <h3 class="text-lg font-semibold mb-2">Enter In-Game Name</h3>
+    <input id="inGameName" type="text" class="w-full p-2 rounded text-black" placeholder="Your Free Fire Name"/>
+    <button id="joinBtn" class="mt-4 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded w-full">
+      Join Match
+    </button>
+  </div>
 
-    <!-- Join Match Section -->
-    <form id="joinForm" class="space-y-4 bg-gray-900 p-4 rounded-lg shadow border border-purple-700">
-      <h3 class="text-lg font-bold text-purple-400">🎮 Join Match</h3>
-
-      <div>
-        <label class="block text-sm font-medium mb-1">Free Fire Username</label>
-        <input type="text" id="playerName" required class="w-full bg-gray-800 text-white p-2 rounded border border-gray-600 focus:outline-none focus:border-purple-500" />
-      </div>
-
-      <button type="submit" class="w-full bg-purple-700 hover:bg-purple-800 text-white py-2 rounded font-bold transition-colors">
-        Join Now
-      </button>
-    </form>
-
-    <!-- Rules Section -->
-    <section class="bg-gray-900 p-4 rounded-lg shadow border border-purple-700">
-      <h3 class="text-lg font-bold text-purple-400 mb-2">⚠️ Rules</h3>
-      <ul class="list-disc ml-5 space-y-1 text-sm text-purple-200">
-        <li>No hacking or cheating allowed.</li>
-        <li>Strictly solo mode only.</li>
-        <li>Entry fee: ₹10 will be deducted from your wallet.</li>
-        <li>Disrespect or abuse will lead to disqualification.</li>
-        <li>Use only one device to play the match.</li>
-      </ul>
-    </section>
-  </main>
-
-  <!-- Firebase Logic -->
+  <!-- Firebase & Match Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -121,72 +55,48 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
     const db = getFirestore();
-    let currentUser = null;
-
-    const walletDisplay = document.getElementById("walletDisplay");
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        currentUser = user;
-        document.getElementById("sidebarPic").src = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
+        document.getElementById("sidebarPic").src = user.photoURL || "";
         document.getElementById("username").textContent = user.displayName || "User";
 
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          const wallet = userDoc.data().wallet || 0;
-          walletDisplay.textContent = `Wallet: ₹${wallet}`;
+        const userRef = doc(db, "users", user.uid);
+        onSnapshot(userRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const wallet = docSnap.data().wallet || 0;
+            document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+          }
+        });
+
+        // Load selected match from localStorage
+        const selectedMatch = JSON.parse(localStorage.getItem("selectedMatch"));
+        if (selectedMatch) {
+          document.getElementById("matchImage").src = selectedMatch.image || "";
+          document.getElementById("matchTitle").textContent = `${selectedMatch.matchId} - ${selectedMatch.time}`;
+          document.getElementById("matchEntryFee").textContent = selectedMatch.entryFee || "--";
+          document.getElementById("matchPrize").textContent = selectedMatch.prize || "--";
+          document.getElementById("matchMap").textContent = selectedMatch.map || "--";
+          document.getElementById("matchTime").textContent = selectedMatch.time || "--";
+          document.getElementById("matchSlot").textContent = selectedMatch.slot || "--";
+        } else {
+          document.getElementById("matchCard").innerHTML = "<p class='text-center text-red-500'>No match selected!</p>";
         }
+
+        // Handle Join (you can add your wallet deduction logic here)
+        document.getElementById("joinBtn").addEventListener("click", () => {
+          const name = document.getElementById("inGameName").value.trim();
+          if (name === "") {
+            alert("Please enter your in-game name.");
+            return;
+          }
+          alert(`Joining match as "${name}"...`);
+          // Add your join logic here
+        });
+
       } else {
         window.location.href = "index.html";
       }
-    });
-
-    window.toggleSidebar = function () {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-
-      sidebar.classList.toggle("sidebar-hidden");
-      overlay.classList.toggle("hidden");
-    };
-
-    window.logout = function () {
-      signOut(auth).then(() => {
-        window.location.href = "index.html";
-      });
-    };
-
-    // Join Match
-    document.getElementById("joinForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const name = document.getElementById("playerName").value.trim();
-
-      if (!name) {
-        alert("Please enter your Free Fire username.");
-        return;
-      }
-
-      const userRef = doc(db, "users", currentUser.uid);
-      const userDoc = await getDoc(userRef);
-      const wallet = userDoc.data().wallet || 0;
-
-      if (wallet < 10) {
-        alert("Insufficient wallet balance. Minimum ₹10 required.");
-        return;
-      }
-
-      const newWallet = wallet - 10;
-
-      await updateDoc(userRef, {
-        wallet: newWallet,
-        matches: arrayUnion({
-          match: "Solo Classic 5:00PM",
-          name,
-          joinedAt: new Date()
-        })
-      });
-
-      walletDisplay.textContent = `Wallet: ₹${newWallet}`;
-      alert("✅ You have successfully joined the match!");
     });
   </script>
 </body>
