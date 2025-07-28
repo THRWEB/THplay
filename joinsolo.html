@@ -53,7 +53,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, updateDoc, onSnapshot, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -94,18 +94,10 @@
       document.getElementById("matchPrize").textContent = match.prize;
       document.getElementById("matchMap").textContent = match.map;
       document.getElementById("matchTime").textContent = match.time;
+      document.getElementById("matchSlot").textContent = match.slot;
 
       matchId = match.matchId;
       entryFee = Number(match.entryFee || 0);
-
-      // Live Slot Count Update
-      const matchRef = doc(db, "solocs", matchId);
-      onSnapshot(matchRef, (snap) => {
-        if (snap.exists()) {
-          document.getElementById("matchSlot").textContent = snap.data().slot;
-        }
-      });
-
       document.getElementById("loadingSpinner").style.display = "none";
 
       // JOIN MATCH
@@ -119,6 +111,7 @@
           return;
         }
 
+        const matchRef = doc(db, "solocs", matchId);
         const matchSnap = await getDoc(matchRef);
         let currentSlot = matchSnap.data().slot;
 
@@ -138,6 +131,7 @@
           });
 
           msg.innerHTML = `<span class="text-green-400">Successfully joined! ₹${entryFee} deducted.</span>`;
+          document.getElementById("matchSlot").textContent = currentSlot - 1;
         } catch (e) {
           msg.innerHTML = `<span class="text-red-500">Failed to join. Try again later.</span>`;
         }
