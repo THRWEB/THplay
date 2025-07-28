@@ -80,6 +80,7 @@
 
         matchDataMap[id] = {
           matchId: id,
+          title: data.title || "Clash Squad Solo",
           entryFee: data.entryfees || 0,
           prize: data.prize || 0,
           matchtime: data.matchtime || "--",
@@ -93,7 +94,7 @@
         card.onclick = () => selectMatch(id);
         card.innerHTML = `
           <img src="${matchDataMap[id].image}" class="w-full rounded mb-2">
-          <h2 class="text-xl font-bold">Clash Squad Solo</h2>
+          <h2 class="text-xl font-bold">${matchDataMap[id].title}</h2>
           <p>Entry Fee: ₹${matchDataMap[id].entryFee}</p>
           <p>Prize: ₹${matchDataMap[id].prize}</p>
           <p>Time: ${matchDataMap[id].matchtime}</p>
