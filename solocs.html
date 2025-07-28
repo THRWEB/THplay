@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solo Classic - THplay</title>
+  <title>Clash Squad Solo - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -83,6 +83,7 @@
           entryFee: data.entryfees || 0,
           prize: data.prize || 0,
           matchtime: data.matchtime || "--",
+          map: data.map || "--",
           slot: `${data.slot || 0}/48`,
           image: "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png"
         };
@@ -92,10 +93,11 @@
         card.onclick = () => selectMatch(id);
         card.innerHTML = `
           <img src="${matchDataMap[id].image}" class="w-full rounded mb-2">
-          <h2 class="text-xl font-bold">Solo Classic</h2>
+          <h2 class="text-xl font-bold">Clash Squad Solo</h2>
           <p>Entry Fee: ₹${matchDataMap[id].entryFee}</p>
           <p>Prize: ₹${matchDataMap[id].prize}</p>
-          <p>Match Time: ${matchDataMap[id].matchtime}</p>
+          <p>Time: ${matchDataMap[id].matchtime}</p>
+          <p>Map: ${matchDataMap[id].map}</p>
           <p>Slots: ${matchDataMap[id].slot}</p>
         `;
         container.appendChild(card);
