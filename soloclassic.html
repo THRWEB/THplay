@@ -12,6 +12,7 @@
   </style>
 </head>
 <body class="bg-[#111] text-white font-sans">
+
   <!-- Fixed Header -->
   <div class="fixed top-0 w-full z-50 bg-gray-900 py-3 flex items-center justify-center shadow">
     <div class="absolute left-4 cursor-pointer" onclick="window.location.href='main.html'">
@@ -75,6 +76,7 @@
 
         const data = docSnap.data();
         const id = docSnap.id;
+        const slotCount = data.slot || 0;
 
         matchDataMap[id] = {
           matchId: id,
@@ -83,12 +85,12 @@
           prize: data.prize || 0,
           matchtime: data.matchtime || "--",
           map: data.map || "--",
-          slot: `${data.slot || 0}/48`,
+          slot: slotCount,  // as number, not "x/48"
           image: "https://i.postimg.cc/Gtc1nVjV/file-00000000ad90622f81015bdfb65ca95f.png"
         };
 
         let card = document.getElementById(`match-${id}`);
-        const slotFull = data.slot >= 48;
+        const slotFull = slotCount >= 48;
 
         if (!card) {
           card = document.createElement("div");
@@ -105,7 +107,7 @@
           <p>Prize: ₹${matchDataMap[id].prize}</p>
           <p>Time: ${matchDataMap[id].matchtime}</p>
           <p>Map: ${matchDataMap[id].map}</p>
-          <p id="slot-${id}">Slots: ${data.slot}/48</p>
+          <p id="slot-${id}">Slots: ${slotCount}/48</p>
         `;
 
         if (slotFull) {
@@ -122,8 +124,7 @@
       const data = matchDataMap[matchId];
       if (!data) return;
 
-      const currentSlot = parseInt(data.slot.split("/")[0]);
-      if (currentSlot >= 48) {
+      if (data.slot >= 48) {
         alert("This match is full.");
         return;
       }
