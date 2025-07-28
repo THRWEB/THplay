@@ -15,14 +15,18 @@
 </head>
 <body class="bg-[#111] text-white font-sans">
 
-  <!-- TOP NAVBAR -->
-  <div class="fixed top-0 w-full z-50 bg-gray-900 shadow flex justify-between items-center px-4 py-3">
-    <button onclick="location.href='main.html'" class="bg-yellow-400 text-black px-3 py-1 rounded-lg font-semibold shadow hover:bg-yellow-300 transition">Home</button>
-    <div class="text-yellow-400 text-2xl font-bold">THplay</div>
-    <div id="walletDisplay" class="text-yellow-400 font-bold cursor-pointer hover:underline">Wallet: ₹0</div>
+  <!-- Fixed Header -->
+  <div class="fixed top-0 w-full z-50 bg-gray-900 py-3 flex items-center justify-center shadow">
+    <div class="absolute left-4 cursor-pointer" onclick="window.location.href='main.html'">
+      <i data-lucide="home" class="text-white w-6 h-6"></i>
+    </div>
+    <h1 class="text-xl md:text-2xl font-bold text-purple-400">THplay</h1>
+    <div id="walletDisplay" class="absolute right-4 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer">
+      Wallet: ₹0
+    </div>
   </div>
 
-  <!-- Page content padding to avoid overlay under fixed header -->
+  <!-- Content Padding -->
   <div class="pt-20 grid grid-cols-1 gap-4 p-4">
     <!-- Match 1 -->
     <div class="bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700" onclick="selectMatch('1')">
@@ -77,7 +81,7 @@
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // Wallet Balance
+        // Wallet Display
         const userRef = doc(db, "users", user.uid);
         onSnapshot(userRef, (docSnap) => {
           if (docSnap.exists()) {
@@ -86,12 +90,10 @@
           }
         });
 
-        // Wallet click
         document.getElementById("walletDisplay").onclick = () => {
           window.location.href = "wallet.html";
         };
 
-        // Load Matches
         const loadMatch = async (matchId, suffix) => {
           const matchDoc = await getDoc(doc(db, "matches", matchId));
           if (matchDoc.exists()) {
@@ -129,6 +131,8 @@
         window.location.href = "index.html";
       }
     });
+
+    lucide.createIcons();
   </script>
 </body>
 </html>
