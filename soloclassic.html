@@ -78,30 +78,30 @@
         const data = docSnap.data();
         const id = docSnap.id;
 
-        const slotValue = data.slot || 0;
-
-        matchDataMap[id] = {
+        const match = {
           matchId: id,
           title: data.title || "Clash Squad Solo",
           entryFee: data.entryfees || 0,
           prize: data.prize || 0,
           matchtime: data.matchtime || "--",
           map: data.map || "--",
-          slot: slotValue,
+          slot: data.slot || 0,
           image: "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png"
         };
+
+        matchDataMap[id] = match;
 
         const card = document.createElement("div");
         card.className = "bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700";
         card.onclick = () => selectMatch(id);
         card.innerHTML = `
-          <img src="${matchDataMap[id].image}" class="w-full rounded mb-2">
-          <h2 class="text-xl font-bold">${matchDataMap[id].title}</h2>
-          <p>Entry Fee: ₹${matchDataMap[id].entryFee}</p>
-          <p>Prize: ₹${matchDataMap[id].prize}</p>
-          <p>Time: ${matchDataMap[id].matchtime}</p>
-          <p>Map: ${matchDataMap[id].map}</p>
-          <p>Slots: ${slotValue}/48</p>
+          <img src="${match.image}" class="w-full rounded mb-2">
+          <h2 class="text-xl font-bold">${match.title}</h2>
+          <p>Entry Fee: ₹${match.entryFee}</p>
+          <p>Prize: ₹${match.prize}</p>
+          <p>Time: ${match.matchtime}</p>
+          <p>Map: ${match.map}</p>
+          <p>Slots: ${match.slot}/48</p>
         `;
         container.appendChild(card);
       });
@@ -109,8 +109,9 @@
 
     // Match select function
     window.selectMatch = function (matchId) {
-      if (matchDataMap[matchId]) {
-        localStorage.setItem("selectedMatch", JSON.stringify(matchDataMap[matchId]));
+      const selected = matchDataMap[matchId];
+      if (selected) {
+        localStorage.setItem("selectedMatch", JSON.stringify(selected));
         window.location.href = "joinsolo.html";
       }
     };
