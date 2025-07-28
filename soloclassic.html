@@ -54,38 +54,8 @@
 <main class="p-4 pt-8">
   <h2 class="text-2xl font-bold mb-6 text-center">One Man Army Battle</h2>
   <div class="grid grid-cols-1 gap-6">
-    <div class="space-y-4">
-
-      <!-- Card 1: Active -->
-      <div class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform cursor-pointer" onclick="window.location.href='soloclassic01.html'">
-        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
-        <div class="p-4 space-y-1">
-          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹<span id="entryFee">--</span></p>
-          <p><span class="font-bold text-purple-400">Prize:</span> ₹<span id="prizePerKill">--</span> per kill</p>
-          <p><span class="font-bold text-purple-400">Date:</span> <span id="matchDate">--</span></p>
-          <p><span class="font-bold text-purple-400">Time:</span> <span id="matchTime">--</span></p>
-          <p><span class="font-bold text-purple-400">Slot:</span> <span id="slotCount">--</span></p>
-          <p><span class="font-bold text-purple-400">Map:</span> <span id="matchMap">--</span></p>
-        </div>
-      </div>
-
-      <!-- Card 2 & 3: Coming Soon -->
-      <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm opacity-60 cursor-not-allowed">
-        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
-        <div class="p-4 space-y-1">
-          <p class="text-purple-400 font-bold">Coming Soon</p>
-          <p>Entry Fees: ₹5 | Prize: ₹4/kill | Slot: 0/48</p>
-        </div>
-      </div>
-
-      <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm opacity-60 cursor-not-allowed">
-        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
-        <div class="p-4 space-y-1">
-          <p class="text-purple-400 font-bold">Coming Soon</p>
-          <p>Entry Fees: ₹5 | Prize: ₹4/kill | Slot: 0/48</p>
-        </div>
-      </div>
-
+    <div class="space-y-4" id="matchCardsContainer">
+      <!-- Match cards will be injected here by JS -->
     </div>
   </div>
 </main>
@@ -109,12 +79,34 @@
   const auth = getAuth();
   const db = getFirestore();
 
+  const matchCardsContainer = document.getElementById("matchCardsContainer");
+
+  const matchIds = ["match1", "match2", "match3"];
+  const matchLinks = ["soloclassic01.html", "soloclassic02.html", "soloclassic03.html"];
+
+  function createMatchCard(data, link) {
+    return `
+      <div class="block bg-gray-800 rounded-xl overflow-hidden shadow-lg text-sm hover:scale-[1.01] transition-transform cursor-pointer"
+           onclick="window.location.href='${link}'">
+        <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full aspect-video object-cover bg-black" />
+        <div class="p-4 space-y-1">
+          <p><span class="font-bold text-purple-400">Entry Fees:</span> ₹${data.entryfees || "--"}</p>
+          <p><span class="font-bold text-purple-400">Prize:</span> ₹${data.prizeperkill || "--"} per kill</p>
+          <p><span class="font-bold text-purple-400">Date:</span> ${data.date || "--"}</p>
+          <p><span class="font-bold text-purple-400">Time:</span> ${data.time || "--"}</p>
+          <p><span class="font-bold text-purple-400">Slot:</span> ${data.slot || 0}/${data.maxslots || 48}</p>
+          <p><span class="font-bold text-purple-400">Map:</span> ${data.map || "--"}</p>
+        </div>
+      </div>
+    `;
+  }
+
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       document.getElementById("sidebarPic").src = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
       document.getElementById("username").textContent = user.displayName || "User";
 
-      // ✅ Real-time wallet balance update
+      // Real-time wallet update
       const userRef = doc(db, "users", user.uid);
       onSnapshot(userRef, (docSnap) => {
         if (docSnap.exists()) {
@@ -123,16 +115,12 @@
         }
       });
 
-      // ✅ Fetch match data once
-      const matchDoc = await getDoc(doc(db, "matches", "match1"));
-      if (matchDoc.exists()) {
-        const data = matchDoc.data();
-        document.getElementById("entryFee").textContent = data.entryfees || "--";
-        document.getElementById("prizePerKill").textContent = data.prizeperkill || "--";
-        document.getElementById("matchDate").textContent = data.date || "--";
-        document.getElementById("matchTime").textContent = data.time || "--";
-        document.getElementById("matchMap").textContent = data.map || "--";
-        document.getElementById("slotCount").textContent = `${data.slot || 0}/${data.maxslots || 48}`;
+      // Fetch all 3 match documents
+      for (let i = 0; i < matchIds.length; i++) {
+        const matchDoc = await getDoc(doc(db, "matches", matchIds[i]));
+        if (matchDoc.exists()) {
+          matchCardsContainer.innerHTML += createMatchCard(matchDoc.data(), matchLinks[i]);
+        }
       }
 
     } else {
