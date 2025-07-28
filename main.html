@@ -22,189 +22,191 @@
   </style>
 </head>
 <body class="bg-gray-950 text-white">
-  <!-- Sidebar Overlay -->
-  <div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div>
 
-  <!-- Sidebar -->
-  <aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50">
-    <div class="p-6">
-      <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
-      <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
-      <div class="mt-10 flex flex-col space-y-3">
-        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">Logout</button>
-        <a href="https://t.me/T7fiit4" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">Support</a>
-      </div>
-    </div>
-  </aside>
+<!-- Sidebar Overlay -->
+<div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div>
 
-  <!-- Header -->
-  <header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
-    <div class="max-w-7xl mx-auto flex items-center justify-between relative">
-      <div class="absolute left-0 flex items-center space-x-2">
-        <button onclick="toggleSidebar()" class="text-white focus:outline-none z-50 relative">
-          <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
-        </button>
-      </div>
-      <h1 class="text-xl md:text-2xl font-bold text-purple-400 mx-auto">THplay</h1>
-      <button onclick="goToWallet()" id="walletDisplay" class="absolute right-0 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold focus:outline-none">
-        Wallet: ₹0
-      </button>
-    </div>
-  </header>
-
-  <!-- Main -->
-  <main class="p-6 md:px-20 py-10">
-    <h2 class="text-3xl font-bold mb-8 text-center">Choose Your Battle Style</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-      <!-- Solo Card -->
-      <div onclick="openModePopup('solo')" class="cursor-pointer">
-        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
-          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Solo" class="w-full h-40 object-cover">
-          <div class="p-4 text-center">
-            <h3 class="text-xl font-bold text-purple-400">Free Fire Solo</h3>
-          </div>
-        </div>
-      </div>
-
-      <!-- Duo Card (Still Disabled) -->
-      <div class="opacity-50 cursor-not-allowed">
-        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
-          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Duo" class="w-full h-40 object-cover">
-          <div class="p-4 text-center">
-            <h3 class="text-xl font-bold text-purple-400">Free Fire Duo</h3>
-            <p class="text-sm text-red-400 font-semibold mt-2">Coming Soon</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Squad Card (Now Enabled) -->
-      <div onclick="openModePopup('squad')" class="cursor-pointer">
-        <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
-          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Squad" class="w-full h-40 object-cover">
-          <div class="p-4 text-center">
-            <h3 class="text-xl font-bold text-purple-400">Free Fire Squad</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Mode Modal -->
-  <div id="modePopup" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-    <div class="bg-gray-800 rounded-xl p-6 w-80 text-center relative">
-      <button onclick="closeModePopup()" class="absolute top-2 right-2 text-white text-xl font-bold">&times;</button>
-      <h3 class="text-xl font-bold mb-4 text-purple-400">Select Mode</h3>
-      <button onclick="joinClassic()" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full mb-3 font-semibold">Classic</button>
-      <button onclick="joinClashSquad()" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full font-semibold">Clash Squad</button>
+<!-- Sidebar -->
+<aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50">
+  <div class="p-6">
+    <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
+    <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
+    <div class="mt-10 flex flex-col space-y-3">
+      <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">Logout</button>
+      <a href="https://t.me/T7fiit4" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">Support</a>
     </div>
   </div>
+</aside>
 
-  <!-- Firebase + Logic -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+<!-- Header -->
+<header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
+  <div class="max-w-7xl mx-auto flex items-center justify-between relative">
+    <div class="absolute left-0 flex items-center space-x-2">
+      <button onclick="toggleSidebar()" class="text-white focus:outline-none z-50 relative">
+        <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+    <h1 class="text-xl md:text-2xl font-bold text-purple-400 mx-auto">THplay</h1>
+    <button onclick="goToWallet()" id="walletDisplay" class="absolute right-0 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold focus:outline-none">
+      Wallet: ₹0
+    </button>
+  </div>
+</header>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
-      authDomain: "thplay-b3c68.firebaseapp.com",
-      projectId: "thplay-b3c68",
-      storageBucket: "thplay-b3c68.appspot.com",
-      messagingSenderId: "243301774162",
-      appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
-    };
+<!-- Main -->
+<main class="p-6 md:px-20 py-10">
+  <h2 class="text-3xl font-bold mb-8 text-center">Choose Your Battle Style</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const db = getFirestore();
+    <!-- Card 1 -->
+    <div onclick="openModePopup('solo')" class="cursor-pointer">
+      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
+        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Solo" class="w-full h-40 object-cover">
+        <div class="p-4 text-center">
+          <h3 class="text-xl font-bold text-purple-400">Free Fire Solo</h3>
+        </div>
+      </div>
+    </div>
 
-    let currentUser = null;
-    let sidebarOpen = false;
-    let currentCard = null;
+    <!-- Card 2 -->
+    <div onclick="openModePopup('duo')" class="cursor-pointer">
+      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
+        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Duo" class="w-full h-40 object-cover">
+        <div class="p-4 text-center">
+          <h3 class="text-xl font-bold text-purple-400">Free Fire Duo</h3>
+        </div>
+      </div>
+    </div>
 
-    async function updateWallet() {
-      if (!currentUser) return;
-      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-      if (userDoc.exists()) {
-        const wallet = userDoc.data().wallet || 0;
-        document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+    <!-- Card 3 -->
+    <div onclick="openModePopup('squad')" class="cursor-pointer">
+      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
+        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Squad" class="w-full h-40 object-cover">
+        <div class="p-4 text-center">
+          <h3 class="text-xl font-bold text-purple-400">Free Fire Squad</h3>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Mode Modal -->
+<div id="modePopup" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+  <div class="bg-gray-800 rounded-xl p-6 w-80 text-center relative">
+    <button onclick="closeModePopup()" class="absolute top-2 right-2 text-white text-xl font-bold">&times;</button>
+    <h3 class="text-xl font-bold mb-4 text-purple-400">Select Mode</h3>
+    <button onclick="joinClassic()" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full mb-3 font-semibold">Classic</button>
+    <button onclick="joinClashSquad()" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full font-semibold">Clash Squad</button>
+  </div>
+</div>
+
+<!-- Firebase + Logic -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+    authDomain: "thplay-b3c68.firebaseapp.com",
+    projectId: "thplay-b3c68",
+    storageBucket: "thplay-b3c68.appspot.com",
+    messagingSenderId: "243301774162",
+    appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+  const db = getFirestore();
+
+  let currentUser = null;
+  let sidebarOpen = false;
+  let currentCard = null;
+
+  async function updateWallet() {
+    if (!currentUser) return;
+    const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+    if (userDoc.exists()) {
+      const wallet = userDoc.data().wallet || 0;
+      document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+    }
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      currentUser = user;
+      document.getElementById("sidebarPic").src = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
+      document.getElementById("username").textContent = user.displayName || "User";
+      await updateWallet();
+    } else {
+      window.location.href = "index.html";
+    }
+  });
+
+  window.openModePopup = function (cardType) {
+    currentCard = cardType;
+    document.getElementById("modePopup").classList.remove("hidden");
+  };
+
+  window.closeModePopup = function () {
+    document.getElementById("modePopup").classList.add("hidden");
+  };
+
+  window.joinClassic = function () {
+    if (currentCard === 'solo') {
+      window.location.href = "soloclassic.html";
+    } else {
+      alert("Classic Mode Selected");
+      closeModePopup();
+    }
+  };
+
+  window.joinClashSquad = function () {
+    alert("Clash Squad Mode Selected");
+    closeModePopup();
+  };
+
+  window.toggleSidebar = function () {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    sidebarOpen = !sidebarOpen;
+    if (sidebarOpen) {
+      sidebar.classList.remove("sidebar-hidden");
+      overlay.classList.remove("hidden");
+      history.pushState({ sidebar: true }, "");
+    } else {
+      sidebar.classList.add("sidebar-hidden");
+      overlay.classList.add("hidden");
+      if (history.state && history.state.sidebar) {
+        history.back();
       }
     }
+  };
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        currentUser = user;
-        document.getElementById("sidebarPic").src = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
-        document.getElementById("username").textContent = user.displayName || "User";
-        await updateWallet();
-      } else {
-        window.location.href = "index.html";
-      }
+  window.onpopstate = function () {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    if (sidebarOpen) {
+      sidebar.classList.add("sidebar-hidden");
+      overlay.classList.add("hidden");
+      sidebarOpen = false;
+    }
+  };
+
+  window.logout = function () {
+    signOut(auth).then(() => {
+      window.location.href = "index.html";
     });
+  };
 
-    window.openModePopup = function (cardType) {
-      currentCard = cardType;
-      document.getElementById("modePopup").classList.remove("hidden");
-    };
+  window.goToWallet = function () {
+    window.location.href = "wallet.html";
+  };
+</script>
 
-    window.closeModePopup = function () {
-      document.getElementById("modePopup").classList.add("hidden");
-    };
-
-    window.joinClassic = function () {
-      if (currentCard === 'solo') {
-        window.location.href = "soloclassic.html";
-      } else if (currentCard === 'squad') {
-        window.location.href = "solocs.html";
-      } else {
-        alert("Classic Mode Selected");
-        closeModePopup();
-      }
-    };
-
-    window.joinClashSquad = function () {
-      alert("Clash Squad Mode Selected");
-      closeModePopup();
-    };
-
-    window.toggleSidebar = function () {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      sidebarOpen = !sidebarOpen;
-      if (sidebarOpen) {
-        sidebar.classList.remove("sidebar-hidden");
-        overlay.classList.remove("hidden");
-        history.pushState({ sidebar: true }, "");
-      } else {
-        sidebar.classList.add("sidebar-hidden");
-        overlay.classList.add("hidden");
-        if (history.state && history.state.sidebar) {
-          history.back();
-        }
-      }
-    };
-
-    window.onpopstate = function () {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("overlay");
-      if (sidebarOpen) {
-        sidebar.classList.add("sidebar-hidden");
-        overlay.classList.add("hidden");
-        sidebarOpen = false;
-      }
-    };
-
-    window.logout = function () {
-      signOut(auth).then(() => {
-        window.location.href = "index.html";
-      });
-    };
-
-    window.goToWallet = function () {
-      window.location.href = "wallet.html";
-    };
-  </script>
 </body>
 </html>
+
