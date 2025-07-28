@@ -11,10 +11,11 @@
   <!-- Header -->
   <div class="flex justify-between items-center px-4 py-2 bg-gray-900">
     <div class="flex items-center">
+      <div class="text-2xl font-bold mr-2">☰</div>
       <img id="sidebarPic" src="" class="w-10 h-10 rounded-full mr-2" />
-      <span id="username">Loading...</span>
+      <span id="username" class="text-sm sm:text-base">Loading...</span>
     </div>
-    <div id="walletDisplay" class="text-yellow-400 font-bold">Wallet: ₹0</div>
+    <div id="walletDisplay" class="text-yellow-400 font-bold text-sm sm:text-base">Wallet: ₹0</div>
   </div>
 
   <!-- Selected Match Card Display -->
@@ -28,7 +29,7 @@
     <p>Slots: <span id="matchSlot">--</span></p>
   </div>
 
-  <!-- Join Form (you can expand this part as needed) -->
+  <!-- Join Form -->
   <div class="m-4 p-4 bg-gray-900 rounded">
     <h3 class="text-lg font-semibold mb-2">Enter In-Game Name</h3>
     <input id="inGameName" type="text" class="w-full p-2 rounded text-black" placeholder="Your Free Fire Name"/>
@@ -83,7 +84,7 @@
           document.getElementById("matchCard").innerHTML = "<p class='text-center text-red-500'>No match selected!</p>";
         }
 
-        // Handle Join (you can add your wallet deduction logic here)
+        // Join button logic (placeholder)
         document.getElementById("joinBtn").addEventListener("click", () => {
           const name = document.getElementById("inGameName").value.trim();
           if (name === "") {
@@ -91,7 +92,7 @@
             return;
           }
           alert(`Joining match as "${name}"...`);
-          // Add your join logic here
+          // TODO: Implement match joining logic here
         });
 
       } else {
