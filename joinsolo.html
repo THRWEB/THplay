@@ -15,7 +15,8 @@
       <i data-lucide="home" class="text-white w-6 h-6"></i>
     </div>
     <h1 class="text-xl md:text-2xl font-bold text-purple-400">THplay</h1>
-    <div id="walletDisplay" class="absolute right-4 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer">
+    <!-- ✅ Wallet Clickable -->
+    <div id="walletDisplay" onclick="window.location.href='wallet.html'" class="absolute right-4 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer">
       Wallet: ₹0
     </div>
   </div>
@@ -100,5 +101,6 @@
 
     lucide.createIcons();
   </script>
+
 </body>
 </html>
