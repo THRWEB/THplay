@@ -94,7 +94,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -114,13 +114,16 @@
       document.getElementById("sidebarPic").src = user.photoURL || "https://i.postimg.cc/DZfGbnrg/user.png";
       document.getElementById("username").textContent = user.displayName || "User";
 
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        const wallet = userDoc.data().wallet || 0;
-        document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
-      }
+      // ✅ Real-time wallet balance update
+      const userRef = doc(db, "users", user.uid);
+      onSnapshot(userRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const wallet = docSnap.data().wallet || 0;
+          document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+        }
+      });
 
-      // ✅ Fetch match data from Firestore
+      // ✅ Fetch match data once
       const matchDoc = await getDoc(doc(db, "matches", "match1"));
       if (matchDoc.exists()) {
         const data = matchDoc.data();
