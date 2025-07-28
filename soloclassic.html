@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solo Classic - THplay</title>
+  <title>Clash Squad Solo - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -26,44 +26,16 @@
     </div>
   </div>
 
-  <!-- Content Padding -->
-  <div class="pt-20 grid grid-cols-1 gap-4 p-4">
-    <!-- Match 1 -->
-    <div class="bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700" onclick="selectMatch('1')">
-      <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full rounded mb-2">
-      <h2 class="text-xl font-bold">Solo Classic - 5:00 PM</h2>
-      <p>Entry Fee: ₹<span id="entryFee1">--</span></p>
-      <p>Prize Per Kill: ₹<span id="prizePerKill1">--</span></p>
-      <p>Map: <span id="matchMap1">--</span></p>
-      <p>Slots: <span id="slotCount1">--</span></p>
-    </div>
-
-    <!-- Match 2 - Coming Soon -->
-    <div class="bg-gray-800 rounded-xl p-4 opacity-60 pointer-events-none">
-      <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full rounded mb-2">
-      <h2 class="text-xl font-bold text-yellow-400">Coming Soon</h2>
-      <p>Entry Fee: ₹<span id="entryFee2">--</span></p>
-      <p>Prize Per Kill: ₹<span id="prizePerKill2">--</span></p>
-      <p>Map: <span id="matchMap2">--</span></p>
-      <p>Slots: <span id="slotCount2">--</span></p>
-    </div>
-
-    <!-- Match 3 - Coming Soon -->
-    <div class="bg-gray-800 rounded-xl p-4 opacity-60 pointer-events-none">
-      <img src="https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png" class="w-full rounded mb-2">
-      <h2 class="text-xl font-bold text-yellow-400">Coming Soon</h2>
-      <p>Entry Fee: ₹<span id="entryFee3">--</span></p>
-      <p>Prize Per Kill: ₹<span id="prizePerKill3">--</span></p>
-      <p>Map: <span id="matchMap3">--</span></p>
-      <p>Slots: <span id="slotCount3">--</span></p>
-    </div>
+  <!-- Content Grid -->
+  <div class="pt-20 grid grid-cols-1 gap-4 p-4" id="matchesContainer">
+    <!-- Match cards will be inserted here dynamically -->
   </div>
 
   <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, getDocs, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -77,60 +49,69 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
     const db = getFirestore();
-    const matchData = {};
+
+    const matchDataMap = {};
 
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // Wallet Display
-        const userRef = doc(db, "users", user.uid);
-        onSnapshot(userRef, (docSnap) => {
-          if (docSnap.exists()) {
-            const wallet = docSnap.data().wallet || 0;
-            document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
-          }
-        });
-
-        document.getElementById("walletDisplay").onclick = () => {
-          window.location.href = "wallet.html";
-        };
-
-        const loadMatch = async (matchId, suffix) => {
-          const matchDoc = await getDoc(doc(db, "matches", matchId));
-          if (matchDoc.exists()) {
-            const data = matchDoc.data();
-            document.getElementById(`entryFee${suffix}`).textContent = data.entryfees || "--";
-            document.getElementById(`prizePerKill${suffix}`).textContent = data.prizeperkill || "--";
-            document.getElementById(`matchMap${suffix}`).textContent = data.map || "--";
-            document.getElementById(`slotCount${suffix}`).textContent = `${data.slot || 0}/${data.maxslots || 48}`;
-
-            matchData[`match${suffix}`] = {
-              matchId,
-              entryFee: data.entryfees || "--",
-              prize: data.prizeperkill || "--",
-              map: data.map || "--",
-              slot: `${data.slot || 0}/${data.maxslots || 48}`,
-              image: "https://i.postimg.cc/mrBf9X8f/file-00000000ad90622f81015bdfb65ca95f.png",
-              time: data.time || "--",
-              date: data.date || "--"
-            };
-          }
-        };
-
-        await loadMatch("match1", "1");
-        await loadMatch("match2", "2");
-        await loadMatch("match3", "3");
-
-        window.selectMatch = function(suffix) {
-          const selected = matchData[`match${suffix}`];
-          if (selected) {
-            localStorage.setItem("selectedMatch", JSON.stringify(selected));
-            window.location.href = "joinsolo.html";
-          }
-        };
-      } else {
+      if (!user) {
         window.location.href = "index.html";
+        return;
       }
+
+      // Wallet fetch
+      const userRef = doc(db, "users", user.uid);
+      onSnapshot(userRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const wallet = docSnap.data().wallet || 0;
+          document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+        }
+      });
+
+      document.getElementById("walletDisplay").onclick = () => {
+        window.location.href = "wallet.html";
+      };
+
+      // Fetch all matches from "solocs"
+      const container = document.getElementById("matchesContainer");
+      const snapshot = await getDocs(collection(db, "solocs"));
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const id = docSnap.id;
+
+        matchDataMap[id] = {
+          matchId: id,
+          title: data.title || "Clash Squad Solo",
+          entryFee: data.entryfees || 0,
+          prize: data.prize || 0,
+          matchtime: data.matchtime || "--",
+          map: data.map || "--",
+          slot: `${data.slot || 0}/48`,
+          image: "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png"
+        };
+
+        const card = document.createElement("div");
+        card.className = "bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700";
+        card.onclick = () => selectMatch(id);
+        card.innerHTML = `
+          <img src="${matchDataMap[id].image}" class="w-full rounded mb-2">
+          <h2 class="text-xl font-bold">${matchDataMap[id].title}</h2>
+          <p>Entry Fee: ₹${matchDataMap[id].entryFee}</p>
+          <p>Prize: ₹${matchDataMap[id].prize}</p>
+          <p>Time: ${matchDataMap[id].matchtime}</p>
+          <p>Map: ${matchDataMap[id].map}</p>
+          <p>Slots: ${matchDataMap[id].slot}</p>
+        `;
+        container.appendChild(card);
+      });
     });
+
+    // Match select function
+    window.selectMatch = function (matchId) {
+      if (matchDataMap[matchId]) {
+        localStorage.setItem("selectedMatch", JSON.stringify(matchDataMap[matchId]));
+        window.location.href = "joinsolo.html";
+      }
+    };
 
     lucide.createIcons();
   </script>
