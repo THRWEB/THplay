@@ -28,7 +28,7 @@
     </div>
   </div>
 
-  <!-- Selected Match Card Display -->
+  <!-- Selected Match Card -->
   <div id="matchCard" class="bg-gray-800 rounded-xl p-4 m-4">
     <img id="matchImage" src="" class="w-full rounded mb-2">
     <h2 id="matchTitle" class="text-xl font-bold">Loading Match...</h2>
@@ -49,11 +49,11 @@
     <div id="message" class="text-center mt-4 font-semibold"></div>
   </div>
 
-  <!-- Firebase & Match Logic -->
+  <!-- Firebase & Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, updateDoc, onSnapshot, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -68,73 +68,77 @@
     const auth = getAuth();
     const db = getFirestore();
 
-    let currentWallet = 0;
-    let currentUser;
-    let entryFee = 0;
+    let currentUser, entryFee = 0, matchId = "", currentWallet = 0;
 
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        currentUser = user;
-        const userRef = doc(db, "users", user.uid);
-        onSnapshot(userRef, (docSnap) => {
-          if (docSnap.exists()) {
-            currentWallet = docSnap.data().wallet || 0;
-            document.getElementById("walletDisplay").textContent = `Wallet: ₹${currentWallet}`;
-          }
-          document.getElementById('loadingSpinner').style.display = 'none';
-        });
+      if (!user) return window.location.href = "index.html";
 
-        // Load selected match from localStorage
-        const selectedMatch = JSON.parse(localStorage.getItem("selectedMatch"));
-        if (selectedMatch) {
-          document.getElementById("matchImage").src = selectedMatch.image || "";
-          document.getElementById("matchTitle").textContent = `${selectedMatch.matchId} - ${selectedMatch.time}`;
-          document.getElementById("matchEntryFee").textContent = selectedMatch.entryFee || "--";
-          document.getElementById("matchPrize").textContent = selectedMatch.prize || "--";
-          document.getElementById("matchMap").textContent = selectedMatch.map || "--";
-          document.getElementById("matchTime").textContent = selectedMatch.time || "--";
-          document.getElementById("matchSlot").textContent = selectedMatch.slot || "--";
-          entryFee = Number(selectedMatch.entryFee || 0);
-        } else {
-          document.getElementById("matchCard").innerHTML = "<p class='text-center text-red-500'>No match selected!</p>";
+      currentUser = user;
+      const userRef = doc(db, "users", user.uid);
+
+      // Live Wallet Update
+      onSnapshot(userRef, (docSnap) => {
+        if (docSnap.exists()) {
+          currentWallet = docSnap.data().wallet || 0;
+          document.getElementById("walletDisplay").textContent = `Wallet: ₹${currentWallet}`;
+        }
+      });
+
+      // Load Match Info from localStorage
+      const match = JSON.parse(localStorage.getItem("selectedMatch"));
+      if (!match) return document.getElementById("matchCard").innerHTML = "No Match Selected";
+
+      document.getElementById("matchImage").src = match.image || "";
+      document.getElementById("matchTitle").textContent = `${match.matchId} - ${match.time}`;
+      document.getElementById("matchEntryFee").textContent = match.entryFee;
+      document.getElementById("matchPrize").textContent = match.prize;
+      document.getElementById("matchMap").textContent = match.map;
+      document.getElementById("matchTime").textContent = match.time;
+      document.getElementById("matchSlot").textContent = match.slot;
+
+      matchId = match.matchId;
+      entryFee = Number(match.entryFee || 0);
+      document.getElementById("loadingSpinner").style.display = "none";
+
+      // JOIN MATCH
+      document.getElementById("joinBtn").addEventListener("click", async () => {
+        const name = document.getElementById("inGameName").value.trim();
+        const msg = document.getElementById("message");
+        if (!name) return msg.textContent = "Please enter your in-game name.";
+
+        if (currentWallet < entryFee) {
+          msg.innerHTML = `<span class="text-red-500">Insufficient balance.</span>`;
+          return;
         }
 
-        document.getElementById("joinBtn").addEventListener("click", async () => {
-          const name = document.getElementById("inGameName").value.trim();
-          const msg = document.getElementById("message");
-          if (!name) {
-            msg.textContent = "Please enter your in-game name.";
-            msg.className = "text-red-500 font-semibold mt-2 text-center";
-            return;
-          }
+        const matchRef = doc(db, "solocs", matchId);
+        const matchSnap = await getDoc(matchRef);
+        let currentSlot = matchSnap.data().slot;
 
-          if (currentWallet >= entryFee) {
-            const newBalance = currentWallet - entryFee;
-            try {
-              await updateDoc(doc(db, "users", currentUser.uid), {
-                wallet: newBalance
-              });
-              msg.innerHTML = `<span class="text-green-400">Successfully joined! ₹${entryFee} deducted.</span>`;
-            } catch (err) {
-              msg.innerHTML = `<span class="text-red-500">Failed to join. Try again.</span>`;
-            }
-          } else {
-            msg.innerHTML = `
-              <span class="text-red-500">Insufficient balance to join this match.</span><br>
-              <button onclick="window.location.href='wallet.html'" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full text-sm">
-                Add Money
-              </button>
-            `;
-          }
-        });
+        if (currentSlot <= 0) {
+          msg.innerHTML = `<span class="text-red-500">No slots available!</span>`;
+          return;
+        }
 
-      } else {
-        window.location.href = "index.html";
-      }
+        try {
+          await updateDoc(userRef, {
+            wallet: currentWallet - entryFee,
+            joinedMatches: arrayUnion(matchId)
+          });
+
+          await updateDoc(matchRef, {
+            slot: currentSlot - 1
+          });
+
+          msg.innerHTML = `<span class="text-green-400">Successfully joined! ₹${entryFee} deducted.</span>`;
+          document.getElementById("matchSlot").textContent = currentSlot - 1;
+        } catch (e) {
+          msg.innerHTML = `<span class="text-red-500">Failed to join. Try again later.</span>`;
+        }
+      });
     });
 
     lucide.createIcons();
   </script>
-
 </body>
 </html>
