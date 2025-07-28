@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Join Solo Match - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-[#111] text-white font-sans">
 
   <!-- Header -->
   <div class="flex justify-between items-center px-4 py-2 bg-gray-900">
     <div class="flex items-center cursor-pointer" onclick="window.location.href='main.html'">
-      <div class="text-2xl mr-2">🏠</div>
+      <i data-lucide="home" class="text-white w-6 h-6"></i>
     </div>
     <div id="walletDisplay" class="text-yellow-400 font-bold text-sm sm:text-base">Wallet: ₹0</div>
   </div>
@@ -79,7 +81,7 @@
           document.getElementById("matchCard").innerHTML = "<p class='text-center text-red-500'>No match selected!</p>";
         }
 
-        // Join button logic (placeholder)
+        // Join button logic
         document.getElementById("joinBtn").addEventListener("click", () => {
           const name = document.getElementById("inGameName").value.trim();
           if (name === "") {
@@ -94,6 +96,9 @@
         window.location.href = "index.html";
       }
     });
+
+    // Load Lucide icons
+    lucide.createIcons();
   </script>
 </body>
 </html>
