@@ -53,7 +53,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, updateDoc, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, updateDoc, onSnapshot, arrayUnion, runTransaction } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -68,7 +68,7 @@
     const auth = getAuth();
     const db = getFirestore();
 
-    let currentUser, matchId = "", entryFee = 0, currentWallet = 0;
+    let currentUser, matchId = "", entryFee = 0, currentWallet = 0, matchCollection = "solocs";
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) return window.location.href = "index.html";
@@ -76,7 +76,7 @@
       currentUser = user;
       const userRef = doc(db, "users", user.uid);
 
-      // Update Wallet Live
+      // Live Wallet Update
       onSnapshot(userRef, (docSnap) => {
         if (docSnap.exists()) {
           currentWallet = docSnap.data().wallet || 0;
@@ -84,17 +84,17 @@
         }
       });
 
-      // Get Match Info from localStorage
+      // Get match info from localStorage
       const match = JSON.parse(localStorage.getItem("selectedMatch"));
       if (!match) {
         document.getElementById("matchCard").innerHTML = "<p>No match selected.</p>";
         return;
       }
 
-      matchId = match.id || "match1";  // fallback
+      matchId = match.id || "match1";
+      matchCollection = match.collection || "solocs";
       entryFee = Number(match.entryFee || 0);
 
-      // Update UI
       document.getElementById("matchImage").src = match.image || "";
       document.getElementById("matchTitle").textContent = `${match.title || matchId} - ${match.time || ""}`;
       document.getElementById("matchEntryFee").textContent = match.entryFee || "--";
@@ -105,7 +105,7 @@
 
       document.getElementById("loadingSpinner").style.display = "none";
 
-      // Join Logic
+      // Join Button Handler
       document.getElementById("joinBtn").addEventListener("click", async () => {
         const name = document.getElementById("inGameName").value.trim();
         const msg = document.getElementById("message");
@@ -117,34 +117,35 @@
           return;
         }
 
-        const matchRef = doc(db, "solocs", matchId);
-        const matchSnap = await getDoc(matchRef);
-
-        if (!matchSnap.exists()) {
-          msg.innerHTML = `<span class="text-red-500">Match not found.</span>`;
-          return;
-        }
-
-        let currentSlot = matchSnap.data().slot;
-        if (currentSlot <= 0) {
-          msg.innerHTML = `<span class="text-red-500">No slots available!</span>`;
-          return;
-        }
+        const matchRef = doc(db, matchCollection, matchId);
 
         try {
-          await updateDoc(userRef, {
-            wallet: currentWallet - entryFee,
-            joinedMatches: arrayUnion(matchId)
+          await runTransaction(db, async (transaction) => {
+            const matchDoc = await transaction.get(matchRef);
+            const userDoc = await transaction.get(userRef);
+
+            if (!matchDoc.exists()) throw "Match not found.";
+            let availableSlots = matchDoc.data().slot || 0;
+            if (availableSlots <= 0) throw "No slots available.";
+
+            const walletAmount = userDoc.data().wallet || 0;
+            if (walletAmount < entryFee) throw "Not enough balance.";
+
+            transaction.update(userRef, {
+              wallet: walletAmount - entryFee,
+              joinedMatches: arrayUnion(matchId)
+            });
+
+            transaction.update(matchRef, {
+              slot: availableSlots - 1
+            });
+
+            document.getElementById("matchSlot").textContent = availableSlots - 1;
           });
 
-          await updateDoc(matchRef, {
-            slot: currentSlot - 1
-          });
-
-          document.getElementById("matchSlot").textContent = currentSlot - 1;
           msg.innerHTML = `<span class="text-green-400">Successfully joined! ₹${entryFee} deducted.</span>`;
         } catch (e) {
-          msg.innerHTML = `<span class="text-red-500">Failed to join. Try again later.</span>`;
+          msg.innerHTML = `<span class="text-red-500">${e.message || e}</span>`;
         }
       });
     });
