@@ -25,14 +25,14 @@
 
   <!-- Match Cards -->
   <div class="pt-20 grid grid-cols-1 gap-4 p-4" id="matchesContainer">
-    <!-- Match cards go here -->
+    <!-- Match card will be inserted here -->
   </div>
 
   <!-- Firebase & Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, getDocs, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
@@ -68,14 +68,13 @@
       };
 
       const container = document.getElementById("matchesContainer");
+      const docRef = doc(db, "matches", "match1");
 
-      // 🔄 Only fetch Solo Classic matches from "matches"
-      const q = query(collection(db, "matches"), where("type", "==", "soloclassic"));
-      const snapshot = await getDocs(q);
+      onSnapshot(docRef, (docSnap) => {
+        if (!docSnap.exists()) return;
 
-      snapshot.forEach((docSnap) => {
-        const id = docSnap.id;
         const data = docSnap.data();
+        const id = docSnap.id;
 
         matchDataMap[id] = {
           matchId: id,
@@ -88,10 +87,16 @@
           image: "https://i.postimg.cc/Gtc1nVjV/file-00000000ad90622f81015bdfb65ca95f.png"
         };
 
-        const card = document.createElement("div");
-        card.className = "bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition relative";
-        card.id = `match-${id}`;
-        card.onclick = () => selectMatch(id);
+        let card = document.getElementById(`match-${id}`);
+        const slotFull = data.slot >= 48;
+
+        if (!card) {
+          card = document.createElement("div");
+          card.className = "bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition relative";
+          card.id = `match-${id}`;
+          card.onclick = () => selectMatch(id);
+          container.appendChild(card);
+        }
 
         card.innerHTML = `
           <img src="${matchDataMap[id].image}" class="w-full rounded mb-2">
@@ -100,24 +105,16 @@
           <p>Prize: ₹${matchDataMap[id].prize}</p>
           <p>Time: ${matchDataMap[id].matchtime}</p>
           <p>Map: ${matchDataMap[id].map}</p>
-          <p id="slot-${id}">Slots: ${matchDataMap[id].slot}</p>
+          <p id="slot-${id}">Slots: ${data.slot}/48</p>
         `;
 
-        container.appendChild(card);
-
-        // 🔄 Real-time updates
-        onSnapshot(doc(db, "matches", id), (updatedDoc) => {
-          const slots = updatedDoc.data().slot || 0;
-          matchDataMap[id].slot = `${slots}/48`;
-
-          const slotElement = document.getElementById(`slot-${id}`);
-          if (slotElement) slotElement.textContent = `Slots: ${slots}/48`;
-
-          if (slots >= 48) {
-            card.classList.add("opacity-50", "cursor-not-allowed");
-            card.onclick = null;
-          }
-        });
+        if (slotFull) {
+          card.classList.add("opacity-50", "cursor-not-allowed");
+          card.onclick = null;
+        } else {
+          card.classList.remove("opacity-50", "cursor-not-allowed");
+          card.onclick = () => selectMatch(id);
+        }
       });
     });
 
