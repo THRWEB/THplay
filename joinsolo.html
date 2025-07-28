@@ -84,14 +84,16 @@
         }
       });
 
-      // Get match info from localStorage
+      // ⛏ Load match from localStorage
       const match = JSON.parse(localStorage.getItem("selectedMatch"));
-      if (!match) {
-        document.getElementById("matchCard").innerHTML = "<p>No match selected.</p>";
+      console.log("🔎 Selected match from localStorage:", match);
+
+      if (!match || (!match.id && !match.title)) {
+        document.getElementById("matchCard").innerHTML = "<p class='text-red-500'>No match selected.</p>";
         return;
       }
 
-      matchId = match.id || "match1";
+      matchId = match.id || match.title?.toLowerCase().replace(/\s+/g, "_") || "match1";
       matchCollection = match.collection || "solocs";
       entryFee = Number(match.entryFee || 0);
 
@@ -105,7 +107,7 @@
 
       document.getElementById("loadingSpinner").style.display = "none";
 
-      // Join Button Handler
+      // 👉 Join Match
       document.getElementById("joinBtn").addEventListener("click", async () => {
         const name = document.getElementById("inGameName").value.trim();
         const msg = document.getElementById("message");
