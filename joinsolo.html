@@ -10,10 +10,8 @@
 
   <!-- Header -->
   <div class="flex justify-between items-center px-4 py-2 bg-gray-900">
-    <div class="flex items-center">
-      <div class="text-2xl font-bold mr-2">☰</div>
-      <img id="sidebarPic" src="" class="w-10 h-10 rounded-full mr-2" />
-      <span id="username" class="text-sm sm:text-base">Loading...</span>
+    <div class="flex items-center cursor-pointer" onclick="window.location.href='main.html'">
+      <div class="text-2xl mr-2">🏠</div>
     </div>
     <div id="walletDisplay" class="text-yellow-400 font-bold text-sm sm:text-base">Wallet: ₹0</div>
   </div>
@@ -59,9 +57,6 @@
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        document.getElementById("sidebarPic").src = user.photoURL || "";
-        document.getElementById("username").textContent = user.displayName || "User";
-
         const userRef = doc(db, "users", user.uid);
         onSnapshot(userRef, (docSnap) => {
           if (docSnap.exists()) {
