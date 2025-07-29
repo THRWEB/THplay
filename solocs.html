@@ -13,8 +13,16 @@
 </head>
 <body class="bg-[#111] text-white">
 
+  <!-- 🔄 Loading Spinner -->
+  <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+    <svg class="animate-spin h-10 w-10 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+    </svg>
+  </div>
+
   <!-- Header -->
-  <div class="fixed top-0 w-full z-50 bg-gray-900 py-3 flex items-center justify-center shadow">
+  <div class="fixed top-0 w-full z-40 bg-gray-900 py-3 flex items-center justify-center shadow">
     <div class="absolute left-4 cursor-pointer" onclick="window.location.href='main.html'">
       <i data-lucide="home" class="text-white w-6 h-6"></i>
     </div>
@@ -47,8 +55,11 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
     const db = getFirestore();
-
     const matchDataMap = {};
+
+    const spinner = document.getElementById("loadingSpinner");
+    const walletDisplay = document.getElementById("walletDisplay");
+    const container = document.getElementById("matchesContainer");
 
     onAuthStateChanged(auth, (user) => {
       if (!user) {
@@ -56,21 +67,32 @@
         return;
       }
 
-      // Wallet Balance Display
       const userRef = doc(db, "users", user.uid);
+
+      // 1. Load wallet
+      let walletLoaded = false;
+      let matchesLoaded = false;
+
+      const tryHideSpinner = () => {
+        if (walletLoaded && matchesLoaded) {
+          spinner.style.display = "none";
+        }
+      };
+
       docSnap(userRef, (doc) => {
         if (doc.exists()) {
           const wallet = doc.data().wallet || 0;
-          document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+          walletDisplay.textContent = `Wallet: ₹${wallet}`;
         }
+        walletLoaded = true;
+        tryHideSpinner();
       });
 
-      document.getElementById("walletDisplay").onclick = () => {
+      walletDisplay.onclick = () => {
         window.location.href = "wallet.html";
       };
 
-      // Match Cards
-      const container = document.getElementById("matchesContainer");
+      // 2. Load matches
       const matchCollection = collection(db, "solocs");
 
       onSnapshot(matchCollection, (snapshot) => {
@@ -107,6 +129,8 @@
           `;
           container.appendChild(card);
         });
+        matchesLoaded = true;
+        tryHideSpinner();
       });
     });
 
