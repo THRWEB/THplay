@@ -131,9 +131,12 @@
             if (wallet < entryFee) throw "Not enough balance.";
 
             tx.update(matchRef, { slot: slots - 1 });
+
+            // Update user with in-game name and match category
             tx.update(userRef, {
               wallet: wallet - entryFee,
-              joinedMatches: arrayUnion(matchId)
+              ingameName: name,
+              joinedMatches: arrayUnion(matchCollection) // will add "solocs"
             });
 
             document.getElementById("matchSlot").textContent = slots - 1;
