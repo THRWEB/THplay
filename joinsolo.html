@@ -132,11 +132,11 @@
 
             tx.update(matchRef, { slot: slots - 1 });
 
-            // Update user with in-game name and match category
+            // ✅ Append values to arrays instead of overwriting
             tx.update(userRef, {
               wallet: wallet - entryFee,
-              ingameName: name,
-              joinedMatches: arrayUnion(matchCollection) // will add "solocs"
+              joinedMatches: arrayUnion(matchCollection),
+              ingameNames: arrayUnion(name)
             });
 
             document.getElementById("matchSlot").textContent = slots - 1;
