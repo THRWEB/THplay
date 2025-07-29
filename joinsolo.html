@@ -130,13 +130,13 @@
             const wallet = userSnap.data()?.wallet ?? 0;
             if (wallet < entryFee) throw "Not enough balance.";
 
-            tx.update(matchRef, { slot: slots - 1 });
+            // 🧠 Build joinedHistory entry
+            const joinedData = { page: matchCollection, name };
 
-            // ✅ Append values to arrays instead of overwriting
+            tx.update(matchRef, { slot: slots - 1 });
             tx.update(userRef, {
               wallet: wallet - entryFee,
-              joinedMatches: arrayUnion(matchCollection),
-              ingameNames: arrayUnion(name)
+              joinedHistory: arrayUnion(joinedData)
             });
 
             document.getElementById("matchSlot").textContent = slots - 1;
