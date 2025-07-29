@@ -26,9 +26,9 @@
     </div>
   </div>
 
-  <!-- Content Grid -->
+  <!-- Match Cards Grid -->
   <div class="pt-20 grid grid-cols-1 gap-4 p-4" id="matchesContainer">
-    <!-- Match cards will be inserted here dynamically -->
+    <!-- Dynamic cards will appear here -->
   </div>
 
   <!-- Firebase Script -->
@@ -58,7 +58,7 @@
         return;
       }
 
-      // Wallet fetch
+      // Wallet Update
       const userRef = doc(db, "users", user.uid);
       onSnapshot(userRef, (docSnap) => {
         if (docSnap.exists()) {
@@ -71,7 +71,7 @@
         window.location.href = "wallet.html";
       };
 
-      // Fetch all matches from "matches" collection
+      // Load Matches
       const container = document.getElementById("matchesContainer");
       const snapshot = await getDocs(collection(db, "matches"));
       snapshot.forEach((docSnap) => {
@@ -86,7 +86,8 @@
           matchtime: data.matchtime || "--",
           map: data.map || "--",
           slot: data.slot || 0,
-          image: "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png"
+          image: "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png",
+          collection: "matches"
         };
 
         matchDataMap[id] = match;
@@ -107,7 +108,7 @@
       });
     });
 
-    // Match select function
+    // Save match to localStorage
     window.selectMatch = function (matchId) {
       const selected = matchDataMap[matchId];
       if (selected) {
