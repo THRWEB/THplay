@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Clash Squad Solo - THplay</title>
+  <title>Classic Solo - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -33,9 +33,7 @@
   </div>
 
   <!-- Match Grid -->
-  <div class="pt-20 grid grid-cols-1 gap-4 p-4" id="matchesContainer">
-    <!-- Match cards will be injected here -->
-  </div>
+  <div class="pt-20 grid grid-cols-1 gap-4 p-4" id="matchesContainer"></div>
 
   <!-- Firebase Logic -->
   <script type="module">
@@ -69,14 +67,12 @@
 
       const userRef = doc(db, "users", user.uid);
 
-      // 1. Load wallet
+      // Wallet Listener
       let walletLoaded = false;
       let matchesLoaded = false;
 
       const tryHideSpinner = () => {
-        if (walletLoaded && matchesLoaded) {
-          spinner.style.display = "none";
-        }
+        if (walletLoaded && matchesLoaded) spinner.style.display = "none";
       };
 
       docSnap(userRef, (doc) => {
@@ -92,11 +88,11 @@
         window.location.href = "wallet.html";
       };
 
-      // 2. Load matches
-      const matchCollection = collection(db, "solocs");
+      // Load matches from "soloc" collection
+      const matchCollection = collection(db, "soloc");
 
       onSnapshot(matchCollection, (snapshot) => {
-        container.innerHTML = ""; // Clear before render
+        container.innerHTML = "";
         snapshot.forEach((doc) => {
           const data = doc.data();
           const id = doc.id;
@@ -104,13 +100,13 @@
           const match = {
             id: id,
             collection: "soloc",
-            title: data.title || "Clash Squad Solo",
+            title: data.title || "Classic Solo",
             entryFee: data.entryfees || 0,
             prize: data.prize || 0,
             matchTime: data.matchtime || "--",
             map: data.map || "--",
             slot: data.slot || 0,
-            image: "https://i.postimg.cc/Gtc1nVjV/file-00000000ad90622f81015bdfb65ca95f.png"
+            image: data.image || "https://i.postimg.cc/Gtc1nVjV/file-00000000ad90622f81015bdfb65ca95f.png"
           };
 
           matchDataMap[id] = match;
