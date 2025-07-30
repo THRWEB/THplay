@@ -47,6 +47,7 @@
       Join Match
     </button>
     <div id="message" class="text-center mt-4 font-semibold"></div>
+    <div id="addMoneyWrapper" class="flex justify-center mt-2"></div>
   </div>
 
   <!-- 🔌 Firebase Logic -->
@@ -70,6 +71,21 @@
 
     let currentUser, entryFee = 0;
     let matchId = "", matchCollection = "solocs";
+    let userWallet = 0; // Track user wallet for instant feedback
+
+    // Util: Show/hide Add Money button
+    function showAddMoneyButton() {
+      const wrapper = document.getElementById('addMoneyWrapper');
+      wrapper.innerHTML = '';
+      const addMoneyBtn = document.createElement('button');
+      addMoneyBtn.textContent = 'Add Money';
+      addMoneyBtn.className = 'mt-2 bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded font-semibold';
+      addMoneyBtn.onclick = () => window.location.href = 'wallet.html';
+      wrapper.appendChild(addMoneyBtn);
+    }
+    function hideAddMoneyButton() {
+      document.getElementById('addMoneyWrapper').innerHTML = '';
+    }
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) return window.location.href = "index.html";
@@ -79,8 +95,8 @@
 
       // 🪙 Wallet Listener
       onSnapshot(userRef, (docSnap) => {
-        const wallet = docSnap.data()?.wallet ?? 0;
-        document.getElementById("walletDisplay").textContent = `Wallet: ₹${wallet}`;
+        userWallet = docSnap.data()?.wallet ?? 0;
+        document.getElementById("walletDisplay").textContent = `Wallet: ₹${userWallet}`;
       });
 
       // 🎯 Load Match from localStorage
@@ -109,9 +125,13 @@
       document.getElementById("joinBtn").addEventListener("click", async () => {
         const name = document.getElementById("inGameName").value.trim();
         const msg = document.getElementById("message");
+        hideAddMoneyButton();
         msg.textContent = "";
 
-        if (!name) return msg.innerHTML = `<span class="text-red-500">Please enter your Free Fire name.</span>`;
+        if (!name) {
+          msg.innerHTML = `<span class="text-red-500">Please enter your Free Fire name.</span>`;
+          return;
+        }
 
         try {
           await runTransaction(db, async (tx) => {
@@ -145,6 +165,10 @@
           msg.innerHTML = `<span class="text-green-400">Joined successfully! ₹${entryFee} deducted.</span>`;
         } catch (err) {
           msg.innerHTML = `<span class="text-red-500">${err.message || err}</span>`;
+          // Show 'Add Money' button for insufficient balance
+          if ((err.message || err) === "Not enough balance.") {
+            showAddMoneyButton();
+          }
         }
       });
     });
