@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clash Squad Solo - THplay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+  </style>
+</head>
+<body class="bg-[#111] text-white">
+
+  <!-- 🔄 Loading Spinner -->
+  <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+    <svg class="animate-spin h-10 w-10 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+    </svg>
+  </div>
+
+  <!-- Header -->
+  <div class="fixed top-0 w-full z-40 bg-gray-900 py-3 flex items-center justify-center shadow">
+    <div class="absolute left-4 cursor-pointer" onclick="window.location.href='main.html'">
+      <i data-lucide="home" class="text-white w-6 h-6"></i>
+    </div>
+    <h1 class="text-xl md:text-2xl font-bold text-purple-400">THplay</h1>
+    <div id="walletDisplay" class="absolute right-4 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer">
+      Wallet: ₹0
+    </div>
+  </div>
+
+  <!-- Match Grid -->
+  <div class="pt-20 grid grid-cols-1 gap-4 p-4" id="matchesContainer">
+    <!-- Match cards will be injected here -->
+  </div>
+
+  <!-- Firebase Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, doc, onSnapshot as docSnap } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+      authDomain: "thplay-b3c68.firebaseapp.com",
+      projectId: "thplay-b3c68",
+      storageBucket: "thplay-b3c68.appspot.com",
+      messagingSenderId: "243301774162",
+      appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore();
+    const matchDataMap = {};
+
+    const spinner = document.getElementById("loadingSpinner");
+    const walletDisplay = document.getElementById("walletDisplay");
+    const container = document.getElementById("matchesContainer");
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      const userRef = doc(db, "users", user.uid);
+
+      // 1. Load wallet
+      let walletLoaded = false;
+      let matchesLoaded = false;
+
+      const tryHideSpinner = () => {
+        if (walletLoaded && matchesLoaded) {
+          spinner.style.display = "none";
+        }
+      };
+
+      docSnap(userRef, (doc) => {
+        if (doc.exists()) {
+          const wallet = doc.data().wallet || 0;
+          walletDisplay.textContent = `Wallet: ₹${wallet}`;
+        }
+        walletLoaded = true;
+        tryHideSpinner();
+      });
+
+      walletDisplay.onclick = () => {
+        window.location.href = "wallet.html";
+      };
+
+      // 2. Load matches
+      const matchCollection = collection(db, "solocs");
+
+      onSnapshot(matchCollection, (snapshot) => {
+        container.innerHTML = ""; // Clear before render
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const id = doc.id;
+
+          const match = {
+            id: id,
+            collection: "soloc",
+            title: data.title || "Clash Squad Solo",
+            entryFee: data.entryfees || 0,
+            prize: data.prize || 0,
+            matchTime: data.matchtime || "--",
+            map: data.map || "--",
+            slot: data.slot || 0,
+            image: "https://i.postimg.cc/Gtc1nVjV/file-00000000ad90622f81015bdfb65ca95f.png"
+          };
+
+          matchDataMap[id] = match;
+
+          const card = document.createElement("div");
+          card.className = "bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700";
+          card.onclick = () => selectMatch(id);
+          card.innerHTML = `
+            <img src="${match.image}" class="w-full rounded mb-2" />
+            <h2 class="text-xl font-bold">${match.title}</h2>
+            <p>Entry Fee: ₹${match.entryFee}</p>
+            <p>Prize: ₹${match.prize}</p>
+            <p>Time: ${match.matchTime}</p>
+            <p>Map: ${match.map}</p>
+            <p>Slots Left: ${match.slot}</p>
+          `;
+          container.appendChild(card);
+        });
+        matchesLoaded = true;
+        tryHideSpinner();
+      });
+    });
+
+    // Handle match click
+    window.selectMatch = (id) => {
+      const match = matchDataMap[id];
+      if (match) {
+        localStorage.setItem("selectedMatch", JSON.stringify(match));
+        window.location.href = "joinsolo.html";
+      }
+    };
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
