@@ -8,7 +8,7 @@
 </head>
 <body class="bg-[#111] text-white font-sans min-h-screen">
 
-  <!-- 🔄 Loading -->
+  <!-- 🔄 Loading Spinner -->
   <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
     <svg class="animate-spin h-10 w-10 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -16,13 +16,13 @@
     </svg>
   </div>
 
-  <!-- 🔝 Header -->
+  <!-- Header -->
   <div class="relative bg-gray-900 py-3 flex items-center justify-center">
     <div class="absolute left-4 cursor-pointer" onclick="window.location.href='main.html'">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"></path></svg>
     </div>
     <h1 class="text-xl font-bold text-purple-400">THplay</h1>
-    <div id="walletDisplay" onclick="window.location.href='wallet.html'" class="absolute right-4 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer">
+    <div id="walletDisplay" onclick="window.location.href='wallet.html'" class="absolute right-4 bg-purple-700 hover:bg-purple-800 px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer transition">
       Wallet: ₹0
     </div>
   </div>
@@ -35,13 +35,12 @@
     </div>
   </div>
 
-  <!-- 🔌 Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-    const firebaseConfig = {
+    const firebaseConfig = { /* ...your config... */
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
       authDomain: "thplay-b3c68.firebaseapp.com",
       projectId: "thplay-b3c68",
@@ -53,8 +52,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
     const db = getFirestore();
-
-    let user, userData;
 
     const matchesList = document.getElementById('matchesList');
     const noMatches = document.getElementById('noMatches');
@@ -83,68 +80,27 @@
     async function displayMatches(userData) {
       matchesList.innerHTML = '';
       noMatches.classList.add('hidden');
-
       const joinedHistory = userData.joinedHistory || [];
+
       if (joinedHistory.length === 0) {
         noMatches.classList.remove('hidden');
         loadingSpinner.style.display = "none";
         return;
       }
 
-      // Group by collection-page (for efficient Firestore fetching)
-      // joinedHistory: [{page: <collection>, name: <ingamename>, id: <matchid>?} ...]
-      // In your joinsolo, it's only {page, name}, so we'll try to use page as collection, name as in-game
-      // We'll match by both 'collection' and match ID from Firestore
-
-      // But to know match IDs, you may want to extend joinedHistory to {page, name, matchId}, but for now we fallback to search for matches joined by user name
-
+      // Only use entries which have {page, name, matchId}
       let matchPromises = joinedHistory.map(async entry => {
-        // Find the most recent match in that collection that includes the player's name
-        // (Assumption: user can't join same match multiple times with same name)
-        const col = entry.page || "solocs";
-        // Get ALL matches, find the one with most recent and our user's in-game name joined. But if you can, also store matchId in joinedHistory.
-        // If you store matchId, it's much more efficient: just getDoc(doc(db, col, matchId))
-        // For now, let's try to find the latest match joined with this name
-        // But we'll try to fetch all match docs in the 'col' collection and look for a match including this name.
-
-        // This is not scalable for a lot of matches, but for small apps it's fine.
-        // In production, always store {page, matchId, name} for efficiency!
-
-        // We'll fetch last 10 from col, and see if one matches the joined name.
-        // (You can fix this as per your Firestore rules/data.)
-
-        // If you store matchId in joinedHistory, this part gets a lot simpler!
-        let matchDoc = null, match = null, matchId = null;
-
+        if (!entry.page || !entry.matchId) return null;
         try {
-          // Try fast path: maybe entry has 'id' or 'matchId'
-          matchId = entry.id || entry.matchId;
-          if (matchId) {
-            const mdoc = await getDoc(doc(db, col, matchId));
-            if (mdoc.exists()) {
-              matchDoc = mdoc;
-              match = mdoc.data();
-              match.id = mdoc.id;
-            }
+          const mdoc = await getDoc(doc(db, entry.page, entry.matchId));
+          if (mdoc.exists()) {
+            const match = mdoc.data();
+            match.id = mdoc.id;
+            return createMatchCard(match, entry.name);
           }
-        } catch(e){}
-
-        if (!match && col) {
-          try {
-            // fallback: try to find a match in that collection with our name – inefficient but works if count is small
-            // you might fetch a page of matches and test if the joined name shows up
-            // We'll fetch the 10 latest matches from the collection (update to match your app needs!)
-            // Only possible if your Firestore rules allow it and aren't huge.
-            // To minimize, you should store match ID in joinedHistory.
-          } catch(e){}
-        }
-
-        if (!match) return null; // No matching match found or can't resolve
-
-        return createMatchCard(match, entry.name);
+        } catch (e) { return null; }
       });
 
-      // Wait for all
       let cards = (await Promise.all(matchPromises)).filter(Boolean);
 
       if (cards.length === 0) {
@@ -155,13 +111,10 @@
       loadingSpinner.style.display = "none";
     }
 
-    onAuthStateChanged(auth, async (_user) => {
-      if (!_user) return window.location.href = "index.html";
-      user = _user;
-
-      // User wallet listener for header
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return window.location.href = "index.html";
       onSnapshot(doc(db, "users", user.uid), (docSnap) => {
-        userData = docSnap.data() || {};
+        const userData = docSnap.data() || {};
         document.getElementById("walletDisplay").textContent = `Wallet: ₹${userData.wallet ?? 0}`;
         displayMatches(userData);
       });
