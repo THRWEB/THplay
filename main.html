@@ -11,8 +11,6 @@
     .sidebar { transition: transform 0.3s ease; }
     .sidebar-hidden { transform: translateX(-100%); }
     .overlay { background-color: rgba(0, 0, 0, 0.5); }
-
-    /* Popup Modal Animation */
     .modal-fade {
       transition: opacity 0.25s, transform 0.25s;
       opacity: 0;
@@ -27,7 +25,7 @@
     .fade-overlay {
       opacity: 0;
       transition: opacity 0.25s;
-      background: rgba(24, 24, 27, 0.32); /* 950 background with 32% opacity */
+      background: rgba(24, 24, 27, 0.32);
       pointer-events: none;
     }
     .modal-active .fade-overlay {
@@ -47,10 +45,8 @@
     <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
     <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
     <div class="mt-10 flex flex-col space-y-3">
-
       <!-- My Matches button -->
       <button onclick="goToMyMatches()" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full font-semibold">My Matches</button>
-
       <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">Logout</button>
       <a href="https://t.me/T7fiit4" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">Support</a>
     </div>
@@ -203,7 +199,6 @@
     window.location.href = "wallet.html";
   };
 
-  // MY MATCHES BUTTON
   window.goToMyMatches = function () {
     window.location.href = "mymatches.html";
   };
@@ -230,9 +225,10 @@
     setModalActive(false);
   };
 
+  // CHANGE: Open "soloc.html" for "Classic"
   window.joinClassic = function () {
     if (currentCard === 'solo') {
-      window.location.href = "soloclassic.html";
+      window.location.href = "soloc.html";
     } else {
       alert("Classic Mode Selected");
       closeModePopup();
@@ -253,7 +249,6 @@
   });
 
   setModalActive(false);
-
 </script>
 </body>
 </html>
