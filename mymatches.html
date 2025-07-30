@@ -40,7 +40,7 @@
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-    const firebaseConfig = { /* ...your config... */
+    const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
       authDomain: "thplay-b3c68.firebaseapp.com",
       projectId: "thplay-b3c68",
@@ -71,6 +71,8 @@
             <div><b>Map:</b> ${match.map || '--'}</div>
             <div><b>Time:</b> ${match.time || '--'}</div>
             <div><b>Slots Left:</b> ${match.slot ?? '--'}</div>
+            <div><b>Room ID:</b> <span class="text-green-300">${match.roomid || '--'}</span></div>
+            <div><b>Room Pass:</b> <span class="text-green-300">${match.roompass || '--'}</span></div>
           </div>
         </div>
       `;
@@ -88,7 +90,6 @@
         return;
       }
 
-      // Only use entries which have {page, name, matchId}
       let matchPromises = joinedHistory.map(async entry => {
         if (!entry.page || !entry.matchId) return null;
         try {
@@ -96,7 +97,18 @@
           if (mdoc.exists()) {
             const match = mdoc.data();
             match.id = mdoc.id;
-            return createMatchCard(match, entry.name);
+            // Use the joinedName, but also roomid/roompass from the match doc
+            return createMatchCard({
+              ...match,
+              roomid: match.roomid || entry.roomid || '--',
+              roompass: match.roompass || entry.roompass || '--',
+              entryFee: match.entryfees || entry.entryFee || '--',
+              prize: match.prize || entry.prize || '--',
+              map: match.map || entry.map || '--',
+              time: match.matchtime || entry.time || '--',
+              slot: match.slot ?? entry.slot ?? '--',
+              image: match.image || entry.image || ""
+            }, entry.name);
           }
         } catch (e) { return null; }
       });
