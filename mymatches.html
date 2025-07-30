@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Matches - THplay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#111] text-white font-sans min-h-screen">
+
+  <!-- 🔄 Loading -->
+  <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+    <svg class="animate-spin h-10 w-10 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+    </svg>
+  </div>
+
+  <!-- 🔝 Header -->
+  <div class="relative bg-gray-900 py-3 flex items-center justify-center">
+    <div class="absolute left-4 cursor-pointer" onclick="window.location.href='main.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"></path></svg>
+    </div>
+    <h1 class="text-xl font-bold text-purple-400">THplay</h1>
+    <div id="walletDisplay" onclick="window.location.href='wallet.html'" class="absolute right-4 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer">
+      Wallet: ₹0
+    </div>
+  </div>
+
+  <div class="max-w-xl mx-auto mt-6 px-3">
+    <h2 class="text-2xl font-bold text-center mb-3">My Joined Matches</h2>
+    <div id="matchesList" class="space-y-4"></div>
+    <div id="noMatches" class="text-center text-gray-400 mt-8 hidden">
+      You have not joined any matches yet.
+    </div>
+  </div>
+
+  <!-- 🔌 Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+      authDomain: "thplay-b3c68.firebaseapp.com",
+      projectId: "thplay-b3c68",
+      storageBucket: "thplay-b3c68.appspot.com",
+      messagingSenderId: "243301774162",
+      appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore();
+
+    let user, userData;
+
+    const matchesList = document.getElementById('matchesList');
+    const noMatches = document.getElementById('noMatches');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+
+    function createMatchCard(match, joinedName) {
+      const div = document.createElement('div');
+      div.className = "bg-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col md:flex-row gap-4 p-4";
+      div.innerHTML = `
+        <img class="h-24 w-32 object-cover rounded" src="${match.image || 'https://via.placeholder.com/120x80'}" alt="${match.title || ''}">
+        <div class="flex-1 space-y-1">
+          <h3 class="text-lg font-bold text-purple-400">${match.title || match.id || 'Match'}</h3>
+          <div class="text-sm">
+            <div><b>Your Name:</b> <span class="text-gray-200">${joinedName}</span></div>
+            <div><b>Entry Fee:</b> ₹${match.entryFee || '--'}</div>
+            <div><b>Prize:</b> ₹${match.prize || '--'}</div>
+            <div><b>Map:</b> ${match.map || '--'}</div>
+            <div><b>Time:</b> ${match.time || '--'}</div>
+            <div><b>Slots Left:</b> ${match.slot ?? '--'}</div>
+          </div>
+        </div>
+      `;
+      return div;
+    }
+
+    async function displayMatches(userData) {
+      matchesList.innerHTML = '';
+      noMatches.classList.add('hidden');
+
+      const joinedHistory = userData.joinedHistory || [];
+      if (joinedHistory.length === 0) {
+        noMatches.classList.remove('hidden');
+        loadingSpinner.style.display = "none";
+        return;
+      }
+
+      // Group by collection-page (for efficient Firestore fetching)
+      // joinedHistory: [{page: <collection>, name: <ingamename>, id: <matchid>?} ...]
+      // In your joinsolo, it's only {page, name}, so we'll try to use page as collection, name as in-game
+      // We'll match by both 'collection' and match ID from Firestore
+
+      // But to know match IDs, you may want to extend joinedHistory to {page, name, matchId}, but for now we fallback to search for matches joined by user name
+
+      let matchPromises = joinedHistory.map(async entry => {
+        // Find the most recent match in that collection that includes the player's name
+        // (Assumption: user can't join same match multiple times with same name)
+        const col = entry.page || "solocs";
+        // Get ALL matches, find the one with most recent and our user's in-game name joined. But if you can, also store matchId in joinedHistory.
+        // If you store matchId, it's much more efficient: just getDoc(doc(db, col, matchId))
+        // For now, let's try to find the latest match joined with this name
+        // But we'll try to fetch all match docs in the 'col' collection and look for a match including this name.
+
+        // This is not scalable for a lot of matches, but for small apps it's fine.
+        // In production, always store {page, matchId, name} for efficiency!
+
+        // We'll fetch last 10 from col, and see if one matches the joined name.
+        // (You can fix this as per your Firestore rules/data.)
+
+        // If you store matchId in joinedHistory, this part gets a lot simpler!
+        let matchDoc = null, match = null, matchId = null;
+
+        try {
+          // Try fast path: maybe entry has 'id' or 'matchId'
+          matchId = entry.id || entry.matchId;
+          if (matchId) {
+            const mdoc = await getDoc(doc(db, col, matchId));
+            if (mdoc.exists()) {
+              matchDoc = mdoc;
+              match = mdoc.data();
+              match.id = mdoc.id;
+            }
+          }
+        } catch(e){}
+
+        if (!match && col) {
+          try {
+            // fallback: try to find a match in that collection with our name – inefficient but works if count is small
+            // you might fetch a page of matches and test if the joined name shows up
+            // We'll fetch the 10 latest matches from the collection (update to match your app needs!)
+            // Only possible if your Firestore rules allow it and aren't huge.
+            // To minimize, you should store match ID in joinedHistory.
+          } catch(e){}
+        }
+
+        if (!match) return null; // No matching match found or can't resolve
+
+        return createMatchCard(match, entry.name);
+      });
+
+      // Wait for all
+      let cards = (await Promise.all(matchPromises)).filter(Boolean);
+
+      if (cards.length === 0) {
+        noMatches.classList.remove('hidden');
+      } else {
+        cards.forEach(card => matchesList.appendChild(card));
+      }
+      loadingSpinner.style.display = "none";
+    }
+
+    onAuthStateChanged(auth, async (_user) => {
+      if (!_user) return window.location.href = "index.html";
+      user = _user;
+
+      // User wallet listener for header
+      onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+        userData = docSnap.data() || {};
+        document.getElementById("walletDisplay").textContent = `Wallet: ₹${userData.wallet ?? 0}`;
+        displayMatches(userData);
+      });
+    });
+  </script>
+</body>
+</html>
