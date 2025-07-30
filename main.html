@@ -27,6 +27,7 @@
     .fade-overlay {
       opacity: 0;
       transition: opacity 0.25s;
+      background: rgba(24, 24, 27, 0.32); /* 950 background with 32% opacity */
       pointer-events: none;
     }
     .modal-active .fade-overlay {
@@ -107,10 +108,10 @@
   </div>
 </main>
 
-<!-- Mode Popup Modal (Animated!) -->
+<!-- Mode Popup Modal (Faded BG) -->
 <div id="modePopupWrapper" class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none modal-container">
-  <div id="modeOverlay" class="absolute inset-0 bg-black fade-overlay" onclick="closeModePopup()"></div>
-  <div id="modePopup" class="relative z-10 bg-gray-800 rounded-xl p-6 w-80 text-center modal-fade">
+  <div id="modeOverlay" class="absolute inset-0 fade-overlay" onclick="closeModePopup()"></div>
+  <div id="modePopup" class="relative z-10 bg-gray-800 rounded-xl p-6 w-80 text-center modal-fade shadow-2xl">
     <button onclick="closeModePopup()" class="absolute top-2 right-2 text-white text-xl font-bold">&times;</button>
     <h3 class="text-xl font-bold mb-4 text-purple-400">Select Mode</h3>
     <button onclick="joinClassic()" class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full mb-3 font-semibold">Classic</button>
@@ -118,7 +119,6 @@
   </div>
 </div>
 
-<!-- Firebase + Popup Logic -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
@@ -200,29 +200,23 @@
   };
 
   // ---- MODAL LOGIC with Animation ----
-
   const modePopupWrapper = document.getElementById('modePopupWrapper');
 
-  // Helper function
   function setModalActive(active = true) {
     if (active) {
       modePopupWrapper.classList.add('modal-active');
-      // Remove pointer-events-none for interaction
       modePopupWrapper.classList.remove('pointer-events-none');
     } else {
       modePopupWrapper.classList.remove('modal-active');
-      // Make sure modal can't be focussed/clicked when closed
-      setTimeout(() => modePopupWrapper.classList.add('pointer-events-none'), 265);
+      setTimeout(() => modePopupWrapper.classList.add('pointer-events-none'), 260);
     }
   }
 
-  // Exposed for card click
   window.openModePopup = function (cardType) {
     currentCard = cardType;
     setModalActive(true);
   };
 
-  // Exposed for close button or overlay
   window.closeModePopup = function () {
     setModalActive(false);
   };
@@ -245,12 +239,10 @@
     }
   };
 
-  // Close Modal with ESC key
   document.addEventListener('keydown', function(e) {
     if (e.key === "Escape") closeModePopup();
   });
 
-  // Start modal hidden
   setModalActive(false);
 </script>
 </body>
