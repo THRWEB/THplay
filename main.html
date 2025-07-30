@@ -47,6 +47,10 @@
     <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
     <h2 id="username" class="text-center mt-4 text-lg font-bold text-purple-400">User</h2>
     <div class="mt-10 flex flex-col space-y-3">
+
+      <!-- My Matches button -->
+      <button onclick="goToMyMatches()" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full font-semibold">My Matches</button>
+
       <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full font-semibold">Logout</button>
       <a href="https://t.me/T7fiit4" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full font-semibold text-center">Support</a>
     </div>
@@ -161,7 +165,7 @@
     }
   });
 
-  // ----- SIDEBAR -----
+  // SIDEBAR
   window.toggleSidebar = function () {
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
@@ -199,7 +203,12 @@
     window.location.href = "wallet.html";
   };
 
-  // ---- MODAL LOGIC with Animation ----
+  // MY MATCHES BUTTON
+  window.goToMyMatches = function () {
+    window.location.href = "mymatches.html";
+  };
+
+  // MODAL LOGIC
   const modePopupWrapper = document.getElementById('modePopupWrapper');
 
   function setModalActive(active = true) {
@@ -244,6 +253,7 @@
   });
 
   setModalActive(false);
+
 </script>
 </body>
 </html>
