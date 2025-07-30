@@ -90,7 +90,7 @@
         window.location.href = "wallet.html";
       };
 
-      // Load matches from "soloc" collection
+      // Load matches from "soloc" collection (all fields as small letter keys)
       const matchCollection = collection(db, "soloc");
 
       onSnapshot(matchCollection, (snapshot) => {
@@ -107,7 +107,9 @@
             matchTime: data.matchtime || "--",
             map: data.map || "--",
             slot: data.slot || 0,
-            image: data.image || "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png"
+            image: data.image || "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png",
+            roomid: data.roomid || "",
+            roompass: data.roompass || ""
           };
 
           matchDataMap[id] = match;
