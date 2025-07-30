@@ -9,7 +9,7 @@
 </head>
 <body class="bg-[#111] text-white font-sans">
 
-  <!-- 🔄 Loading -->
+  <!-- 🔄 Loading Spinner -->
   <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
     <svg class="animate-spin h-10 w-10 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -17,18 +17,18 @@
     </svg>
   </div>
 
-  <!-- 🔝 Header -->
+  <!-- Header -->
   <div class="relative bg-gray-900 py-3 flex items-center justify-center">
     <div class="absolute left-4 cursor-pointer" onclick="window.location.href='main.html'">
       <i data-lucide="home" class="text-white w-6 h-6"></i>
     </div>
     <h1 class="text-xl font-bold text-purple-400">THplay</h1>
-    <div id="walletDisplay" onclick="window.location.href='wallet.html'" class="absolute right-4 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer">
+    <div id="walletDisplay" onclick="window.location.href='wallet.html'" class="absolute right-4 bg-purple-700 hover:bg-purple-800 px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer transition">
       Wallet: ₹0
     </div>
   </div>
 
-  <!-- 📋 Match Card -->
+  <!-- Match Card -->
   <div id="matchCard" class="bg-gray-800 rounded-xl p-4 m-4">
     <img id="matchImage" src="" class="w-full rounded mb-2" />
     <h2 id="matchTitle" class="text-xl font-bold">Loading...</h2>
@@ -39,7 +39,7 @@
     <p>Slots Left: <span id="matchSlot">--</span></p>
   </div>
 
-  <!-- 🧾 Join Form -->
+  <!-- Join Form -->
   <div class="m-4 p-4 bg-gray-900 rounded">
     <h3 class="text-lg font-semibold mb-2">Enter In-Game Name</h3>
     <input id="inGameName" type="text" class="w-full p-2 rounded text-black" placeholder="Your Free Fire Name"/>
@@ -50,13 +50,13 @@
     <div id="addMoneyWrapper" class="flex justify-center mt-2"></div>
   </div>
 
-  <!-- 🔌 Firebase Logic -->
+  <!-- Firebase Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, updateDoc, runTransaction, arrayUnion, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-    const firebaseConfig = {
+    const firebaseConfig = { /* ...your config... */ 
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
       authDomain: "thplay-b3c68.firebaseapp.com",
       projectId: "thplay-b3c68",
@@ -71,9 +71,8 @@
 
     let currentUser, entryFee = 0;
     let matchId = "", matchCollection = "solocs";
-    let userWallet = 0; // Track user wallet for instant feedback
+    let userWallet = 0;
 
-    // Util: Show/hide Add Money button
     function showAddMoneyButton() {
       const wrapper = document.getElementById('addMoneyWrapper');
       wrapper.innerHTML = '';
@@ -93,7 +92,6 @@
 
       const userRef = doc(db, "users", user.uid);
 
-      // 🪙 Wallet Listener
       onSnapshot(userRef, (docSnap) => {
         userWallet = docSnap.data()?.wallet ?? 0;
         document.getElementById("walletDisplay").textContent = `Wallet: ₹${userWallet}`;
@@ -102,7 +100,8 @@
       // 🎯 Load Match from localStorage
       const match = JSON.parse(localStorage.getItem("selectedMatch"));
       if (!match?.id) {
-        document.getElementById("matchCard").innerHTML = "<p class='text-red-500'>Match not selected or invalid.</p>";
+        document.getElementById("matchCard").innerHTML =
+          "<p class='text-red-500'>Match not selected or invalid.</p>";
         return;
       }
 
@@ -118,7 +117,6 @@
       document.getElementById("matchMap").textContent = match.map || "--";
       document.getElementById("matchTime").textContent = match.time || "--";
       document.getElementById("matchSlot").textContent = match.slot ?? "--";
-
       document.getElementById("loadingSpinner").style.display = "none";
 
       // 🚀 Join Button Logic
@@ -139,8 +137,7 @@
             const userRef = doc(db, "users", currentUser.uid);
 
             const [matchSnap, userSnap] = await Promise.all([
-              tx.get(matchRef),
-              tx.get(userRef)
+              tx.get(matchRef), tx.get(userRef)
             ]);
 
             if (!matchSnap.exists()) throw "Match not found.";
@@ -150,8 +147,8 @@
             const wallet = userSnap.data()?.wallet ?? 0;
             if (wallet < entryFee) throw "Not enough balance.";
 
-            // 🧠 Build joinedHistory entry
-            const joinedData = { page: matchCollection, name };
+            // 🧠 Store matchId in joinedHistory!
+            const joinedData = { page: matchCollection, name, matchId };
 
             tx.update(matchRef, { slot: slots - 1 });
             tx.update(userRef, {
@@ -165,7 +162,6 @@
           msg.innerHTML = `<span class="text-green-400">Joined successfully! ₹${entryFee} deducted.</span>`;
         } catch (err) {
           msg.innerHTML = `<span class="text-red-500">${err.message || err}</span>`;
-          // Show 'Add Money' button for insufficient balance
           if ((err.message || err) === "Not enough balance.") {
             showAddMoneyButton();
           }
