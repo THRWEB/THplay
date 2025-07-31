@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#111] text-white font-sans min-h-screen">
-
   <!-- 🔄 Loading Spinner -->
   <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
     <svg class="animate-spin h-10 w-10 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -38,8 +37,11 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, onSnapshot, Timestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import {
+      getFirestore, collection, getDocs, onSnapshot, doc
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+    // Your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
       authDomain: "thplay-b3c68.firebaseapp.com",
@@ -48,7 +50,6 @@
       messagingSenderId: "243301774162",
       appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
     };
-
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
     const db = getFirestore();
@@ -56,27 +57,21 @@
     const matchesList = document.getElementById('matchesList');
     const noMatches = document.getElementById('noMatches');
     const loadingSpinner = document.getElementById('loadingSpinner');
+    const TIMER_MINUTES = 30;
 
-    //==============================
-    // Timer: change 30 for any min
-    //==============================
-    const TIMER_MINUTES = 30; // <<< CHANGE this to 10, 15, 45 etc. for other timer lengths
-
-    function createMatchCard(entry, joinedName) {
+    // Card UI for one match
+    function createMatchCard(match, joinedName) {
       const div = document.createElement('div');
       div.className = "bg-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col md:flex-row gap-4 p-4 relative";
 
-      // Parse Firestore Timestamp to JS ms
+      // Timer if roomgivenat and room/pass given
       let timerDiv = null;
       let expiryTime = null;
+      if (match.roomgivenat && typeof match.roomgivenat === "object" && "seconds" in match.roomgivenat) {
+        const roomgivenMs = match.roomgivenat.seconds * 1000
+          + ("nanoseconds" in match.roomgivenat ? Math.floor(match.roomgivenat.nanoseconds / 1e6) : 0);
+        expiryTime = roomgivenMs + TIMER_MINUTES * 60 * 1000;
 
-      // 'roomgivenat' is Firestore Timestamp type, convert to milliseconds
-      const roomgivenatField = entry.roomgivenat;
-      if (roomgivenatField && typeof roomgivenatField === "object" && "seconds" in roomgivenatField) {
-        const roomgivenat = roomgivenatField.seconds * 1000 + Math.floor(roomgivenatField.nanoseconds / 1e6);
-        expiryTime = roomgivenat + TIMER_MINUTES * 60 * 1000;
-
-        // Timer UI
         timerDiv = document.createElement('div');
         timerDiv.className = "text-xs text-yellow-400 absolute top-3 right-4";
         div.appendChild(timerDiv);
@@ -89,7 +84,7 @@
             const secs = Math.floor((remaining / 1000) % 60);
             timerDiv.textContent = `Card vanishes in ${mins}:${secs.toString().padStart(2, '0')}`;
           } else {
-            div.remove(); // Hide the card from UI after timer ends
+            div.remove();
             clearInterval(timerId);
           }
         }
@@ -98,78 +93,85 @@
       }
 
       div.innerHTML += `
-        <img class="h-24 w-32 object-cover rounded" src="${entry.image || 'https://via.placeholder.com/120x80'}" alt="${entry.title || ''}">
+        <img class="h-24 w-32 object-cover rounded" src="${match.image || 'https://via.placeholder.com/120x80'}" alt="${match.title || ''}">
         <div class="flex-1 space-y-1">
-          <h3 class="text-lg font-bold text-purple-400">${entry.title || entry.id || 'Match'}</h3>
+          <h3 class="text-lg font-bold text-purple-400">${match.title || match.id || 'Match'}</h3>
           <div class="text-sm">
             <div><b>Your Name:</b> <span class="text-gray-200">${joinedName}</span></div>
-            <div><b>Entry Fee:</b> ₹${entry.entryFee || '--'}</div>
-            <div><b>Prize:</b> ₹${entry.prize || '--'}</div>
-            <div><b>Map:</b> ${entry.map || '--'}</div>
-            <div><b>Time:</b> ${entry.time || '--'}</div>
-            <div><b>Slots Left:</b> ${entry.slot ?? '--'}</div>
-            <div><b>Room ID:</b> <span class="text-green-300">${entry.roomid || '--'}</span></div>
-            <div><b>Room Pass:</b> <span class="text-green-300">${entry.roompass || '--'}</span></div>
+            <div><b>Entry Fee:</b> ₹${match.entryfees ?? match.entryFee ?? '--'}</div>
+            <div><b>Prize:</b> ₹${match.prize || '--'}</div>
+            <div><b>Map:</b> ${match.map || '--'}</div>
+            <div><b>Time:</b> ${match.matchtime || match.time || '--'}</div>
+            <div><b>Slots Left:</b> ${match.slot ?? '--'}</div>
+            <div><b>Room ID:</b> <span class="text-green-300">${match.roomid || '--'}</span></div>
+            <div><b>Room Pass:</b> <span class="text-green-300">${match.roompass || '--'}</span></div>
           </div>
         </div>
       `;
       return div;
     }
 
-    async function displayMatches(userData) {
+    // Find matches user joined
+    async function displayMyMatches(user) {
       matchesList.innerHTML = '';
       noMatches.classList.add('hidden');
-      const joinedHistory = userData.joinedHistory || [];
+      loadingSpinner.style.display = "flex";
 
-      if (joinedHistory.length === 0) {
+      // Collect all matches from soloc/solocs
+      const collections = ['soloc', 'solocs'];
+      const userMatches = [];
+
+      for (const collName of collections) {
+        const snapshot = await getDocs(collection(db, collName));
+        for (let mDoc of snapshot.docs) {
+          const match = mDoc.data();
+          match.id = mDoc.id;
+          match.collection = collName;
+          const joinedPlayers = match.joinedPlayers || [];
+          // Find if this user joined (first match => player can join same match multiple times, each with different name)
+          const myJoins = joinedPlayers.filter(jp => jp.uid === user.uid);
+          myJoins.forEach(jp => {
+            // For each join (possible in case you allow multi-name join per UID), show one card per name joined
+            userMatches.push({
+              match,
+              joinedName: jp.name
+            });
+          });
+        }
+      }
+
+      if (userMatches.length === 0) {
         noMatches.classList.remove('hidden');
         loadingSpinner.style.display = "none";
         return;
       }
 
-      let matchPromises = joinedHistory.map(async entry => {
-        if (!entry.page || !entry.matchId) return null;
-        try {
-          const mdoc = await getDoc(doc(db, entry.page, entry.matchId));
-          if (mdoc.exists()) {
-            const match = mdoc.data();
-            match.id = mdoc.id;
-            // Pass all fields through; use match for up-to-date info, fallback to entry for old fields
-            return createMatchCard(
-              {
-                ...match,
-                roomid: match.roomid || entry.roomid || '--',
-                roompass: match.roompass || entry.roompass || '--',
-                entryFee: match.entryfees || entry.entryFee || '--',
-                prize: match.prize || entry.prize || '--',
-                map: match.map || entry.map || '--',
-                time: match.matchtime || entry.time || '--',
-                slot: match.slot ?? entry.slot ?? '--',
-                image: match.image || entry.image || "",
-                roomgivenat: match.roomgivenat || entry.roomgivenat || null
-              }, entry.name
-            );
-          }
-        } catch (e) { return null; }
+      // Sort by match time/ID if you want (optional)
+      userMatches.sort((a, b) =>
+        (b.match.matchtime || 0) - (a.match.matchtime || 0)
+      );
+
+      userMatches.forEach(({match, joinedName}) => {
+        matchesList.appendChild(createMatchCard(match, joinedName));
       });
 
-      let cards = (await Promise.all(matchPromises)).filter(Boolean);
-
-      if (cards.length === 0) {
-        noMatches.classList.remove('hidden');
-      } else {
-        cards.forEach(card => matchesList.appendChild(card));
-      }
       loadingSpinner.style.display = "none";
+    }
+
+    // Live wallet update
+    function listenWallet(uid) {
+      onSnapshot(doc(db, "users", uid), snap => {
+        document.getElementById("walletDisplay").textContent =
+          `Wallet: ₹${snap.exists() ? (snap.data().wallet ?? 0) : 0}`;
+      });
     }
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) return window.location.href = "index.html";
-      onSnapshot(doc(db, "users", user.uid), (docSnap) => {
-        const userData = docSnap.data() || {};
-        document.getElementById("walletDisplay").textContent = `Wallet: ₹${userData.wallet ?? 0}`;
-        displayMatches(userData);
-      });
+      listenWallet(user.uid);
+
+      // Show their joined matches
+      displayMyMatches(user);
     });
   </script>
 </body>
