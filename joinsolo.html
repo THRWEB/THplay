@@ -50,14 +50,14 @@
     <div id="addMoneyWrapper" class="flex justify-center mt-2"></div>
   </div>
 
-  <!-- Firebase Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import {
-      getFirestore, doc, getDoc, updateDoc, runTransaction, arrayUnion, onSnapshot
+      getFirestore, doc, getDoc, setDoc, runTransaction, arrayUnion, onSnapshot
     } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
+    // --- Firebase Setup ---
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
       authDomain: "thplay-b3c68.firebaseapp.com",
@@ -66,16 +66,14 @@
       messagingSenderId: "243301774162",
       appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
     };
-
     const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
     const auth = getAuth();
-    const db = getFirestore();
 
     let currentUser = null,
         entryFee = 0,
         matchId = "",
-        matchCollection = "solocs",
-        userWallet = 0;
+        matchCollection = "solocs";
 
     function showAddMoneyButton() {
       const wrapper = document.getElementById('addMoneyWrapper');
@@ -90,31 +88,22 @@
       document.getElementById('addMoneyWrapper').innerHTML = '';
     }
 
-    // Get wallet from localStorage (or wherever you keep wallet info)
-    function getUserWallet() {
-      // You must update this part if wallet is stored somewhere else!
-      return Number(localStorage.getItem("userWallet") || 0);
-    }
-    function setUserWallet(val) {
-      // Sync local wallet to storage if you deduct it
-      localStorage.setItem("userWallet", val);
-      userWallet = val;
-      document.getElementById("walletDisplay").textContent = `Wallet: ₹${userWallet}`;
-    }
-
+    // ----- On Auth -----
     onAuthStateChanged(auth, async (user) => {
       if (!user) return window.location.href = "index.html";
       currentUser = user;
+      const userDocRef = doc(db, "users", user.uid);
 
-      // Wallet: here you must get wallet from localStorage or your app's wallet system!
-      userWallet = getUserWallet();
-      document.getElementById("walletDisplay").textContent = `Wallet: ₹${userWallet}`;
+      // Live wallet display
+      onSnapshot(userDocRef, (snap) => {
+        let amt = (snap.exists() ? snap.data().wallet : 0) || 0;
+        document.getElementById("walletDisplay").textContent = "Wallet: ₹" + amt;
+      });
 
-      // Load match
+      // ------ Load Match ------
       const match = JSON.parse(localStorage.getItem("selectedMatch"));
       if (!match?.id) {
-        document.getElementById("matchCard").innerHTML =
-          "<p class='text-red-500'>Match not selected or invalid.</p>";
+        document.getElementById("matchCard").innerHTML = "<p class='text-red-500'>Match not selected or invalid.</p>";
         document.getElementById("loadingSpinner").style.display = "none";
         return;
       }
@@ -131,6 +120,7 @@
       document.getElementById("matchSlot").textContent = match.slot ?? "--";
       document.getElementById("loadingSpinner").style.display = "none";
 
+      // ------ JOIN BUTTON ------
       document.getElementById("joinBtn").addEventListener("click", async () => {
         const name = document.getElementById("inGameName").value.trim();
         const msg = document.getElementById("message");
@@ -146,45 +136,55 @@
         document.getElementById("loadingSpinner").style.display = "flex";
         try {
           await runTransaction(db, async (tx) => {
+            // 1. Match doc
             const matchRef = doc(db, matchCollection, matchId);
             const matchSnap = await tx.get(matchRef);
             if (!matchSnap.exists()) throw new Error("Match not found.");
-
             let slots = matchSnap.data()?.slot ?? 0;
             if (slots <= 0) throw new Error("No slots available.");
-
             let joinedPlayers = matchSnap.data().joinedPlayers || [];
-            // Prevent same UID and same name double-joining
             if (joinedPlayers.some(j => j.uid === currentUser.uid && j.name.toLowerCase() === name.toLowerCase())) {
               throw new Error("You have already joined this match with this in-game name.");
             }
 
-            if (entryFee > 0 && userWallet < entryFee) {
-              throw new Error("Not enough wallet balance.");
+            // 2. User doc (for wallet check & update)
+            const userDocRef = doc(db, "users", currentUser.uid);
+            let userSnap = await tx.get(userDocRef);
+            let wallet = 0;
+            if (!userSnap.exists()) {
+              // First time: only allow if free match (no funds to deduct)
+              if (entryFee > 0) {
+                throw new Error("Please add money to your wallet before joining paid matches.");
+              }
+              // Create user doc for zero-balance/free match join
+              await tx.set(userDocRef, { wallet: 0, joinedHistory: [] });
+              wallet = 0;
+            } else {
+              wallet = userSnap.data().wallet ?? 0;
+              if (wallet < entryFee) {
+                throw new Error("Not enough wallet balance.");
+              }
             }
 
-            // Add join to match's joinedPlayers array
+            // 3. Update both: deduct fee, add join record to match doc
             tx.update(matchRef, {
               slot: slots - 1,
               joinedPlayers: arrayUnion({
                 uid: currentUser.uid,
-                name: name,
-                wallet: userWallet // wallet before deduction
+                name: name
+                // Omit wallet here on purpose: always consult users collection for wallet!
               })
             });
-
-            // If you want to deduct wallet client-side (sync with localStorage)
             if (entryFee > 0) {
-              setUserWallet(userWallet - entryFee);
+              tx.update(userDocRef, { wallet: wallet - entryFee });
             }
           });
 
           document.getElementById("loadingSpinner").style.display = "none";
           msg.innerHTML = `<span class="text-green-400">Joined successfully!${entryFee > 0 ? " ₹" + entryFee + " deducted." : ""}</span>`;
-          // Optionally refresh or disable join button
-          // document.getElementById("joinBtn").disabled = true;
           let slotsNode = document.getElementById("matchSlot");
           slotsNode.textContent = Math.max(0, (parseInt(slotsNode.textContent) || 1) - 1);
+
         } catch (err) {
           document.getElementById("loadingSpinner").style.display = "none";
           msg.innerHTML = `<span class="text-red-500">${err.message || err}</span>`;
