@@ -33,7 +33,7 @@
     <div class="bg-gray-800 rounded-xl p-6 shadow-md">
       <h3 class="text-xl font-bold text-purple-400 mb-4">Add Money</h3>
       <input id="amountInput" type="number" min="1" placeholder="Enter amount (₹)" class="w-full p-3 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 mb-4"/>
-      <button onclick="addMoney()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition">Add to Wallet</button>
+      <button id="addBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition">Add to Wallet</button>
     </div>
 
     <!-- Transaction History (Static for now) -->
@@ -48,9 +48,8 @@
   </main>
 
   <script type="module">
-    // Firebase wallet read/write (replace with your logic)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, increment } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -67,36 +66,44 @@
     const auth = getAuth();
 
     const walletDisplay = document.getElementById("walletAmount");
-    let userDocRef;
+    const amountInput = document.getElementById("amountInput");
+    const addBtn = document.getElementById("addBtn");
 
+    let userDocRef = null;
+
+    // Watch Auth State
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        userDocRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userDocRef);
-        if (userSnap.exists()) {
-          walletDisplay.innerText = "₹" + (userSnap.data().wallet || 0);
-        }
-      } else {
-        window.location.href = "login.html";
-      }
+      if (!user) return window.location.href = "login.html";
+      userDocRef = doc(db, "users", user.uid);
+
+      // Listen live to wallet updates
+      onSnapshot(userDocRef, (snap) => {
+        let amt = (snap.exists() ? snap.data().wallet : 0) || 0;
+        walletDisplay.innerText = "₹" + amt;
+      });
     });
 
+    // Add Money Handler
     async function addMoney() {
-      const amount = parseInt(document.getElementById("amountInput").value);
+      const amount = parseInt(amountInput.value);
       if (isNaN(amount) || amount <= 0) {
         alert("Enter a valid amount");
         return;
       }
 
-      const userSnap = await getDoc(userDocRef);
-      const currentWallet = userSnap.data().wallet || 0;
-      const newBalance = currentWallet + amount;
-
-      await updateDoc(userDocRef, { wallet: newBalance });
-      walletDisplay.innerText = "₹" + newBalance;
-      alert("₹" + amount + " added to your wallet!");
-      document.getElementById("amountInput").value = "";
+      // Create users doc if not exists, else update
+      const snap = await getDoc(userDocRef);
+      if (!snap.exists()) {
+        await setDoc(userDocRef, { wallet: amount, joinedHistory: [] });
+      } else {
+        // Use Firestore increment for atomic add
+        await updateDoc(userDocRef, { wallet: increment(amount) });
+      }
+      amountInput.value = "";
+      alert(`₹${amount} added to your wallet!`);
     }
+
+    addBtn.addEventListener("click", addMoney);
   </script>
 </body>
 </html>
