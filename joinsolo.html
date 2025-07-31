@@ -55,8 +55,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
     import {
-      getFirestore, doc, getDoc, setDoc, updateDoc,
-      runTransaction, arrayUnion, onSnapshot
+      getFirestore, doc, getDoc, updateDoc, runTransaction, arrayUnion, onSnapshot
     } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -91,17 +90,27 @@
       document.getElementById('addMoneyWrapper').innerHTML = '';
     }
 
+    // Get wallet from localStorage (or wherever you keep wallet info)
+    function getUserWallet() {
+      // You must update this part if wallet is stored somewhere else!
+      return Number(localStorage.getItem("userWallet") || 0);
+    }
+    function setUserWallet(val) {
+      // Sync local wallet to storage if you deduct it
+      localStorage.setItem("userWallet", val);
+      userWallet = val;
+      document.getElementById("walletDisplay").textContent = `Wallet: ₹${userWallet}`;
+    }
+
     onAuthStateChanged(auth, async (user) => {
       if (!user) return window.location.href = "index.html";
       currentUser = user;
 
-      const userRef = doc(db, "users", user.uid);
+      // Wallet: here you must get wallet from localStorage or your app's wallet system!
+      userWallet = getUserWallet();
+      document.getElementById("walletDisplay").textContent = `Wallet: ₹${userWallet}`;
 
-      onSnapshot(userRef, (docSnap) => {
-        userWallet = docSnap.exists() ? (docSnap.data().wallet ?? 0) : 0;
-        document.getElementById("walletDisplay").textContent = `Wallet: ₹${userWallet}`;
-      });
-
+      // Load match
       const match = JSON.parse(localStorage.getItem("selectedMatch"));
       if (!match?.id) {
         document.getElementById("matchCard").innerHTML =
@@ -138,55 +147,42 @@
         try {
           await runTransaction(db, async (tx) => {
             const matchRef = doc(db, matchCollection, matchId);
-            const userRef = doc(db, "users", currentUser.uid);
-
-            const [matchSnap, userSnap] = await Promise.all([
-              tx.get(matchRef), tx.get(userRef)
-            ]);
-
+            const matchSnap = await tx.get(matchRef);
             if (!matchSnap.exists()) throw new Error("Match not found.");
+
             let slots = matchSnap.data()?.slot ?? 0;
             if (slots <= 0) throw new Error("No slots available.");
 
-            let wallet = 0, joinedHistory = [];
-            let joinData = { matchId, page: matchCollection, name };
+            let joinedPlayers = matchSnap.data().joinedPlayers || [];
+            // Prevent same UID and same name double-joining
+            if (joinedPlayers.some(j => j.uid === currentUser.uid && j.name.toLowerCase() === name.toLowerCase())) {
+              throw new Error("You have already joined this match with this in-game name.");
+            }
 
-            if (!userSnap.exists()) {
-              // First join! Free match only, or show add money for paid
-              if (entryFee > 0) {
-                throw new Error("Please add money to your wallet before joining paid matches.");
-              }
-              // New user, so create document with this single join
-              await tx.set(userRef, {
-                wallet: 0,
-                joinedHistory: [joinData]
-              });
-              slots--;
-              tx.update(matchRef, { slot: slots });
-              return;
-            } else {
-              wallet = userSnap.data().wallet ?? 0;
-              joinedHistory = userSnap.data().joinedHistory || [];
-              // Block joining again with SAME name in SAME match (but allow different names for same match)
-              if (joinedHistory.some(j => j.matchId === matchId && j.name.toLowerCase() === name.toLowerCase())) {
-                throw new Error("You have already joined this match with this in-game name.");
-              }
-              if (wallet < entryFee) {
-                throw new Error("Not enough balance.");
-              }
-              slots--;
-              tx.update(matchRef, { slot: slots });
-              tx.update(userRef, {
-                wallet: wallet - entryFee,
-                joinedHistory: arrayUnion(joinData)
-              });
+            if (entryFee > 0 && userWallet < entryFee) {
+              throw new Error("Not enough wallet balance.");
+            }
+
+            // Add join to match's joinedPlayers array
+            tx.update(matchRef, {
+              slot: slots - 1,
+              joinedPlayers: arrayUnion({
+                uid: currentUser.uid,
+                name: name,
+                wallet: userWallet // wallet before deduction
+              })
+            });
+
+            // If you want to deduct wallet client-side (sync with localStorage)
+            if (entryFee > 0) {
+              setUserWallet(userWallet - entryFee);
             }
           });
 
           document.getElementById("loadingSpinner").style.display = "none";
           msg.innerHTML = `<span class="text-green-400">Joined successfully!${entryFee > 0 ? " ₹" + entryFee + " deducted." : ""}</span>`;
-          document.getElementById("joinBtn").disabled = false;
-          // Update slots after join
+          // Optionally refresh or disable join button
+          // document.getElementById("joinBtn").disabled = true;
           let slotsNode = document.getElementById("matchSlot");
           slotsNode.textContent = Math.max(0, (parseInt(slotsNode.textContent) || 1) - 1);
         } catch (err) {
