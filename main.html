@@ -17,87 +17,72 @@
       transform: scale(0.92);
       pointer-events: none;
     }
-    .modal-active .modal-fade { opacity: 1!important; transform: scale(1)!important; pointer-events: auto!important; }
-    .fade-overlay { opacity: 0; transition: opacity 0.25s; background: rgba(24,24,27,0.32); pointer-events: none; }
-    .modal-active .fade-overlay { opacity: 1!important; pointer-events: auto!important; }
-    /* Section Card Styles */
-    .card-section {
-      border-radius: 1.15rem;
-      margin-bottom: 1.42rem;
-      overflow: hidden;
-      box-shadow: 0 6px 30px 0 rgba(58,28,113,0.18);
-      position: relative;
+    .modal-active .modal-fade {
+      opacity: 1 !important;
+      transform: scale(1) !important;
+      pointer-events: auto !important;
     }
-    .solo-card {
-      background: linear-gradient(130deg, #32043d 70%, #1a1037 100%);
+    .fade-overlay {
+      opacity: 0;
+      transition: opacity 0.25s;
+      background: rgba(24, 24, 27, 0.32);
+      pointer-events: none;
+    }
+    .modal-active .fade-overlay {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+    .es-main-section {
+      background: linear-gradient(135deg, #261a36 0%, #180d25 100%);
+      border-radius: 1.3rem;
+      box-shadow: 0 8px 32px 0 rgba(58,28,113,0.22);
       border-left: 7px solid #a21caf;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
     }
-    .duo-card {
-      background: linear-gradient(110deg, #021d34 60%, #174356 100%);
-      border-left: 7px solid #0ea5e9;
-      opacity: .75;
-      pointer-events: none;
+    .es-head-title {
+      color: #a78bfa;
+      font-family: 'Creepster', cursive !important;
+      font-size: 2.2rem;
+      letter-spacing: 1.5px;
+      text-shadow: 0 2px 10px #9333ea55;
+      margin-bottom: 1rem;
     }
-    .squad-card {
-      background: linear-gradient(115deg, #443200 67%, #25313d 100%);
-      border-left: 7px solid #fbbf24;
-      opacity: .75;
-      pointer-events: none;
-    }
-    .mode-badge {
-      position: absolute; top: 18px; left: 0;
-      font-size: 0.98rem;
-      padding: 0.14rem 1rem 0.13rem 0.99rem;
-      border-radius: 0 9999px 9999px 0/0 2rem 2rem 0;
-      font-weight: 700; letter-spacing: 0.04em;
-      background: linear-gradient(90deg,#a21caf 77%,#f472b6 100%);
-      color: #fff;
-      z-index:2;
-      box-shadow: 0 2px 9px #a21caf44;
-    }
-    .duo-card .mode-badge {
-      background: linear-gradient(90deg, #0ea5e9 77%, #38bdf8 100%);
-    }
-    .squad-card .mode-badge {
-      background: linear-gradient(90deg, #fbbf24 77%, #fde68a 100%);
-      color: #47330b;
-    }
-    .coming { position: absolute; top: 1.15rem; right: 1.1rem;
-      background: #fff4; color: #222; font-size: .93rem; font-weight: bold;
-      padding: 0.2rem 0.89rem; border-radius: 1.2rem; }
-    .card-img-mob {
-      width: 100%; max-width: 315px; height: 92px; object-fit: cover; border-radius: 1rem;
-      box-shadow: 0 3px 13px #a21caf28; margin: .9rem auto 0.35rem auto; display: block;
-    }
-    .card-title { font-size: 1.08rem; font-weight: bold; margin: .6rem 0 .32rem .16rem; letter-spacing: .5px; }
-    .flex-row-sec { display: flex; gap: 0.7rem; flex-wrap: wrap; padding: 0 0.14rem; }
-    .flex-row-sec > div { display: flex; gap: .25rem; align-items: center; font-size: .97rem;}
-    .flex-row-sec .label { font-weight: 700; font-size: .97rem;}
-    .join-btn {
-      background: linear-gradient(90deg,#9333ea 0%,#f472b6 100%);
-      color: #fff;
+    .es-section-title {
+      font-size: 1.35rem;
       font-weight: bold;
-      font-size: 1.1rem;
-      border-radius: 9999px;
-      width: 100%; padding: .58rem 0;
-      margin: .50rem 0 .7rem 0;
-      box-shadow: 0 3.5px 13px #a21caf30;
-      letter-spacing:.03em;
+      letter-spacing: .5px;
+      color: #fbbf24;
+      margin-bottom: 0.3rem;
+      text-shadow: 0 2px 7px #d977061a;
     }
-    .duo-card .coming { color: #0ea5e9; background: #082f49ec; }
-    .squad-card .coming { color: #b77502; background: #fbbf24ee; }
-
-    /* keep info sections, youtube unchanged */
+    .es-section {
+      background: linear-gradient(95deg, #321b53dd 0%, #18142bcc 100%);
+      border-radius: 1rem;
+      box-shadow: 0 3px 16px 0 #18102744;
+      margin-bottom: 1.3rem;
+      padding: 1.1rem 1.1rem 1.1rem 1.3rem;
+      border-left: 6px solid #fbbf24;
+    }
+    .es-section.fair { border-left-color: #ef4444!important; }
+    .es-section.earn { border-left-color: #4ade80!important; }
+    .es-section .es-section-title { margin-bottom: 0.2rem;}
     .youtube-gradient {
-      background: linear-gradient(100deg, #11192a 60%, #3b1728 100%);
+      background: linear-gradient(100deg, #11192a 60%, #3b1728  100%);
       border-left: 7px solid #ff0000;
     }
-    .youtube-icon-hover:hover { background: #ff0000 !important; border-color: #ff0000 !important; }
+
+    .youtube-icon-hover { transition: background 0.18s, border 0.18s; }
+    .youtube-icon-hover:hover {
+      background: #ff0000 !important;
+      border-color: #ff0000 !important;
+    }
     .youtube-icon-hover:hover svg { fill: #fff !important; }
-    @media (max-width: 500px) {
-      .card-img-mob { height: 72px; }
-      .card-title { font-size: .97rem; }
-      .card-section { border-radius: 0.88rem;}
+    @media (max-width: 490px) {
+      .es-head-title { font-size: 1.37rem; }
+      .es-section-title { font-size:1.09rem; }
+      .es-section, .youtube-gradient { padding: 1rem .7rem .9rem 1.0rem; }
     }
   </style>
 </head>
@@ -105,6 +90,8 @@
 
 <!-- Sidebar Overlay -->
 <div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
 <aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50">
   <div class="p-6">
     <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
@@ -134,52 +121,43 @@
   </div>
 </header>
 
-<main class="p-4 md:px-6 py-8 max-w-md mx-auto">
-  <!-- SOLO CARD -->
-  <section class="card-section solo-card">
-    <span class="mode-badge">SOLO • Now Live</span>
-    <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob" />
-    <div class="card-title text-purple-300">Free Fire Classic Solo</div>
-    <div class="flex-row-sec mb-2">
-      <div><span class="label text-purple-400">Entry</span><span class="text-white">0</span></div>
-      <div><span class="label text-pink-400">Prize</span><span class="text-green-400 font-bold">₹4/kill</span></div>
-      <div><span class="label text-sky-400">Map</span><span class="text-white">Bermuda</span></div>
-      <div><span class="label text-fuchsia-400">Time</span><span class="text-white">4:00 PM</span></div>
-      <div><span class="label text-yellow-300">Slots</span><span class="text-white">48</span></div>
+<!-- Main Cards -->
+<main class="p-6 md:px-16 py-8">
+  <!-- Gradient Section for "Choose Mode" Cards -->
+  <div class="es-main-section p-3 md:p-7 mb-14 shadow-lg">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+      <!-- Card 1 - Active -->
+      <div onclick="openModePopup('solo')" class="cursor-pointer hover:scale-105 transition transform duration-200 active:scale-98">
+        <div class="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-tr from-violet-900 via-indigo-900 to-gray-900 border border-purple-700 hover:border-fuchsia-400 duration-200 px-1 pb-3 pt-2">
+          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Solo" class="w-full h-40 object-cover rounded-xl shadow-md border border-purple-900">
+          <div class="p-3 text-center">
+            <h3 class="text-xl font-bold text-purple-300 mb-1 tracking-wide drop-shadow">Free Fire Solo</h3>
+          </div>
+        </div>
+      </div>
+      <!-- Card 2 - Disabled -->
+      <div class="pointer-events-none opacity-60">
+        <div class="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-tr from-zinc-800 via-indigo-900 to-gray-900 border border-gray-700 px-1 pb-3 pt-2">
+          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Duo" class="w-full h-40 object-cover rounded-xl border border-slate-800 shadow">
+          <div class="p-3 text-center">
+            <h3 class="text-xl font-bold text-yellow-500 tracking-wide">Coming Soon</h3>
+          </div>
+        </div>
+      </div>
+      <!-- Card 3 - Disabled -->
+      <div class="pointer-events-none opacity-60">
+        <div class="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-tr from-zinc-800 via-indigo-900 to-gray-900 border border-gray-700 px-1 pb-3 pt-2">
+          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Squad" class="w-full h-40 object-cover rounded-xl border border-slate-800 shadow">
+          <div class="p-3 text-center">
+            <h3 class="text-xl font-bold text-yellow-500 tracking-wide">Coming Soon</h3>
+          </div>
+        </div>
+      </div>
     </div>
-    <button class="join-btn" onclick="openModePopup('solo')">Join Now</button>
-  </section>
-  <!-- DUO CARD -->
-  <section class="card-section duo-card">
-    <span class="mode-badge">DUO • Coming Soon</span>
-    <span class="coming">Coming Soon</span>
-    <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob" />
-    <div class="card-title text-cyan-300">Free Fire Duo</div>
-    <div class="flex-row-sec mb-2">
-      <div><span class="label text-cyan-400">Entry</span><span class="text-white">--</span></div>
-      <div><span class="label text-sky-400">Prize</span><span class="text-green-400 font-bold">--</span></div>
-      <div><span class="label text-fuchsia-400">Map</span><span class="text-white">--</span></div>
-      <div><span class="label text-blue-400">Time</span><span class="text-white">--</span></div>
-      <div><span class="label text-cyan-300">Slots</span><span class="text-white">--</span></div>
-    </div>
-  </section>
-  <!-- SQUAD CARD -->
-  <section class="card-section squad-card">
-    <span class="mode-badge">SQUAD • Coming Soon</span>
-    <span class="coming">Coming Soon</span>
-    <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob" />
-    <div class="card-title text-amber-300">Free Fire Squad</div>
-    <div class="flex-row-sec mb-2">
-      <div><span class="label text-yellow-400">Entry</span><span class="text-white">--</span></div>
-      <div><span class="label text-orange-300">Prize</span><span class="text-green-400 font-bold">--</span></div>
-      <div><span class="label text-indigo-400">Map</span><span class="text-white">--</span></div>
-      <div><span class="label text-yellow-400">Time</span><span class="text-white">--</span></div>
-      <div><span class="label text-amber-300">Slots</span><span class="text-white">--</span></div>
-    </div>
-  </section>
+  </div>
 
-  <!-- Info & Accent Sections (unchanged from your code) -->
-  <section class="max-w-2xl mx-auto mt-6">
+  <!-- Info & Accent Sections -->
+  <section class="max-w-2xl mx-auto mt-8">
     <div class="es-section">
       <div class="es-section-title text-yellow-400 flex items-center gap-1">
         <svg class="inline-block w-6 h-6" fill="#fbbf24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><text x="12" y="17" font-size="13" fill="#fff" font-family="sans-serif" text-anchor="middle">!</text></svg>
@@ -209,8 +187,8 @@
     </div>
   </section>
 
-  <!-- YouTube Section -->
-  <section class="youtube-gradient max-w-md mx-auto mt-10 mb-16 rounded-2xl shadow-lg py-7 px-3 flex flex-col items-center text-center">
+  <!-- YouTube Info Section with Logo Link -->
+  <section class="youtube-gradient max-w-md mx-auto mt-12 mb-16 rounded-2xl shadow-lg py-7 px-3 flex flex-col items-center text-center">
     <h3 class="text-2xl font-bold text-red-500 mb-2 flex items-center gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" fill="#FF0000" viewBox="0 0 48 48" class="w-7 h-7"><path d="M44.16 12.44q-0.48-1.78-1.87-3.17t-3.17-1.87Q36.16 7 24 7T6.84 7.4q-1.78 0.48-3.17 1.87t-1.87 3.17Q1 15.85 1 24t0.8 11q0.48 1.78 1.87 3.17t3.17 1.87Q11.84 41 24 41t17.16-0.4q1.78-0.48 3.17-1.87t1.87-3.17Q47 32.15 47 24t-0.8-11ZM19 31V17l14 7Z"/></svg>
       YouTube
@@ -231,7 +209,7 @@
   </section>
 </main>
 
-<!-- Mode Popup Modal (unchanged) -->
+<!-- Mode Popup Modal -->
 <div id="modePopupWrapper" class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none modal-container">
   <div id="modeOverlay" class="absolute inset-0 fade-overlay" onclick="closeModePopup()"></div>
   <div id="modePopup" class="relative z-10 bg-gray-800 rounded-xl p-6 w-80 text-center modal-fade shadow-2xl">
@@ -284,6 +262,7 @@
     }
   });
 
+  // SIDEBAR
   window.toggleSidebar = function () {
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
