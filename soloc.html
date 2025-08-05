@@ -12,7 +12,6 @@
   </style>
 </head>
 <body class="bg-[#111] text-white">
-
   <!-- 🔄 Loading Spinner -->
   <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
     <svg class="animate-spin h-10 w-10 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -69,7 +68,6 @@
 
       const userRef = doc(db, "users", user.uid);
 
-      // Wallet Listener
       let walletLoaded = false;
       let matchesLoaded = false;
 
@@ -114,17 +112,28 @@
 
           matchDataMap[id] = match;
 
+          // The Side-by-Side info structure
+          const makeRow = (left, value) => `
+            <div class="flex justify-between items-center py-0.5">
+              <span class="text-gray-300">${left}</span>
+              <span class="text-green-400 font-bold">${value}</span>
+            </div>
+          `;
+
           const card = document.createElement("div");
-          card.className = "bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700";
-          card.onclick = () => selectMatch(id);
+          card.className = "bg-gray-800 rounded-xl p-4 shadow-lg relative flex flex-col";
           card.innerHTML = `
             <img src="${match.image}" class="w-full rounded mb-2" />
-            <h2 class="text-xl font-bold">${match.title}</h2>
-            <p>Entry Fee: ₹${match.entryFee}</p>
-            <p>Prize: ₹${match.prize}</p>
-            <p>Time: ${match.matchTime}</p>
-            <p>Map: ${match.map}</p>
-            <p>Slots Left: ${match.slot}</p>
+            <h2 class="text-xl font-bold mb-2">${match.title}</h2>
+            ${makeRow("Entry Fee:", match.entryFee)}
+            ${makeRow("Prize:", match.prize)}
+            ${makeRow("Time:", match.matchTime)}
+            ${makeRow("Map:", match.map)}
+            ${makeRow("Slots Left:", match.slot)}
+            <button class="mt-4 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded w-full transition"
+              onclick="window.selectMatch('${id}')">
+              Join
+            </button>
           `;
           container.appendChild(card);
         });
@@ -133,7 +142,7 @@
       });
     });
 
-    // Handle match click
+    // Only Join button is clickable
     window.selectMatch = (id) => {
       const match = matchDataMap[id];
       if (match) {
