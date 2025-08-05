@@ -71,10 +71,38 @@
       margin-top:0.2rem;
       margin-bottom:0.1rem;
     }
+
+    /* Match Rules SECTION - make identical to info card in main.html */
+    .es-section-rules {
+      background: linear-gradient(95deg, #321b53dd 0%, #18142bcc 100%);
+      border-radius: 1rem;
+      box-shadow: 0 3px 16px 0 #18102744;
+      margin-bottom: 1.3rem;
+      padding: 1.28rem 1.1rem 1.1rem 1.28rem;
+      border-left: 6px solid #fbbf24;
+      max-width: 550px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      overflow: hidden;
+    }
+    .es-section-title {
+      font-size: 1.35rem;
+      font-weight: bold;
+      letter-spacing: .5px;
+      color: #fbbf24;
+      margin-bottom: 0.32rem;
+      text-shadow: 0 2px 7px #d977061a;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
     @media (max-width: 480px) {
       .es-card { padding: 0.6rem 0.5rem 1rem 0.7rem }
       .es-card .es-label, .es-card .es-value { font-size: 1rem!important;}
       .es-card .match-title { font-size: 1.03rem; }
+      .es-section-rules { max-width: 98vw; padding: 1.03rem .55rem .9rem .77rem; }
+      .es-section-title { font-size: 1.08rem; }
     }
   </style>
 </head>
@@ -157,19 +185,23 @@
     <div id="addMoneyWrapper" class="flex justify-center mt-2"></div>
   </div>
 
-  <!-- Match Rules Section -->
-  <section class="max-w-2xl mx-auto my-8 px-4">
-    <div class="bg-gray-800 border-l-4 border-red-600 rounded-2xl p-5 shadow-lg">
-      <h3 class="text-2xl font-bold text-red-400 mb-3">Match Rules</h3>
-      <ul class="list-disc list-inside space-y-2 text-gray-200 text-base">
-        <li><span class="font-bold">No usage of mod apps or hacks</span>. Players using any unfair advantage will be disqualified instantly.</li>
-        <li><span class="font-bold">Headshot rate must not exceed 50%.</span> Suspicious stats will be reviewed and may result in disqualification.</li>
-        <li><span class="font-bold">Do not change your slot.</span> The slot assigned to you after joining must be used for the match.</li>
-        <li><span class="font-bold">Abusive language is prohibited.</span> Any form of abuse, hate speech, or offensive chat may result in suspension or ban.</li>
-        <li><span class="font-bold">Respect all players and organizers.</span></li>
-      </ul>
-      <p class="mt-4 text-sm text-gray-400 italic">Breaking any rule may lead to removal, account suspension, or refund denial. Play fair and enjoy the competition!</p>
+  <!-- Match Rules Section - MATCHED Gradient Esports Card -->
+  <section class="es-section-rules my-8">
+    <div class="es-section-title">
+      <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-6 h-6" fill="#fbbf24" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <text x="12" y="17" font-size="13" fill="#fff" font-family="sans-serif" text-anchor="middle">!</text>
+      </svg>
+      Match Rules
     </div>
+    <ul class="list-disc list-inside space-y-2 text-gray-200 text-base mt-2 mb-3 pl-2">
+      <li><span class="font-bold">No usage of mod apps or hacks</span>. Players using any unfair advantage will be disqualified instantly.</li>
+      <li><span class="font-bold">Headshot rate must not exceed 50%.</span> Suspicious stats will be reviewed and may result in disqualification.</li>
+      <li><span class="font-bold">Do not change your slot.</span> The slot assigned to you after joining must be used for the match.</li>
+      <li><span class="font-bold">Abusive language is prohibited.</span> Any form of abuse, hate speech, or offensive chat may result in suspension or ban.</li>
+      <li><span class="font-bold">Respect all players and organizers.</span></li>
+    </ul>
+    <p class="mt-4 text-sm text-gray-400 italic">Breaking any rule may lead to removal, account suspension, or refund denial. Play fair and enjoy the competition!</p>
   </section>
 
   <script type="module">
