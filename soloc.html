@@ -9,12 +9,40 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body { font-family: 'Poppins', sans-serif; }
-    .card-value { color: #4ade80 !important; font-weight: 700; }
-    .card-label { color: #d1d5db !important; }
-    @media (max-width: 420px) {
-      .match-card-flex { flex-direction: column !important; }
-      .match-card-flex > div { width: 100% !important; }
-      .match-card-join { justify-content: flex-end !important; }
+    .card-value { color: #4ade80!important; font-weight: 800; font-size: 1.10rem;}
+    .card-label { color: #d1d5db!important; font-size: 1.10rem;}
+    .match-info-row { display: flex; justify-content: space-between; align-items: center; gap: 1.2rem; margin-bottom: 0.4rem; }
+    .match-info-row-small { display: flex; justify-content: space-between; align-items: center; gap: 1.2rem; }
+    .match-info-col { flex: 1 1 50%; display: flex; align-items: center; }
+    .match-info-col.right { justify-content: flex-end; }
+    .match-join-row { display: flex; justify-content: space-between; align-items: center; gap: 1.2rem; margin-top: 1rem;}
+    .match-join-col { flex: 1 1 50%; display: flex; align-items: center; }
+    .match-join-col.right { justify-content: flex-end; }
+    @media (max-width: 500px) {
+      .card-label, .card-value {
+        font-size: 1rem !important;
+      }
+      .match-info-row, .match-join-row {
+        flex-wrap: wrap;
+        flex-direction: row;
+        gap: 0.6rem;
+      }
+      .match-info-col, .match-join-col { min-width: 110px !important; }
+    }
+    @media (max-width: 380px) {
+      .match-info-row, .match-join-row { flex-direction: column; align-items: flex-start; }
+      .match-info-col, .match-join-col { width: 100% !important; justify-content: flex-start !important;}
+      .match-join-col.right { justify-content: flex-start !important; }
+    }
+    .join-btn-main {
+      font-size: 1.10rem; font-weight: 800;
+      padding-left: 1.6rem; padding-right: 1.6rem;
+      width: 100%;
+      max-width:150px;
+    }
+    .match-card-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.6rem; }
+    @media (max-width:440px) {
+      .match-card-title { font-size: 1.05rem; }
     }
   </style>
 </head>
@@ -43,7 +71,6 @@
     <!-- Match cards will be injected here -->
   </div>
 
-  <!-- Firebase Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
@@ -112,50 +139,49 @@
             matchTime: data.matchtime || "--",
             map: data.map || "--",
             slot: data.slot || 0,
-            image: data.image || "https://i.postimg.cc/Gtc1nVjV/file-00000000ad90622f81015bdfb65ca95f.png",
-            roomid: data.roomid || "",
-            roompass: data.roompass || ""
+            image: data.image || "https://i.postimg.cc/Gtc1nVjV/file-00000000ad90622f81015bdfb65ca95f.png"
           };
 
           matchDataMap[id] = match;
 
-          // Two-column layout for each row
+          // THE SIDE-BY-SIDE INFO GRID ROWS
           const card = document.createElement("div");
           card.className = "bg-gray-800 rounded-xl p-4 shadow-lg relative flex flex-col select-none";
 
           card.innerHTML = `
             <img src="${match.image}" class="w-full rounded mb-2" />
-            <h2 class="text-xl font-bold mb-3">${match.title}</h2>
+            <div class="match-card-title">${match.title}</div>
             <!-- Row 1: Entry Fee | Prize -->
-            <div class="flex match-card-flex w-full gap-2 mb-1">
-              <div class="w-1/2 flex items-center">
-                <span class="card-label text-base">Entry Fee:</span>
+            <div class="match-info-row">
+              <div class="match-info-col">
+                <span class="card-label">Entry Fee:</span>
                 <span class="card-value ml-1">${match.entryFee}</span>
               </div>
-              <div class="w-1/2 flex items-center justify-end">
-                <span class="card-label text-base mr-1">Prize:</span>
-                <span class="card-value">${match.prize}</span>
+              <div class="match-info-col right">
+                <span class="card-label">Prize:</span>
+                <span class="card-value ml-1">${match.prize}</span>
               </div>
             </div>
             <!-- Row 2: Time | Map -->
-            <div class="flex match-card-flex w-full gap-2 mb-1">
-              <div class="w-1/2 flex items-center">
-                <span class="card-label text-base">Time:</span>
+            <div class="match-info-row">
+              <div class="match-info-col">
+                <span class="card-label">Time:</span>
                 <span class="card-value ml-1">${match.matchTime}</span>
               </div>
-              <div class="w-1/2 flex items-center justify-end">
-                <span class="card-label text-base mr-1">Map:</span>
-                <span class="card-value">${match.map}</span>
+              <div class="match-info-col right">
+                <span class="card-label">Map:</span>
+                <span class="card-value ml-1">${match.map}</span>
               </div>
             </div>
-            <!-- Row 3: Slots Left | Join Button -->
-            <div class="flex match-card-flex items-center w-full gap-2 mt-2 match-card-join">
-              <div class="w-1/2 flex items-center">
-                <span class="card-label text-base">Slots Left:</span>
+            <!-- Row 3: Slots Left | Join -->
+            <div class="match-join-row">
+              <div class="match-join-col">
+                <span class="card-label">Slots Left:</span>
                 <span class="card-value ml-1">${match.slot}</span>
               </div>
-              <div class="w-1/2 flex items-center justify-end">
-                <button class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-6 rounded transition" onclick="window.selectMatch('${id}')">
+              <div class="match-join-col right">
+                <button class="join-btn-main bg-yellow-500 hover:bg-yellow-600 text-black rounded transition"
+                  onclick="window.selectMatch('${id}')">
                   Join
                 </button>
               </div>
@@ -168,7 +194,6 @@
       });
     });
 
-    // Only Join button is clickable
     window.selectMatch = (id) => {
       const match = matchDataMap[id];
       if (match) {
