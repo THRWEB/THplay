@@ -32,20 +32,61 @@
       opacity: 1 !important;
       pointer-events: auto !important;
     }
+    .es-main-section {
+      background: linear-gradient(135deg, #261a36 0%, #180d25 100%);
+      border-radius: 1.3rem;
+      box-shadow: 0 8px 32px 0 rgba(58,28,113,0.22);
+      border-left: 7px solid #a21caf;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .es-head-title {
+      color: #a78bfa;
+      font-family: 'Creepster', cursive !important;
+      font-size: 2.2rem;
+      letter-spacing: 1.5px;
+      text-shadow: 0 2px 10px #9333ea55;
+      margin-bottom: 1rem;
+    }
+    .es-section-title {
+      font-size: 1.35rem;
+      font-weight: bold;
+      letter-spacing: .5px;
+      color: #fbbf24;
+      margin-bottom: 0.3rem;
+      text-shadow: 0 2px 7px #d977061a;
+    }
+    .es-section {
+      background: linear-gradient(95deg, #321b53dd 0%, #18142bcc 100%);
+      border-radius: 1rem;
+      box-shadow: 0 3px 16px 0 #18102744;
+      margin-bottom: 1.3rem;
+      padding: 1.1rem 1.1rem 1.1rem 1.3rem;
+      border-left: 6px solid #fbbf24;
+    }
+    .es-section.fair { border-left-color: #ef4444!important; }
+    .es-section.earn { border-left-color: #4ade80!important; }
+    .es-section .es-section-title { margin-bottom: 0.2rem;}
+    .youtube-gradient {
+      background: linear-gradient(100deg, #11192a 60%, #3b1728  100%);
+      border-left: 7px solid #ff0000;
+    }
+
+    .youtube-icon-hover { transition: background 0.18s, border 0.18s; }
     .youtube-icon-hover:hover {
       background: #ff0000 !important;
       border-color: #ff0000 !important;
-      transition: background 0.2s, border 0.2s;
     }
-    .youtube-icon-hover svg {
-      transition: fill 0.2s;
-    }
-    .youtube-icon-hover:hover svg {
-      fill: #fff !important;
+    .youtube-icon-hover:hover svg { fill: #fff !important; }
+    @media (max-width: 490px) {
+      .es-head-title { font-size: 1.37rem; }
+      .es-section-title { font-size:1.09rem; }
+      .es-section, .youtube-gradient { padding: 1rem .7rem .9rem 1.0rem; }
     }
   </style>
 </head>
-<body class="bg-gray-950 text-white">
+<body class="bg-gradient-to-b from-indigo-950 via-black to-zinc-900 min-h-screen text-white">
 
 <!-- Sidebar Overlay -->
 <div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div>
@@ -64,7 +105,7 @@
 </aside>
 
 <!-- Header -->
-<header class="bg-gray-900 p-4 sticky top-0 z-30 shadow-md">
+<header class="bg-gradient-to-r from-purple-900 via-indigo-900 to-gray-900 p-4 sticky top-0 z-30 shadow-md">
   <div class="max-w-7xl mx-auto flex items-center justify-between relative">
     <div class="absolute left-0 flex items-center space-x-2">
       <button onclick="toggleSidebar()" class="text-white focus:outline-none z-50 relative">
@@ -73,7 +114,7 @@
         </svg>
       </button>
     </div>
-    <h1 class="text-xl md:text-2xl font-bold text-purple-400 mx-auto">THplay</h1>
+    <h1 class="text-xl md:text-2xl font-bold text-purple-400 mx-auto tracking-wide">THplay</h1>
     <button onclick="goToWallet()" id="walletDisplay" class="absolute right-0 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold focus:outline-none">
       Wallet: ₹0
     </button>
@@ -81,71 +122,86 @@
 </header>
 
 <!-- Main Cards -->
-<main class="p-6 md:px-20 py-10">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 mb-12">
-
-    <!-- Card 1 - Active -->
-    <div onclick="openModePopup('solo')" class="cursor-pointer">
-      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
-        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Solo" class="w-full h-40 object-cover">
-        <div class="p-4 text-center">
-          <h3 class="text-xl font-bold text-purple-400">Free Fire Solo</h3>
+<main class="p-6 md:px-16 py-8">
+  <!-- Gradient Section for "Choose Mode" Cards -->
+  <div class="es-main-section p-3 md:p-7 mb-14 shadow-lg">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+      <!-- Card 1 - Active -->
+      <div onclick="openModePopup('solo')" class="cursor-pointer hover:scale-105 transition transform duration-200 active:scale-98">
+        <div class="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-tr from-violet-900 via-indigo-900 to-gray-900 border border-purple-700 hover:border-fuchsia-400 duration-200 px-1 pb-3 pt-2">
+          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Solo" class="w-full h-40 object-cover rounded-xl shadow-md border border-purple-900">
+          <div class="p-3 text-center">
+            <h3 class="text-xl font-bold text-purple-300 mb-1 tracking-wide drop-shadow">Free Fire Solo</h3>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- Card 2 - Disabled -->
-    <div class="opacity-60 pointer-events-none">
-      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
-        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Duo" class="w-full h-40 object-cover">
-        <div class="p-4 text-center">
-          <h3 class="text-xl font-bold text-yellow-400">Coming Soon</h3>
+      <!-- Card 2 - Disabled -->
+      <div class="pointer-events-none opacity-60">
+        <div class="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-tr from-zinc-800 via-indigo-900 to-gray-900 border border-gray-700 px-1 pb-3 pt-2">
+          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Duo" class="w-full h-40 object-cover rounded-xl border border-slate-800 shadow">
+          <div class="p-3 text-center">
+            <h3 class="text-xl font-bold text-yellow-500 tracking-wide">Coming Soon</h3>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- Card 3 - Disabled -->
-    <div class="opacity-60 pointer-events-none">
-      <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
-        <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Squad" class="w-full h-40 object-cover">
-        <div class="p-4 text-center">
-          <h3 class="text-xl font-bold text-yellow-400">Coming Soon</h3>
+      <!-- Card 3 - Disabled -->
+      <div class="pointer-events-none opacity-60">
+        <div class="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-tr from-zinc-800 via-indigo-900 to-gray-900 border border-gray-700 px-1 pb-3 pt-2">
+          <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Squad" class="w-full h-40 object-cover rounded-xl border border-slate-800 shadow">
+          <div class="p-3 text-center">
+            <h3 class="text-xl font-bold text-yellow-500 tracking-wide">Coming Soon</h3>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ABOUT, FAIR PLAY, EARN MONEY SECTIONS -->
-  <section class="max-w-3xl mx-auto mt-8 space-y-8">
-    <div class="rounded-2xl bg-gray-800 px-6 py-5 shadow-lg border-l-4 border-purple-600">
-      <h3 class="text-2xl font-bold text-purple-400 mb-2">About THplay</h3>
-      <p class="text-gray-200 text-base">
+  <!-- Info & Accent Sections -->
+  <section class="max-w-2xl mx-auto mt-8">
+    <div class="es-section">
+      <div class="es-section-title text-yellow-400 flex items-center gap-1">
+        <svg class="inline-block w-6 h-6" fill="#fbbf24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><text x="12" y="17" font-size="13" fill="#fff" font-family="sans-serif" text-anchor="middle">!</text></svg>
+        About THplay
+      </div>
+      <p class="text-gray-200 text-[1.03rem] tracking-wide mt-2">
         THplay is India's next-level esports platform for Free Fire players. Enter tournaments, compete fairly, win cash, and grow your esports journey!
       </p>
     </div>
-    <div class="rounded-2xl bg-gray-800 px-6 py-5 shadow-lg border-l-4 border-red-600">
-      <h3 class="text-2xl font-bold text-red-400 mb-2">Fair Play</h3>
-      <p class="text-gray-200 text-base">
+    <div class="es-section fair">
+      <div class="es-section-title text-red-400 flex items-center gap-1">
+        <svg class="inline-block w-6 h-6" fill="#ef4444" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><text x="12" y="17" font-size="13" fill="#fff" font-family="sans-serif" text-anchor="middle">⚖</text></svg>
+        Fair Play
+      </div>
+      <p class="text-gray-200 text-[1.03rem] tracking-wide mt-2">
         We stand for trust and honesty. Cheating, hacking, or exploiting is strictly banned. All matches are reviewed for fair play.
       </p>
     </div>
-    <div class="rounded-2xl bg-gray-800 px-6 py-5 shadow-lg border-l-4 border-green-600">
-      <h3 class="text-2xl font-bold text-green-400 mb-2">Earn Money</h3>
-      <p class="text-gray-200 text-base">
+    <div class="es-section earn">
+      <div class="es-section-title text-green-400 flex items-center gap-1">
+        <svg class="inline-block w-6 h-6" fill="#4ade80" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><text x="12" y="17" font-size="12" fill="#155e31" font-family="sans-serif" text-anchor="middle">₹</text></svg>
+        Earn Money
+      </div>
+      <p class="text-gray-200 text-[1.03rem] tracking-wide mt-2">
         Top Free Fire players earn real cash prizes. Compete, climb the leaderboard, and withdraw your winnings instantly.
       </p>
     </div>
   </section>
 
   <!-- YouTube Info Section with Logo Link -->
-  <section class="mt-10 flex flex-col items-center text-center">
-    <h3 class="text-2xl font-bold text-red-500 mb-2">YouTube</h3>
+  <section class="youtube-gradient max-w-md mx-auto mt-12 mb-16 rounded-2xl shadow-lg py-7 px-3 flex flex-col items-center text-center">
+    <h3 class="text-2xl font-bold text-red-500 mb-2 flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="#FF0000" viewBox="0 0 48 48" class="w-7 h-7"><path d="M44.16 12.44q-0.48-1.78-1.87-3.17t-3.17-1.87Q36.16 7 24 7T6.84 7.4q-1.78 0.48-3.17 1.87t-1.87 3.17Q1 15.85 1 24t0.8 11q0.48 1.78 1.87 3.17t3.17 1.87Q11.84 41 24 41t17.16-0.4q1.78-0.48 3.17-1.87t1.87-3.17Q47 32.15 47 24t-0.8-11ZM19 31V17l14 7Z"/></svg>
+      YouTube
+    </h3>
     <p class="text-base text-gray-200 mb-4 max-w-xl">
-      You can see your gameplay there, watch live matches, event highlights, and much more. Join our channel and never miss the action!
+      You can see your gameplay there, watch live matches, event highlights, and much more.<br>
+      Join our channel and never miss the action!
     </p>
     <a href="https://youtube.com/@gaming_nur_7x?si=qZV2lkNtzgFmnthf"
        target="_blank"
-       class="youtube-icon-hover inline-flex justify-center items-center rounded-full border-4 border-red-600 bg-gray-900 p-4 transition mb-2"
-       style="width:90px;height:90px;">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="#FF0000" viewBox="0 0 48 48" class="w-12 h-12">
+       class="youtube-icon-hover inline-flex justify-center items-center border-4 border-red-600 bg-gray-900 p-4 transition rounded-full mb-2"
+       style="width:84px;height:84px;">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="#FF0000" viewBox="0 0 48 48" class="w-11 h-11">
         <path d="M44.16 12.44q-0.48-1.78-1.87-3.17t-3.17-1.87Q36.16 7 24 7T6.84 7.4q-1.78 0.48-3.17 1.87t-1.87 3.17Q1 15.85 1 24t0.8 11q0.48 1.78 1.87 3.17t3.17 1.87Q11.84 41 24 41t17.16-0.4q1.78-0.48 3.17-1.87t1.87-3.17Q47 32.15 47 24t-0.8-11ZM19 31V17l14 7Z"/>
       </svg>
     </a>
