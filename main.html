@@ -32,31 +32,6 @@
       opacity: 1 !important;
       pointer-events: auto !important;
     }
-    .bloody-heading {
-      font-family: 'Creepster', cursive !important;
-      color: #ef2323;
-      letter-spacing: 2.5px;
-      -webkit-text-stroke: 1.2px #660000;
-      font-weight: 400;
-      white-space: nowrap;
-      line-height: 1.1 !important;
-      font-size: 3rem;
-    }
-    @media (max-width: 640px) {
-      .bloody-heading {
-        font-size: 1.7rem;
-      }
-    }
-    @media (min-width: 641px) and (max-width: 1023px) {
-      .bloody-heading {
-        font-size: 2.5rem;
-      }
-    }
-    @media (min-width: 1024px) {
-      .bloody-heading {
-        font-size: 3.5rem;
-      }
-    }
   </style>
 </head>
 <body class="bg-gray-950 text-white">
@@ -94,19 +69,9 @@
   </div>
 </header>
 
-<!-- Main -->
+<!-- Main Cards -->
 <main class="p-6 md:px-20 py-10">
-
-  <!-- NO extra character, clean heading -->
-  <div class="flex justify-center mb-8 overflow-x-auto">
-    <h2 class="bloody-heading text-center mx-auto px-2">
-      CHOOSE YOUR BATTLE STYLE
-    </h2>
-  </div>
-
-  <div style="height:0;clear:both;"></div>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 mb-12">
 
     <!-- Card 1 - Active -->
     <div onclick="openModePopup('solo')" class="cursor-pointer">
@@ -136,9 +101,42 @@
       </div>
     </div>
   </div>
+
+  <!-- ABOUT, FAIR PLAY, EARN MONEY SECTIONS -->
+  <section class="max-w-3xl mx-auto mt-8 space-y-8">
+    <div class="rounded-2xl bg-gray-800 px-6 py-5 shadow-lg border-l-4 border-purple-600">
+      <h3 class="text-2xl font-bold text-purple-400 mb-2">About THplay</h3>
+      <p class="text-gray-200 text-base">
+        THplay is India's next-level esports platform for Free Fire players. Enter tournaments, compete fairly, win cash, and grow your esports journey!
+      </p>
+    </div>
+
+    <div class="rounded-2xl bg-gray-800 px-6 py-5 shadow-lg border-l-4 border-red-600">
+      <h3 class="text-2xl font-bold text-red-400 mb-2">Fair Play</h3>
+      <p class="text-gray-200 text-base">
+        We stand for trust and honesty. Cheating, hacking, or exploiting is strictly banned. All matches are reviewed for fair play.
+      </p>
+    </div>
+
+    <div class="rounded-2xl bg-gray-800 px-6 py-5 shadow-lg border-l-4 border-green-600">
+      <h3 class="text-2xl font-bold text-green-400 mb-2">Earn Money</h3>
+      <p class="text-gray-200 text-base">
+        Top Free Fire players earn real cash prizes. Compete, climb the leaderboard, and withdraw your winnings instantly.
+      </p>
+    </div>
+  </section>
+
+  <!-- Direct Telegram Support -->
+  <section class="mt-10 flex justify-center">
+    <a href="https://t.me/T7fiit4" target="_blank"
+      class="flex items-center bg-purple-700 hover:bg-purple-800 text-white font-bold px-8 py-4 rounded-full shadow-lg text-lg space-x-3 transition">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6 mr-2" viewBox="0 0 24 24"><path d="M9.03 12.84l-.37 3.78c.54 0 .78-.24 1.08-.53l2.58-2.43 5.35 3.92c.98.54 1.69.26 1.95-.9l3.55-16.22c.32-1.48-.54-2.05-1.5-1.7L2.6 9.26c-1.46.56-1.44 1.36-.26 1.72l4.52 1.41L17.64 5.21c.44-.27.85-.12.52.15L9.03 12.84z"/></svg>
+      Contact Support (Telegram @T7fiit4)
+    </a>
+  </section>
 </main>
 
-<!-- Mode Popup Modal (Faded BG) -->
+<!-- Mode Popup Modal -->
 <div id="modePopupWrapper" class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none modal-container">
   <div id="modeOverlay" class="absolute inset-0 fade-overlay" onclick="closeModePopup()"></div>
   <div id="modePopup" class="relative z-10 bg-gray-800 rounded-xl p-6 w-80 text-center modal-fade shadow-2xl">
