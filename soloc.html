@@ -14,10 +14,19 @@
       border-radius: 1.3rem;
       box-shadow: 0 8px 32px 0 rgba(58,28,113,0.25);
       border-left: 6px solid #a21caf;
+
+      /* Responsive, mobile-first width */
+      width: 100%;
+      max-width: 350px;         /* max width for big screens */
+      margin-left: auto;
+      margin-right: auto;
+
       padding: 0.5rem 1rem 1.2rem 1rem;
       margin-bottom: 1.5rem;
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
     .es-card .join-btn {
       font-weight: bold;
@@ -72,7 +81,10 @@
       margin-bottom:0.1rem;
     }
     @media (max-width: 480px) {
-      .es-card { padding: 0.6rem 0.5rem 1rem 0.7rem }
+      .es-card { 
+        max-width: 96vw; /* use almost full width of mobile screen */
+        padding: 0.6rem 0.5rem 1rem 0.7rem;
+      }
       .es-card .es-label, .es-card .es-value { font-size: 1rem!important;}
       .es-card .match-title { font-size: 1.03rem; }
     }
@@ -99,7 +111,7 @@
   </div>
 
   <!-- Match Grid -->
-  <div class="pt-20 grid grid-cols-1 gap-4 p-4 max-w-md mx-auto" id="matchesContainer">
+  <div class="pt-20 grid grid-cols-1 gap-4 p-2 max-w-md mx-auto" id="matchesContainer">
     <!-- Match cards will be injected here -->
   </div>
 
