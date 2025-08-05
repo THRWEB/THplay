@@ -9,31 +9,66 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body { font-family: 'Poppins', sans-serif; }
-    .card-value { color: #4ade80!important; font-weight: 800; font-size: 1.13rem;}
-    .card-label { color: #d1d5db!important; font-size: 1.13rem;}
-    .match-info-row { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-bottom: 0.5rem;}
-    .match-info-col { flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
-    .match-info-col.right { justify-content: flex-end; }
-    .match-join-row { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-top: 1rem;}
-    .match-join-col { flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
-    .match-join-col.right { justify-content: flex-end; }
+    .card-label { color: #d1d5db!important; font-size: 1.16rem; width: 110px; flex-shrink: 0; }
+    .card-value { color: #4ade80!important; font-weight: 800; font-size: 1.16rem; }
+
+    /* Info Grid: aligns pairs in two column fixed-alignment for both label and value */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.70rem 2rem;
+      margin-bottom: 1rem;
+    }
+    .info-row {
+      display: flex; align-items: center;
+    }
+    .info-label {
+      min-width: 84px; /* stop overlap; must match across rows */
+      color: #d1d5db; font-size: 1.13rem;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .info-value {
+      color: #4ade80;
+      font-weight: 800;
+      font-size: 1.13rem;
+      margin-left: 0.33em;
+      min-width: 24px;
+    }
+
+    /* Last row: slots left + join button perfectly aligned with above columns */
+    .last-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.70rem 2rem;
+      align-items: center;
+      margin-top: 0.8rem;
+    }
+    .slots-col {
+      display: flex; align-items: center;
+    }
+    .join-col {
+      display: flex; align-items: center; justify-content: flex-end;
+    }
     .join-btn-main {
       font-size: 1.10rem; font-weight: 800;
-      padding-left: 1.6rem; padding-right: 1.6rem;
+      padding-left: 1.5rem; padding-right: 1.5rem;
       width: 100%;
-      max-width:150px;
+      max-width: 150px;
     }
-    .match-card-title { font-size: 1.35rem; font-weight: bold; margin-bottom: 0.7rem; }
-    @media (max-width: 650px) {
-      .match-card-title { font-size: 1.15rem; }
-      .card-label, .card-value { font-size: 1rem !important; }
-      .match-info-row, .match-join-row { gap: 1rem; }
+    .match-card-title { font-size: 1.21rem; font-weight: bold; margin-bottom: 0.85rem; }
+    @media (max-width: 560px) {
+      .card-label, .card-value, .info-label, .info-value { font-size: 1rem !important; }
+      .match-card-title { font-size: 1.05rem; }
+      .info-grid, .last-row { gap: 0.5rem 1.1rem; }
     }
     @media (max-width: 400px) {
-      .match-info-row, .match-join-row { flex-direction: column; align-items: flex-start; gap: 0; }
-      .match-info-col, .match-join-col { width: 100% !important; justify-content: flex-start !important;}
-      .match-join-col.right { justify-content: flex-start !important; }
-      .join-btn-main { max-width: 100%; }
+      .info-grid, .last-row {
+        grid-template-columns: 1fr;
+        gap: 0.45rem 0.75rem;
+      }
+      .join-col { justify-content: flex-start !important; }
+      .join-btn-main { max-width: 150px; }
     }
   </style>
 </head>
@@ -136,40 +171,40 @@
           matchDataMap[id] = match;
 
           const card = document.createElement("div");
-          card.className = "bg-gray-800 rounded-xl p-4 shadow-lg relative flex flex-col select-none";
+          card.className = "bg-gray-800 rounded-xl p-4 shadow-lg flex flex-col select-none";
 
           card.innerHTML = `
             <img src="${match.image}" class="w-full rounded mb-2" />
             <div class="match-card-title">${match.title}</div>
-            <!-- Row 1: Entry Fee | Prize -->
-            <div class="match-info-row">
-              <div class="match-info-col">
-                <span class="card-label">Entry Fee:</span>
-                <span class="card-value ml-1">${match.entryFee}</span>
+            <div class="info-grid">
+              <!-- Entry Fee -->
+              <div class="info-row">
+                <span class="info-label">Entry Fee:</span>
+                <span class="info-value">${match.entryFee}</span>
               </div>
-              <div class="match-info-col right">
-                <span class="card-label">Prize:</span>
-                <span class="card-value ml-1">${match.prize}</span>
+              <!-- Prize -->
+              <div class="info-row">
+                <span class="info-label">Prize:</span>
+                <span class="info-value">${match.prize}</span>
+              </div>
+              <!-- Time -->
+              <div class="info-row">
+                <span class="info-label">Time:</span>
+                <span class="info-value">${match.matchTime}</span>
+              </div>
+              <!-- Map -->
+              <div class="info-row">
+                <span class="info-label">Map:</span>
+                <span class="info-value">${match.map}</span>
               </div>
             </div>
-            <!-- Row 2: Time | Map -->
-            <div class="match-info-row">
-              <div class="match-info-col">
-                <span class="card-label">Time:</span>
-                <span class="card-value ml-1">${match.matchTime}</span>
+            <!-- Last row: Slots Left + Join -->
+            <div class="last-row">
+              <div class="slots-col">
+                <span class="info-label">Slots Left:</span>
+                <span class="info-value ml-1">${match.slot}</span>
               </div>
-              <div class="match-info-col right">
-                <span class="card-label">Map:</span>
-                <span class="card-value ml-1">${match.map}</span>
-              </div>
-            </div>
-            <!-- Row 3: Slots Left | Join -->
-            <div class="match-join-row">
-              <div class="match-join-col">
-                <span class="card-label">Slots Left:</span>
-                <span class="card-value ml-1">${match.slot}</span>
-              </div>
-              <div class="match-join-col right" style="min-width: 115px;">
+              <div class="join-col">
                 <button class="join-btn-main bg-yellow-500 hover:bg-yellow-600 text-black rounded transition"
                   onclick="window.selectMatch('${id}')">
                   Join
