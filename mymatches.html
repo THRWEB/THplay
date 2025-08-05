@@ -5,8 +5,112 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Matches - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+
+    .es-card {
+      background: linear-gradient(135deg, #261a36 0%, #180d25 100%);
+      border-radius: 1.3rem;
+      box-shadow: 0 8px 32px 0 rgba(58,28,113,0.25);
+      border-left: 6px solid #a21caf;
+      width: 100%;
+      max-width: 350px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0.65rem 1rem 1.12rem 1rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      gap: 1.05rem;
+      align-items: flex-start;
+    }
+    .es-match-image {
+      flex-shrink: 0;
+      width: 80px; height: 80px; 
+      border-radius: .86rem;
+      object-fit: cover;
+      border: 2.5px solid #a21caf;
+      box-shadow: 0 2.5px 10px #a21caf25;
+      background: #17181f;
+    }
+    .es-match-info {
+      width: 100%;
+      min-width: 0;
+      flex: 1 1 0%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.18rem;
+    }
+    .es-title {
+      color: #a78bfa;
+      font-size: 1.1rem;
+      font-weight: bold;
+      line-height: 1.22;
+      margin-bottom: 2px;
+      text-shadow: 0 2px 7px #9333ea44;
+      letter-spacing: 0.01em;
+      word-break: break-word;
+    }
+    .es-row {
+      font-size: .97rem;
+      color: #d6d3fc;
+      display: flex;
+      gap: 0.4em;
+      flex-wrap: wrap;
+    }
+    .es-label {
+      font-weight: 500;
+      color: #94a3b8;
+      min-width: 74px;
+    }
+    .es-value {
+      color: #f3f4f6;
+      font-weight: 600;
+    }
+    .es-name {
+      color: #06d6a0;
+      font-weight: 700;
+      font-size: 1.04em;
+    }
+    .es-room {
+      color: #bef264;
+      font-weight: 700;
+    }
+    .es-pass {
+      color: #7dd3fc;
+      font-weight: 650;
+    }
+    .es-timer {
+      font-size: .97rem;
+      font-weight: 600;
+      color: #facc15;
+      position: absolute;
+      top: 9px;
+      right: 16px;
+      background: #26211b;
+      padding: 0.24em 0.82em;
+      border-radius: 1.2em;
+      box-shadow: 0 0 8px #fde68a35;
+    }
+    @media (max-width: 480px) {
+      .es-card {
+        max-width: 97vw;
+        flex-direction: column;
+        align-items: stretch;
+        gap: .6rem;
+        padding: 0.62rem .6rem 1rem .72rem;
+      }
+      .es-match-image { width: 100%; height: 44vw; max-height: 105px; }
+      .es-title { font-size: .99rem; }
+      .es-row { font-size: .93rem; }
+    }
+  </style>
 </head>
-<body class="bg-[#111] text-white font-sans min-h-screen">
+<body class="bg-gradient-to-b from-indigo-950 via-black to-zinc-900 text-white min-h-screen">
+
   <!-- 🔄 Loading Spinner -->
   <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
     <svg class="animate-spin h-10 w-10 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -16,19 +120,19 @@
   </div>
 
   <!-- Header -->
-  <div class="relative bg-gray-900 py-3 flex items-center justify-center">
+  <div class="fixed top-0 w-full z-40 bg-gradient-to-r from-purple-900 via-indigo-900 to-gray-900 py-3 flex items-center justify-center shadow-md">
     <div class="absolute left-4 cursor-pointer" onclick="window.location.href='main.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"></path></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-purple-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"></path></svg>
     </div>
-    <h1 class="text-xl font-bold text-purple-400">THplay</h1>
+    <h1 class="text-xl md:text-2xl font-bold text-purple-400 tracking-wide drop-shadow">THplay</h1>
     <div id="walletDisplay" onclick="window.location.href='wallet.html'" class="absolute right-4 bg-purple-700 hover:bg-purple-800 px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer transition">
       Wallet: ₹0
     </div>
   </div>
 
-  <div class="max-w-xl mx-auto mt-6 px-3">
-    <h2 class="text-2xl font-bold text-center mb-3">My Joined Matches</h2>
-    <div id="matchesList" class="space-y-4"></div>
+  <div class="pt-20 max-w-xl mx-auto mb-6 px-2">
+    <h2 class="text-2xl font-bold text-center mb-5 text-purple-200 drop-shadow">My Joined Matches</h2>
+    <div id="matchesList"></div>
     <div id="noMatches" class="text-center text-gray-400 mt-8 hidden">
       You have not joined any matches yet.
     </div>
@@ -41,7 +145,6 @@
       getFirestore, collection, getDocs, onSnapshot, doc
     } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-    // Your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
       authDomain: "thplay-b3c68.firebaseapp.com",
@@ -59,12 +162,11 @@
     const loadingSpinner = document.getElementById('loadingSpinner');
     const TIMER_MINUTES = 30;
 
-    // Card UI for one match
     function createMatchCard(match, joinedName) {
       const div = document.createElement('div');
-      div.className = "bg-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col md:flex-row gap-4 p-4 relative";
+      div.className = "es-card";
 
-      // Timer if roomgivenat and room/pass given
+      // Timer for room reveal expiry
       let timerDiv = null;
       let expiryTime = null;
       if (match.roomgivenat && typeof match.roomgivenat === "object" && "seconds" in match.roomgivenat) {
@@ -73,7 +175,7 @@
         expiryTime = roomgivenMs + TIMER_MINUTES * 60 * 1000;
 
         timerDiv = document.createElement('div');
-        timerDiv.className = "text-xs text-yellow-400 absolute top-3 right-4";
+        timerDiv.className = "es-timer";
         div.appendChild(timerDiv);
 
         function updateTimer() {
@@ -93,19 +195,17 @@
       }
 
       div.innerHTML += `
-        <img class="h-24 w-32 object-cover rounded" src="${match.image || 'https://via.placeholder.com/120x80'}" alt="${match.title || ''}">
-        <div class="flex-1 space-y-1">
-          <h3 class="text-lg font-bold text-purple-400">${match.title || match.id || 'Match'}</h3>
-          <div class="text-sm">
-            <div><b>Your Name:</b> <span class="text-gray-200">${joinedName}</span></div>
-            <div><b>Entry Fee:</b> ₹${match.entryfees ?? match.entryFee ?? '--'}</div>
-            <div><b>Prize:</b> ₹${match.prize || '--'}</div>
-            <div><b>Map:</b> ${match.map || '--'}</div>
-            <div><b>Time:</b> ${match.matchtime || match.time || '--'}</div>
-            <div><b>Slots Left:</b> ${match.slot ?? '--'}</div>
-            <div><b>Room ID:</b> <span class="text-green-300">${match.roomid || '--'}</span></div>
-            <div><b>Room Pass:</b> <span class="text-green-300">${match.roompass || '--'}</span></div>
-          </div>
+        <img class="es-match-image" src="${match.image || 'https://via.placeholder.com/120x80'}" alt="${match.title || ''}">
+        <div class="es-match-info">
+          <div class="es-title">${match.title || match.id || 'Match'}</div>
+          <div class="es-row"><span class="es-label">Your Name:</span> <span class="es-name">${joinedName}</span></div>
+          <div class="es-row"><span class="es-label">Entry Fee:</span> <span class="es-value">₹${match.entryfees ?? match.entryFee ?? '--'}</span></div>
+          <div class="es-row"><span class="es-label">Prize:</span> <span class="es-value">₹${match.prize || '--'}</span></div>
+          <div class="es-row"><span class="es-label">Map:</span> <span class="es-value">${match.map || '--'}</span></div>
+          <div class="es-row"><span class="es-label">Time:</span> <span class="es-value">${match.matchtime || match.time || '--'}</span></div>
+          <div class="es-row"><span class="es-label">Slots Left:</span> <span class="es-value">${match.slot ?? '--'}</span></div>
+          <div class="es-row"><span class="es-label">Room ID:</span> <span class="es-room">${match.roomid || '--'}</span></div>
+          <div class="es-row"><span class="es-label">Room Pass:</span> <span class="es-pass">${match.roompass || '--'}</span></div>
         </div>
       `;
       return div;
@@ -117,7 +217,6 @@
       noMatches.classList.add('hidden');
       loadingSpinner.style.display = "flex";
 
-      // Collect all matches from soloc/solocs
       const collections = ['soloc', 'solocs'];
       const userMatches = [];
 
@@ -128,10 +227,9 @@
           match.id = mDoc.id;
           match.collection = collName;
           const joinedPlayers = match.joinedPlayers || [];
-          // Find if this user joined (first match => player can join same match multiple times, each with different name)
+          // Find this user’s entry (there may be more than one if user joined with different names)
           const myJoins = joinedPlayers.filter(jp => jp.uid === user.uid);
           myJoins.forEach(jp => {
-            // For each join (possible in case you allow multi-name join per UID), show one card per name joined
             userMatches.push({
               match,
               joinedName: jp.name
@@ -146,10 +244,12 @@
         return;
       }
 
-      // Sort by match time/ID if you want (optional)
-      userMatches.sort((a, b) =>
-        (b.match.matchtime || 0) - (a.match.matchtime || 0)
-      );
+      // If you want newest first, sort by time (optional)
+      userMatches.sort((a, b) => {
+        const atime = Number(new Date(a.match.matchtime || 0));
+        const btime = Number(new Date(b.match.matchtime || 0));
+        return btime - atime;
+      });
 
       userMatches.forEach(({match, joinedName}) => {
         matchesList.appendChild(createMatchCard(match, joinedName));
@@ -170,7 +270,7 @@
       if (!user) return window.location.href = "index.html";
       listenWallet(user.uid);
 
-      // Show their joined matches
+      // Show user’s joined matches
       displayMyMatches(user);
     });
   </script>
