@@ -9,40 +9,31 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body { font-family: 'Poppins', sans-serif; }
-    .card-value { color: #4ade80!important; font-weight: 800; font-size: 1.10rem;}
-    .card-label { color: #d1d5db!important; font-size: 1.10rem;}
-    .match-info-row { display: flex; justify-content: space-between; align-items: center; gap: 1.2rem; margin-bottom: 0.4rem; }
-    .match-info-row-small { display: flex; justify-content: space-between; align-items: center; gap: 1.2rem; }
-    .match-info-col { flex: 1 1 50%; display: flex; align-items: center; }
+    .card-value { color: #4ade80!important; font-weight: 800; font-size: 1.13rem;}
+    .card-label { color: #d1d5db!important; font-size: 1.13rem;}
+    .match-info-row { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-bottom: 0.5rem;}
+    .match-info-col { flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
     .match-info-col.right { justify-content: flex-end; }
-    .match-join-row { display: flex; justify-content: space-between; align-items: center; gap: 1.2rem; margin-top: 1rem;}
-    .match-join-col { flex: 1 1 50%; display: flex; align-items: center; }
+    .match-join-row { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-top: 1rem;}
+    .match-join-col { flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
     .match-join-col.right { justify-content: flex-end; }
-    @media (max-width: 500px) {
-      .card-label, .card-value {
-        font-size: 1rem !important;
-      }
-      .match-info-row, .match-join-row {
-        flex-wrap: wrap;
-        flex-direction: row;
-        gap: 0.6rem;
-      }
-      .match-info-col, .match-join-col { min-width: 110px !important; }
-    }
-    @media (max-width: 380px) {
-      .match-info-row, .match-join-row { flex-direction: column; align-items: flex-start; }
-      .match-info-col, .match-join-col { width: 100% !important; justify-content: flex-start !important;}
-      .match-join-col.right { justify-content: flex-start !important; }
-    }
     .join-btn-main {
       font-size: 1.10rem; font-weight: 800;
       padding-left: 1.6rem; padding-right: 1.6rem;
       width: 100%;
       max-width:150px;
     }
-    .match-card-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.6rem; }
-    @media (max-width:440px) {
-      .match-card-title { font-size: 1.05rem; }
+    .match-card-title { font-size: 1.35rem; font-weight: bold; margin-bottom: 0.7rem; }
+    @media (max-width: 650px) {
+      .match-card-title { font-size: 1.15rem; }
+      .card-label, .card-value { font-size: 1rem !important; }
+      .match-info-row, .match-join-row { gap: 1rem; }
+    }
+    @media (max-width: 400px) {
+      .match-info-row, .match-join-row { flex-direction: column; align-items: flex-start; gap: 0; }
+      .match-info-col, .match-join-col { width: 100% !important; justify-content: flex-start !important;}
+      .match-join-col.right { justify-content: flex-start !important; }
+      .join-btn-main { max-width: 100%; }
     }
   </style>
 </head>
@@ -144,7 +135,6 @@
 
           matchDataMap[id] = match;
 
-          // THE SIDE-BY-SIDE INFO GRID ROWS
           const card = document.createElement("div");
           card.className = "bg-gray-800 rounded-xl p-4 shadow-lg relative flex flex-col select-none";
 
@@ -179,7 +169,7 @@
                 <span class="card-label">Slots Left:</span>
                 <span class="card-value ml-1">${match.slot}</span>
               </div>
-              <div class="match-join-col right">
+              <div class="match-join-col right" style="min-width: 115px;">
                 <button class="join-btn-main bg-yellow-500 hover:bg-yellow-600 text-black rounded transition"
                   onclick="window.selectMatch('${id}')">
                   Join
