@@ -8,102 +8,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Creepster&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Poppins', sans-serif; }
-    /* CARD 1 - SOLO */
+    /* --- Card Styles --- */
     .card-solo {
-      background: linear-gradient(130deg, #32043d 70%, #251c3e 100%);
-      border-left: 7px solid #a21caf;
-      border-radius: 1.35rem;
-      box-shadow: 0 4px 24px 2px #a21caf38;
+      background: linear-gradient(133deg, #35032a 60%, #14171f 100%);
+      border-left: 6px solid #c026d3;
+      border-radius: 1.2rem;
       position: relative;
-      overflow: hidden;
       margin-bottom: 1.5rem;
+      box-shadow: 0 4px 24px #a21caf45, 0 1.5px 80px #d946ef20;
+      overflow: hidden;
     }
-    .card-solo .btn {
-      background: linear-gradient(90deg, #8b5cf6 0%, #f472b6 100%);
-      color: #fff;
-      font-weight: bold;
-      font-size: 1.13rem;
-      border-radius: 9999px;
-      width: 100%;
-      padding: .60rem 0;
-      margin-top: .85rem;
-      box-shadow: 0 4px 18px #a21caf22;
-      transition: transform 0.13s;
-    }
-    .card-solo .btn:active { transform: scale(0.97); }
-    .card-solo .mode-badge {
-      position: absolute; top: 15px; left: 0;
-      background: linear-gradient(90deg,#c026d3 60%,#0ea5e9 104%);
-      color: #fff; font-weight: bold;
-      padding: 0.22rem 1rem 0.22rem 0.98rem;
-      border-radius: 0 9999px 9999px 0 / 0 2.2rem 2.2rem 0;
-      font-size: 1.08rem;
-      letter-spacing: 0.04em;
-      box-shadow: 0 1px 7px #9333ea66;
-    }
-    /* CARD 2 - DUO */
     .card-duo {
-      background: rgba(39, 106, 186, 0.12);
-      border-left: 7px solid #0ea5e9;
-      border-radius: 1.35rem;
-      box-shadow: 0 6px 32px 1px #blue 11 0.14, 0 0 0 2px #0ea5e920;
+      background: linear-gradient(115deg, #102641 60%, #0c192a 100%);
+      border-left: 6px solid #0ea5e9;
+      border-radius: 1.2rem;
       position: relative;
-      overflow: hidden;
       margin-bottom: 1.5rem;
-      backdrop-filter: blur(7px);
+      box-shadow: 0 4px 24px #0ea5e957, 0 1.5px 80px #38bdf820;
+      overflow: hidden;
+    }
+    .card-squad {
+      background: linear-gradient(115deg, #443200 63%, #211e19 100%);
+      border-left: 6px solid #fbbf24;
+      border-radius: 1.2rem;
+      position: relative;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 24px #fbbf2450, 0 1.5px 80px #fde68a22;
+      overflow: hidden;
+    }
+    .mode-badge {
+      position: absolute; top: 18px; left: 0;
+      font-size: 1.01rem;
+      padding: 0.15rem 0.95rem 0.15rem 0.95rem;
+      border-radius: 0 9999px 9999px 0/0 2rem 2rem 0;
+      font-weight: bold; letter-spacing: 0.04em;
+      box-shadow: 0 2px 7px #0003;
+      background: linear-gradient(90deg, #c026d3 77%, #8b5cf6 100%);
+      color: #fff;
+      z-index:2;
     }
     .card-duo .mode-badge {
-      background: linear-gradient(90deg, #0ea5e9 70%, #67e8f9 100%);
-      color: #fff;
-      font-weight: bold;
-      font-size: 1.08rem;
-      padding: 0.20rem 1rem 0.20rem .92rem;
-      border-radius: 0 9999px 9999px 0/0 2.1rem 2.1rem 0;
-      position: absolute; top: 15px; left: 0;
-      box-shadow: 0 1px 7px #155e7544;
-      letter-spacing: 0.03em;
-    }
-    .card-duo .coming {
-      position: absolute;
-      top: 1rem; right: 1rem;
-      background: #082f49dd;
-      color: #67e8f9;
-      font-size: 0.98rem;
-      font-weight: bold;
-      padding: 0.2rem 0.80rem;
-      border-radius: 1rem;
-      box-shadow: 0 1px 8px #0ea5e955;
-    }
-    /* CARD 3 - SQUAD */
-    .card-squad {
-      background: linear-gradient(125deg, #432300 25%, #28263e 100%);
-      border-left: 7px solid #fde68a;
-      border-radius: 1.35rem;
-      box-shadow: 0 7px 28px 2px #fbbf2433;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, #0ea5e9 77%, #7dd3fc 100%);
     }
     .card-squad .mode-badge {
-      background: linear-gradient(90deg, #f59e42 60%, #fbbf24 97%);
-      color: #222;
-      font-weight: 800;
-      font-size: 1.08rem;
-      padding: 0.22rem 1rem 0.22rem .95rem;
-      border-radius: 0 9999px 9999px 0 / 0 2.1rem 2.1rem 0;
-      position: absolute; top: 15px; left: 0;
-      box-shadow: 0 1px 9px #fde68a55;
-      letter-spacing: 0.03em;
+      background: linear-gradient(90deg, #fbbf24 60%, #fde68a 100%);
+      color: #47330b;
     }
-    .card-squad .coming {
-      position: absolute; top: 1rem; right: 1rem;
-      background: #312e81cc;
-      color: #fbbf24;
-      font-size: 0.99rem;
-      font-weight: bold;
-      padding: 0.2rem 0.8rem;
-      border-radius: 1.2rem;
-      box-shadow: 0 1px 7px #fbbf2444;
+    .card-img-mob {
+      width: 100%; max-width: 370px; height: 120px; object-fit: cover; border-radius: 1.1rem; box-shadow: 0 3px 12px #a21caf22;
+      margin: 0 auto;
+      margin-top: 2.9rem
     }
     .card-title {
       font-size: 1.15rem;
@@ -112,22 +66,29 @@
       letter-spacing: .5px;
       line-height: 1.1;
     }
-    .card-img-mob {
-      width: 100%; max-width: 370px; height: 120px; object-fit: cover; border-radius: 1.1rem; box-shadow: 0 3px 12px #a21caf22;
-      margin: 0 auto;
+    /* Coming badge */
+    .coming {
+      position: absolute; top: 1rem; right: 1rem;
+      background: #0006;
+      color: #fff;
+      font-size: 0.99rem;
+      font-weight: bold;
+      padding: 0.21rem 0.8rem;
+      border-radius: 1.3rem;
+      box-shadow: 0 1px 5px #333c;
+      z-index:2;
     }
-    @media (max-width: 510px) {
-      .card-img-mob { height: 97px; }
-      .es-section, .es-main-section { padding-left: .65rem!important; padding-right: .65rem!important; }
-      .card-title { font-size: 1.01rem; }
-    }
-    /* Youtube section from previous code is retained */
+    /* Youtube section */
     .youtube-gradient {
       background: linear-gradient(100deg, #11192a 60%, #3b1728  100%);
       border-left: 7px solid #ff0000;
     }
     .youtube-icon-hover:hover { background: #ff0000 !important; border-color: #ff0000 !important; }
     .youtube-icon-hover:hover svg { fill: #fff !important; }
+    @media (max-width: 500px) {
+      .card-img-mob { height: 85px; }
+      .card-title { font-size: 1.01rem; }
+    }
   </style>
 </head>
 <body class="bg-gradient-to-b from-indigo-950 via-black to-zinc-900 min-h-screen text-white">
@@ -165,64 +126,54 @@
   </div>
 </header>
 
-<!-- Main Cards: All cards unique by design -->
-<main class="p-3 md:px-7 py-7">
-  <div class="max-w-md mx-auto">
-    <!-- SOLO CARD -->
-    <div class="card-solo mb-8 shadow-lg">
-      <span class="mode-badge"><svg width="22" height="22" fill="none" class="inline mr-1 -mt-1" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#c026d3"/><text x="12" y="17" text-anchor="middle" fill="#fff" font-size="10" font-family="sans-serif" font-weight="bold">SOLO</text></svg>Now Live</span>
-      <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob mt-7" />
-      <div class="card-title text-purple-300 mt-3 mb-2 tracking-wide">Free Fire Classic Solo</div>
-      <div class="flex flex-wrap justify-between px-1 mb-2 gap-x-2 gap-y-1">
-        <div class="flex gap-1 items-center text-sm"><span class="text-purple-400 font-bold">Entry</span> <span class="text-white">0</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-pink-400 font-bold">Prz</span> <span class="text-green-400 font-bold">₹4/kill</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-sky-400 font-bold">Map</span> <span class="text-white">Bermuda</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-fuchsia-400 font-bold">Time</span> <span class="text-white">4:00 PM</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-yellow-300 font-bold">Slots</span> <span class="text-white">48</span></div>
-      </div>
-      <button class="btn mt-3 tracking-wide text-base shadow-xl" onclick="openModePopup('solo')">
-        Join Now
-      </button>
+<main class="p-4 md:px-6 py-8 max-w-md mx-auto">
+  <!-- Free Fire Solo Mode Card -->
+  <section class="card-solo shadow-lg">
+    <span class="mode-badge">SOLO • Now Live</span>
+    <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob" />
+    <div class="card-title text-purple-300 mt-3 mb-2 tracking-wide">Free Fire Classic Solo</div>
+    <div class="flex flex-wrap gap-y-[0.1rem] px-1 gap-x-2 text-[.99rem] mb-2">
+      <div class="flex gap-1 items-center"><span class="text-purple-400 font-bold">Entry</span> <span class="text-white">0</span></div>
+      <div class="flex gap-1 items-center"><span class="text-pink-400 font-bold">Prize</span> <span class="text-green-400 font-bold">₹4/kill</span></div>
+      <div class="flex gap-1 items-center"><span class="text-sky-400 font-bold">Map</span> <span class="text-white">Bermuda</span></div>
+      <div class="flex gap-1 items-center"><span class="text-fuchsia-400 font-bold">Time</span> <span class="text-white">4:00 PM</span></div>
+      <div class="flex gap-1 items-center"><span class="text-yellow-300 font-bold">Slots</span> <span class="text-white">48</span></div>
     </div>
-    <!-- DUO CARD -->
-    <div class="card-duo mb-8 shadow-lg relative opacity-80 pointer-events-none">
-      <span class="mode-badge">
-        <svg width="22" height="22" fill="none" class="inline mr-1 -mt-1" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#0ea5e9"/><text x="12" y="17" text-anchor="middle" fill="#fff" font-size="10" font-family="sans-serif" font-weight="bold">DUO</text></svg>
-        Coming Soon
-      </span>
-      <span class="coming">Coming Soon</span>
-      <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob mt-7" />
-      <div class="card-title text-cyan-300 mt-3 mb-2 tracking-wide">Free Fire Duo</div>
-      <div class="flex flex-wrap justify-between px-1 mb-4 gap-x-2 gap-y-1">
-        <div class="flex gap-1 items-center text-sm"><span class="text-cyan-400 font-bold">Entry</span> <span class="text-white">--</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-sky-400 font-bold">Prz</span> <span class="text-green-400 font-bold">--</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-fuchsia-400 font-bold">Map</span> <span class="text-white">--</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-blue-400 font-bold">Time</span> <span class="text-white">--</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-cyan-300 font-bold">Slots</span> <span class="text-white">--</span></div>
-      </div>
-      <!-- No button -->
+    <button class="btn w-full mb-2 bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-400 text-white py-2 px-7 font-bold rounded-full shadow-xl"
+        onclick="openModePopup('solo')">Join Now</button>
+  </section>
+  <!-- Free Fire Duo Mode Card -->
+  <section class="card-duo shadow-lg pointer-events-none opacity-70">
+    <span class="mode-badge">DUO • Soon</span>
+    <span class="coming">Coming Soon</span>
+    <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob" />
+    <div class="card-title text-cyan-300 mt-3 mb-2 tracking-wide">Free Fire Duo</div>
+    <div class="flex flex-wrap gap-y-[0.1rem] px-1 gap-x-2 text-[.99rem] mb-4">
+      <div class="flex gap-1 items-center"><span class="text-cyan-400 font-bold">Entry</span> <span class="text-white">--</span></div>
+      <div class="flex gap-1 items-center"><span class="text-sky-400 font-bold">Prize</span> <span class="text-green-400 font-bold">--</span></div>
+      <div class="flex gap-1 items-center"><span class="text-fuchsia-400 font-bold">Map</span> <span class="text-white">--</span></div>
+      <div class="flex gap-1 items-center"><span class="text-blue-400 font-bold">Time</span> <span class="text-white">--</span></div>
+      <div class="flex gap-1 items-center"><span class="text-cyan-300 font-bold">Slots</span> <span class="text-white">--</span></div>
     </div>
-    <!-- SQUAD CARD -->
-    <div class="card-squad shadow-lg relative opacity-80 pointer-events-none">
-      <span class="mode-badge">
-        <svg width="22" height="22" fill="none" class="inline mr-1 -mt-1" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fde68a"/><text x="12" y="17" text-anchor="middle" fill="#000" font-size="10" font-family="sans-serif" font-weight="bold">SQUAD</text></svg>
-        Coming Soon
-      </span>
-      <span class="coming">Coming Soon</span>
-      <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob mt-7" />
-      <div class="card-title text-amber-300 mt-3 mb-2 tracking-wide">Free Fire Squad</div>
-      <div class="flex flex-wrap justify-between px-1 mb-4 gap-x-2 gap-y-1">
-        <div class="flex gap-1 items-center text-sm"><span class="text-yellow-400 font-bold">Entry</span> <span class="text-white">--</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-orange-300 font-bold">Prz</span> <span class="text-green-400 font-bold">--</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-indigo-400 font-bold">Map</span> <span class="text-white">--</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-yellow-400 font-bold">Time</span> <span class="text-white">--</span></div>
-        <div class="flex gap-1 items-center text-sm"><span class="text-amber-300 font-bold">Slots</span> <span class="text-white">--</span></div>
-      </div>
-      <!-- No button -->
+    <!-- No button -->
+  </section>
+  <!-- Free Fire Squad Mode Card -->
+  <section class="card-squad shadow-lg pointer-events-none opacity-80">
+    <span class="mode-badge">SQUAD • Coming</span>
+    <span class="coming">Coming Soon</span>
+    <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob" />
+    <div class="card-title text-amber-300 mt-3 mb-2 tracking-wide">Free Fire Squad</div>
+    <div class="flex flex-wrap gap-y-[0.1rem] px-1 gap-x-2 text-[.99rem] mb-2">
+      <div class="flex gap-1 items-center"><span class="text-yellow-400 font-bold">Entry</span> <span class="text-white">--</span></div>
+      <div class="flex gap-1 items-center"><span class="text-orange-300 font-bold">Prize</span> <span class="text-green-400 font-bold">--</span></div>
+      <div class="flex gap-1 items-center"><span class="text-indigo-400 font-bold">Map</span> <span class="text-white">--</span></div>
+      <div class="flex gap-1 items-center"><span class="text-yellow-400 font-bold">Time</span> <span class="text-white">--</span></div>
+      <div class="flex gap-1 items-center"><span class="text-amber-300 font-bold">Slots</span> <span class="text-white">--</span></div>
     </div>
-  </div>
+    <!-- No button -->
+  </section>
 
-  <!-- Info Sections (intact, color graded) -->
+  <!-- Info & Accent Sections -->
   <section class="max-w-2xl mx-auto mt-6">
     <div class="es-section">
       <div class="es-section-title text-yellow-400 flex items-center gap-1">
@@ -253,7 +204,7 @@
     </div>
   </section>
 
-  <!-- Youtube (unchanged, color graded) -->
+  <!-- YouTube Info Section with Logo Link -->
   <section class="youtube-gradient max-w-md mx-auto mt-10 mb-16 rounded-2xl shadow-lg py-7 px-3 flex flex-col items-center text-center">
     <h3 class="text-2xl font-bold text-red-500 mb-2 flex items-center gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" fill="#FF0000" viewBox="0 0 48 48" class="w-7 h-7"><path d="M44.16 12.44q-0.48-1.78-1.87-3.17t-3.17-1.87Q36.16 7 24 7T6.84 7.4q-1.78 0.48-3.17 1.87t-1.87 3.17Q1 15.85 1 24t0.8 11q0.48 1.78 1.87 3.17t3.17 1.87Q11.84 41 24 41t17.16-0.4q1.78-0.48 3.17-1.87t1.87-3.17Q47 32.15 47 24t-0.8-11ZM19 31V17l14 7Z"/></svg>
