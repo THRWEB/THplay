@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>THplay@thrweb</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Fonts: Poppins (all text), Creepster (scratched, bloody heading) -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Creepster&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Poppins', sans-serif; }
@@ -40,7 +39,7 @@
       -webkit-text-stroke: 1.2px #660000;
       font-weight: 400;
       white-space: nowrap;
-      line-height: 1.05 !important;
+      line-height: 1.1 !important;
       font-size: 3rem;
     }
     @media (max-width: 640px) {
@@ -98,12 +97,13 @@
 <!-- Main -->
 <main class="p-6 md:px-20 py-10">
   <div class="flex justify-center mb-8 overflow-x-auto">
-    <!-- Large, one-line, bloody heading -->
+    <!-- The heading: NO extra elements! -->
     <h2 class="bloody-heading text-center mx-auto px-2">
-    Choose Your Battle Style
+      CHOOSE YOUR BATTLE STYLE
     </h2>
   </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+
     <!-- Card 1 - Active -->
     <div onclick="openModePopup('solo')" class="cursor-pointer">
       <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
@@ -251,7 +251,6 @@
     setModalActive(false);
   };
 
-  // CHANGE: Open "soloc.html" for "Classic"
   window.joinClassic = function () {
     if (currentCard === 'solo') {
       window.location.href = "soloc.html";
