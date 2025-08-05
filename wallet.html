@@ -3,48 +3,101 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>THplay@thrweb</title>
+  <title>My Wallet - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
+    body { font-family: 'Poppins', sans-serif; }
+    .es-card {
+      background: linear-gradient(135deg, #261a36 0%, #180d25 100%);
+      border-radius: 1.3rem;
+      box-shadow: 0 8px 32px 0 rgba(58,28,113,0.25);
+      border-left: 6px solid #a21caf;
+      width: 100%;
+      max-width: 350px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 1.3rem 1.1rem 1.4rem 1.15rem;
+      margin-bottom: 1.6rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .es-label {
+      color: #a78bfa;
+      font-size: 1.09rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+    .es-value {
+      color: #4ade80;
+      font-weight: 900;
+      font-size: 1.7rem;
+      text-shadow: 0 0 10px #22d3ee22;
+      letter-spacing: 0.04em;
+    }
+    .es-btn {
+      font-weight: bold;
+      border-radius: 9999px;
+      background: linear-gradient(90deg,#9333ea 0%,#f472b6 100%);
+      color: #fff;
+      letter-spacing: .02em;
+      box-shadow: 0 2px 12px 0 #a21caf29;
+      padding: .75rem 0;
+      font-size: 1.1rem;
+      margin-top: .7rem;
+      width: 100%;
+      transition: background .18s;
+    }
+    .es-btn:hover { background: linear-gradient(90deg,#c026d3 40%,#f472b6 100%); }
+    @media (max-width:480px) {
+      .es-card {
+        max-width: 97vw;
+        padding: 1.0rem 0.6rem 1.2rem 0.7rem;
+      }
+      .es-label { font-size: 1rem; }
+      .es-value { font-size: 1.28rem;}
     }
   </style>
 </head>
-<body class="bg-gray-950 text-white min-h-screen">
+<body class="bg-gradient-to-b from-indigo-950 via-black to-zinc-900 min-h-screen text-white">
 
   <!-- Header -->
-  <header class="bg-gray-900 p-4 shadow-md sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto flex items-center justify-between">
-      <a href="main.html" class="text-purple-400 font-bold text-xl">&larr; Back</a>
-      <h1 class="text-xl font-bold text-purple-400 text-center flex-1 -ml-8">My Wallet</h1>
+  <div class="fixed top-0 w-full z-40 bg-gradient-to-r from-purple-900 via-indigo-900 to-gray-900 py-3 flex items-center justify-center shadow-md">
+    <div class="absolute left-4 cursor-pointer" onclick="window.location.href='main.html'">
+      <svg width="30" height="30" fill="none" stroke="#a78bfa" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.5 19L9 12.5 15.5 6"/></svg>
     </div>
-  </header>
+    <h1 class="text-xl md:text-2xl font-bold text-purple-400 tracking-wide drop-shadow">My Wallet</h1>
+  </div>
 
-  <!-- Wallet Info -->
-  <main class="p-6 space-y-6">
-    <div class="bg-gray-800 rounded-xl p-6 shadow-md text-center">
-      <h2 class="text-2xl font-bold text-purple-400 mb-2">Wallet Balance</h2>
-      <p id="walletAmount" class="text-4xl font-bold text-white">₹0</p>
-    </div>
+  <main class="pt-20 pb-10 px-2 flex flex-col items-center">
+
+    <!-- Wallet Balance -->
+    <section class="es-card text-center">
+      <div class="es-label text-xl font-bold mb-2">Wallet Balance</div>
+      <div class="es-value mb-1" id="walletAmount">₹0</div>
+    </section>
 
     <!-- Add Money -->
-    <div class="bg-gray-800 rounded-xl p-6 shadow-md">
-      <h3 class="text-xl font-bold text-purple-400 mb-4">Add Money</h3>
-      <input id="amountInput" type="number" min="1" placeholder="Enter amount (₹)" class="w-full p-3 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 mb-4"/>
-      <button id="addBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition">Add to Wallet</button>
-    </div>
+    <section class="es-card">
+      <div class="es-label text-lg font-bold mb-2">Add Money</div>
+      <input id="amountInput" type="number" min="1" placeholder="Enter amount (₹)"
+        class="w-full p-3 rounded bg-gray-900 text-white font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500 mb-3 border border-purple-800"/>
+      <button id="addBtn" class="es-btn">Add to Wallet</button>
+    </section>
 
-    <!-- Transaction History (Static for now) -->
-    <div class="bg-gray-800 rounded-xl p-6 shadow-md">
-      <h3 class="text-xl font-bold text-purple-400 mb-4">Transaction History</h3>
-      <ul class="space-y-2 text-sm text-gray-300">
+    <!-- Transaction History -->
+    <section class="es-card">
+      <div class="es-label text-lg font-bold mb-2">Transaction History</div>
+      <ul class="space-y-2 text-[1.03rem] text-gray-300 text-left pl-3 list-disc">
         <li>+ ₹100 added via UPI</li>
         <li>- ₹50 joined Match #1</li>
         <li>+ ₹500 prize from Match #2</li>
       </ul>
-    </div>
+    </section>
+
   </main>
 
   <script type="module">
@@ -71,32 +124,28 @@
 
     let userDocRef = null;
 
-    // Watch Auth State
     onAuthStateChanged(auth, async (user) => {
       if (!user) return window.location.href = "login.html";
       userDocRef = doc(db, "users", user.uid);
 
-      // Listen live to wallet updates
+      // Live wallet updates
       onSnapshot(userDocRef, (snap) => {
         let amt = (snap.exists() ? snap.data().wallet : 0) || 0;
         walletDisplay.innerText = "₹" + amt;
       });
     });
 
-    // Add Money Handler
     async function addMoney() {
       const amount = parseInt(amountInput.value);
       if (isNaN(amount) || amount <= 0) {
         alert("Enter a valid amount");
         return;
       }
-
       // Create users doc if not exists, else update
       const snap = await getDoc(userDocRef);
       if (!snap.exists()) {
         await setDoc(userDocRef, { wallet: amount, joinedHistory: [] });
       } else {
-        // Use Firestore increment for atomic add
         await updateDoc(userDocRef, { wallet: increment(amount) });
       }
       amountInput.value = "";
