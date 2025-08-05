@@ -8,124 +8,103 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Creepster&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Poppins', sans-serif; }
-
-    /* SOLO */
-    .card-solo {
-      background: linear-gradient(133deg, #35032a 60%, #14171f 100%);
+    .sidebar { transition: transform 0.3s ease; }
+    .sidebar-hidden { transform: translateX(-100%); }
+    .overlay { background-color: rgba(0, 0, 0, 0.5); }
+    .modal-fade {
+      transition: opacity 0.25s, transform 0.25s;
+      opacity: 0;
+      transform: scale(0.92);
+      pointer-events: none;
+    }
+    .modal-active .modal-fade { opacity: 1!important; transform: scale(1)!important; pointer-events: auto!important; }
+    .fade-overlay { opacity: 0; transition: opacity 0.25s; background: rgba(24,24,27,0.32); pointer-events: none; }
+    .modal-active .fade-overlay { opacity: 1!important; pointer-events: auto!important; }
+    /* Section Card Styles */
+    .card-section {
+      border-radius: 1.15rem;
+      margin-bottom: 1.42rem;
+      overflow: hidden;
+      box-shadow: 0 6px 30px 0 rgba(58,28,113,0.18);
+      position: relative;
+    }
+    .solo-card {
+      background: linear-gradient(130deg, #32043d 70%, #1a1037 100%);
       border-left: 7px solid #a21caf;
-      border-radius: 1.25rem;
-      margin-bottom: 1.2rem;
-      box-shadow: 0 5px 32px #a21caf3e, 0 2px 70px #d946ef20;
-      position: relative;
-      overflow: hidden;
     }
-    .card-solo .mode-badge {
-      position: absolute; top: 18px; left: 0;
-      font-size: 1.01rem;
-      padding: 0.15rem 1.05rem 0.15rem 0.95rem;
-      border-radius: 0 9999px 9999px 0/0 2rem 2rem 0;
-      font-weight: bold; letter-spacing: 0.04em;
-      box-shadow: 0 2px 7px #0003;
-      background: linear-gradient(90deg, #a21caf 77%, #f472b6 100%);
-      color: #fff;
-      z-index:2;
-    }
-    .card-solo .card-img-mob {
-      width: 100%; max-width: 370px; height: 110px; object-fit: cover; border-radius: 1.1rem;
-      box-shadow: 0 3px 14px #a21caf36; margin: 0 auto; margin-top: 2.85rem;
-    }
-    .card-solo .card-title { font-size: 1.13rem; font-weight: bold; margin: .6rem 0 .3rem .07rem; letter-spacing: .5px; }
-    .card-solo .join-btn {
-      background: linear-gradient(90deg, #8b5cf6 0%, #f472b6 100%);
-      color: #fff; font-weight: bold; font-size: 1.15rem;
-      border-radius: 9999px;
-      width: 100%; margin-top: .82rem; margin-bottom: .6rem; padding: .60rem 0;
-      box-shadow: 0 3px 15px #9333ea29;
-    }
-
-    /* DUO */
-    .card-duo {
-      background: linear-gradient(115deg, #102641 62%, #0c192a 100%);
+    .duo-card {
+      background: linear-gradient(110deg, #021d34 60%, #174356 100%);
       border-left: 7px solid #0ea5e9;
-      border-radius: 1.25rem;
-      margin-bottom: 1.2rem;
-      box-shadow: 0 5px 28px #0ea5e964, 0 2px 60px #38bdf820;
-      position: relative;
-      overflow: hidden;
-      opacity: 0.8;
+      opacity: .75;
       pointer-events: none;
     }
-    .card-duo .mode-badge {
+    .squad-card {
+      background: linear-gradient(115deg, #443200 67%, #25313d 100%);
+      border-left: 7px solid #fbbf24;
+      opacity: .75;
+      pointer-events: none;
+    }
+    .mode-badge {
       position: absolute; top: 18px; left: 0;
-      font-size: 1.01rem;
-      padding: 0.15rem 1.05rem 0.15rem .95rem; border-radius: 0 9999px 9999px 0/0 2rem 2rem 0;
-      font-weight: bold; letter-spacing: 0.01em;
-      box-shadow: 0 2px 7px #082f49ac;
-      background: linear-gradient(90deg, #0ea5e9 77%, #38bdf8 100%);
+      font-size: 0.98rem;
+      padding: 0.14rem 1rem 0.13rem 0.99rem;
+      border-radius: 0 9999px 9999px 0/0 2rem 2rem 0;
+      font-weight: 700; letter-spacing: 0.04em;
+      background: linear-gradient(90deg,#a21caf 77%,#f472b6 100%);
       color: #fff;
       z-index:2;
+      box-shadow: 0 2px 9px #a21caf44;
     }
-    .card-duo .card-img-mob {
-      width: 100%; max-width: 370px; height: 106px; object-fit: cover; border-radius: 1.1rem;
-      margin: 0 auto; margin-top: 2.8rem;
-      box-shadow: 0 2.5px 12px #0ea5e922;
+    .duo-card .mode-badge {
+      background: linear-gradient(90deg, #0ea5e9 77%, #38bdf8 100%);
     }
-    .card-duo .card-title { font-size: 1.1rem; font-weight: bold; margin: .6rem 0 .33rem .09rem; color: #38bdf8; }
-    .card-duo .coming { position: absolute; top: 1.1rem; right: 1.1rem; background: #0ea5e9d9; color: #fff; font-size: .98rem; font-weight: bold; padding: 0.2rem 0.85rem; border-radius: 1.3rem; box-shadow: 0 2px 9px #0ea5e922; }
-
-    /* SQUAD */
-    .card-squad {
-      background: linear-gradient(115deg, #443200 63%, #25223d 100%);
-      border-left: 7px solid #fbbf24;
-      border-radius: 1.2rem;
-      margin-bottom: 1.2rem;
-      box-shadow: 0 5px 32px #fbbf2471, 0 2px 80px #fde68a10;
-      position: relative;
-      overflow: hidden;
-      opacity: 0.82;
-      pointer-events: none;
-    }
-    .card-squad .mode-badge {
-      position: absolute; top: 18px; left: 0;
-      font-size: 1.01rem;
-      padding: 0.14rem 1.0rem 0.14rem .93rem; border-radius: 0 9999px 9999px 0/0 2rem 2rem 0;
-      font-weight: bold; letter-spacing: 0.06em;
-      box-shadow: 0 2px 8px #eab3086b;
+    .squad-card .mode-badge {
       background: linear-gradient(90deg, #fbbf24 77%, #fde68a 100%);
       color: #47330b;
-      z-index:2;
     }
-    .card-squad .card-img-mob {
-      width: 100%; max-width: 370px; height: 110px; object-fit: cover; border-radius: 1.1rem;
-      margin: 0 auto; margin-top: 2.85rem;
-      box-shadow: 0 2.5px 14px #fbbf2440;
+    .coming { position: absolute; top: 1.15rem; right: 1.1rem;
+      background: #fff4; color: #222; font-size: .93rem; font-weight: bold;
+      padding: 0.2rem 0.89rem; border-radius: 1.2rem; }
+    .card-img-mob {
+      width: 100%; max-width: 315px; height: 92px; object-fit: cover; border-radius: 1rem;
+      box-shadow: 0 3px 13px #a21caf28; margin: .9rem auto 0.35rem auto; display: block;
     }
-    .card-squad .card-title { font-size: 1.12rem; font-weight: bold; margin: .6rem 0 .33rem .11rem; color: #fde68a; }
-    .card-squad .coming { position: absolute; top: 1.1rem; right: 1.1rem; background: #fbbf24f1; color: #1a1818; font-size: .98rem; font-weight: bold; padding: 0.2rem 0.85rem; border-radius: 1.3rem; box-shadow: 0 2px 9px #fbbf2438; }
+    .card-title { font-size: 1.08rem; font-weight: bold; margin: .6rem 0 .32rem .16rem; letter-spacing: .5px; }
+    .flex-row-sec { display: flex; gap: 0.7rem; flex-wrap: wrap; padding: 0 0.14rem; }
+    .flex-row-sec > div { display: flex; gap: .25rem; align-items: center; font-size: .97rem;}
+    .flex-row-sec .label { font-weight: 700; font-size: .97rem;}
+    .join-btn {
+      background: linear-gradient(90deg,#9333ea 0%,#f472b6 100%);
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border-radius: 9999px;
+      width: 100%; padding: .58rem 0;
+      margin: .50rem 0 .7rem 0;
+      box-shadow: 0 3.5px 13px #a21caf30;
+      letter-spacing:.03em;
+    }
+    .duo-card .coming { color: #0ea5e9; background: #082f49ec; }
+    .squad-card .coming { color: #b77502; background: #fbbf24ee; }
 
-    /* Section details */
-    .flex-row-sec { display: flex; gap: 0.7rem; flex-wrap: wrap; padding-left: .13rem; padding-right:.13rem;}
-    .flex-row-sec > div { display: flex; gap: .33rem; align-items: center; padding-bottom: 1px; font-size: .99rem;}
-    .flex-row-sec .label { font-weight: bold; font-size: .97rem;}
-    @media (max-width: 500px) {
-      .card-img-mob { height: 84px; }
-      .card-title { font-size: .97rem; }
-    }
-    /* Youtube section, info sections (your theme) remain unchanged */
+    /* keep info sections, youtube unchanged */
     .youtube-gradient {
       background: linear-gradient(100deg, #11192a 60%, #3b1728 100%);
       border-left: 7px solid #ff0000;
     }
     .youtube-icon-hover:hover { background: #ff0000 !important; border-color: #ff0000 !important; }
     .youtube-icon-hover:hover svg { fill: #fff !important; }
+    @media (max-width: 500px) {
+      .card-img-mob { height: 72px; }
+      .card-title { font-size: .97rem; }
+      .card-section { border-radius: 0.88rem;}
+    }
   </style>
 </head>
 <body class="bg-gradient-to-b from-indigo-950 via-black to-zinc-900 min-h-screen text-white">
 
 <!-- Sidebar Overlay -->
 <div id="overlay" class="fixed inset-0 z-40 hidden overlay" onclick="toggleSidebar()"></div>
-
-<!-- Sidebar -->
 <aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl sidebar sidebar-hidden z-50">
   <div class="p-6">
     <img id="sidebarPic" src="https://i.postimg.cc/DZfGbnrg/user.png" class="w-16 h-16 rounded-full mx-auto border-2 border-purple-400" />
@@ -155,30 +134,28 @@
   </div>
 </header>
 
-<!-- Uniquely Styled Individual Mode Cards -->
 <main class="p-4 md:px-6 py-8 max-w-md mx-auto">
-  <!-- SOLO -->
-  <section class="card-solo">
+  <!-- SOLO CARD -->
+  <section class="card-section solo-card">
     <span class="mode-badge">SOLO • Now Live</span>
     <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob" />
-    <div class="card-title text-purple-300 tracking-wide">Free Fire Classic Solo</div>
-    <div class="flex-row-sec mb-2 mt-1">
+    <div class="card-title text-purple-300">Free Fire Classic Solo</div>
+    <div class="flex-row-sec mb-2">
       <div><span class="label text-purple-400">Entry</span><span class="text-white">0</span></div>
       <div><span class="label text-pink-400">Prize</span><span class="text-green-400 font-bold">₹4/kill</span></div>
       <div><span class="label text-sky-400">Map</span><span class="text-white">Bermuda</span></div>
       <div><span class="label text-fuchsia-400">Time</span><span class="text-white">4:00 PM</span></div>
       <div><span class="label text-yellow-300">Slots</span><span class="text-white">48</span></div>
     </div>
-    <button class="join-btn w-full mb-2 bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-400 text-white py-2 px-7 font-bold rounded-full shadow-xl"
-        onclick="openModePopup('solo')">Join Now</button>
+    <button class="join-btn" onclick="openModePopup('solo')">Join Now</button>
   </section>
-  <!-- DUO -->
-  <section class="card-duo">
-    <span class="mode-badge">DUO • Soon</span>
+  <!-- DUO CARD -->
+  <section class="card-section duo-card">
+    <span class="mode-badge">DUO • Coming Soon</span>
     <span class="coming">Coming Soon</span>
     <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob" />
-    <div class="card-title text-cyan-300 tracking-wide">Free Fire Duo</div>
-    <div class="flex-row-sec mb-1 mt-1">
+    <div class="card-title text-cyan-300">Free Fire Duo</div>
+    <div class="flex-row-sec mb-2">
       <div><span class="label text-cyan-400">Entry</span><span class="text-white">--</span></div>
       <div><span class="label text-sky-400">Prize</span><span class="text-green-400 font-bold">--</span></div>
       <div><span class="label text-fuchsia-400">Map</span><span class="text-white">--</span></div>
@@ -186,13 +163,13 @@
       <div><span class="label text-cyan-300">Slots</span><span class="text-white">--</span></div>
     </div>
   </section>
-  <!-- SQUAD -->
-  <section class="card-squad">
-    <span class="mode-badge">SQUAD • Coming</span>
+  <!-- SQUAD CARD -->
+  <section class="card-section squad-card">
+    <span class="mode-badge">SQUAD • Coming Soon</span>
     <span class="coming">Coming Soon</span>
     <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" class="card-img-mob" />
-    <div class="card-title text-amber-300 tracking-wide">Free Fire Squad</div>
-    <div class="flex-row-sec mb-1 mt-1">
+    <div class="card-title text-amber-300">Free Fire Squad</div>
+    <div class="flex-row-sec mb-2">
       <div><span class="label text-yellow-400">Entry</span><span class="text-white">--</span></div>
       <div><span class="label text-orange-300">Prize</span><span class="text-green-400 font-bold">--</span></div>
       <div><span class="label text-indigo-400">Map</span><span class="text-white">--</span></div>
@@ -201,7 +178,7 @@
     </div>
   </section>
 
-  <!-- Info & Accent Sections -->
+  <!-- Info & Accent Sections (unchanged from your code) -->
   <section class="max-w-2xl mx-auto mt-6">
     <div class="es-section">
       <div class="es-section-title text-yellow-400 flex items-center gap-1">
@@ -232,7 +209,7 @@
     </div>
   </section>
 
-  <!-- YouTube Info Section with Logo Link -->
+  <!-- YouTube Section -->
   <section class="youtube-gradient max-w-md mx-auto mt-10 mb-16 rounded-2xl shadow-lg py-7 px-3 flex flex-col items-center text-center">
     <h3 class="text-2xl font-bold text-red-500 mb-2 flex items-center gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" fill="#FF0000" viewBox="0 0 48 48" class="w-7 h-7"><path d="M44.16 12.44q-0.48-1.78-1.87-3.17t-3.17-1.87Q36.16 7 24 7T6.84 7.4q-1.78 0.48-3.17 1.87t-1.87 3.17Q1 15.85 1 24t0.8 11q0.48 1.78 1.87 3.17t3.17 1.87Q11.84 41 24 41t17.16-0.4q1.78-0.48 3.17-1.87t1.87-3.17Q47 32.15 47 24t-0.8-11ZM19 31V17l14 7Z"/></svg>
@@ -254,7 +231,7 @@
   </section>
 </main>
 
-<!-- Mode Popup Modal -->
+<!-- Mode Popup Modal (unchanged) -->
 <div id="modePopupWrapper" class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none modal-container">
   <div id="modeOverlay" class="absolute inset-0 fade-overlay" onclick="closeModePopup()"></div>
   <div id="modePopup" class="relative z-10 bg-gray-800 rounded-xl p-6 w-80 text-center modal-fade shadow-2xl">
@@ -307,7 +284,6 @@
     }
   });
 
-  // SIDEBAR
   window.toggleSidebar = function () {
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
