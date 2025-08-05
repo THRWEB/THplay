@@ -33,24 +33,29 @@
       opacity: 1 !important;
       pointer-events: auto !important;
     }
-    /* Scratched Bloody Effect for Heading */
     .bloody-heading {
       font-family: 'Creepster', cursive !important;
       color: #ef2323;
-      letter-spacing: 2px;
-      text-shadow:
-        2px 2px 0 #660000,
-        0 2px 6px #ef2323,
-        0 4px 12px #1a0000;
-      -webkit-text-stroke: 1px #660000;
+      letter-spacing: 2.5px;
+      -webkit-text-stroke: 1.2px #660000;
       font-weight: 400;
-      transition: text-shadow 0.2s;
       white-space: nowrap;
-      line-height: 1.1 !important;
+      line-height: 1.05 !important;
+      font-size: 3rem;
     }
-    @media (max-width: 440px) {
+    @media (max-width: 640px) {
       .bloody-heading {
-        font-size: 1.45rem !important;
+        font-size: 1.7rem;
+      }
+    }
+    @media (min-width: 641px) and (max-width: 1023px) {
+      .bloody-heading {
+        font-size: 2.5rem;
+      }
+    }
+    @media (min-width: 1024px) {
+      .bloody-heading {
+        font-size: 3.5rem;
       }
     }
   </style>
@@ -92,14 +97,13 @@
 
 <!-- Main -->
 <main class="p-6 md:px-20 py-10">
-  <div class="flex justify-center mb-8">
-    <!-- One-line, scratched, bloody heading -->
-    <h2 class="bloody-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal nowhitespace">
+  <div class="flex justify-center mb-8 overflow-x-auto">
+    <!-- Large, one-line, bloody heading -->
+    <h2 class="bloody-heading text-center mx-auto px-2">
       Choose Your Battle Style
     </h2>
   </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-
     <!-- Card 1 - Active -->
     <div onclick="openModePopup('solo')" class="cursor-pointer">
       <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:scale-105 transition">
@@ -109,7 +113,6 @@
         </div>
       </div>
     </div>
-
     <!-- Card 2 - Disabled -->
     <div class="opacity-60 pointer-events-none">
       <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
@@ -119,7 +122,6 @@
         </div>
       </div>
     </div>
-
     <!-- Card 3 - Disabled -->
     <div class="opacity-60 pointer-events-none">
       <div class="bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
@@ -129,7 +131,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </main>
 
