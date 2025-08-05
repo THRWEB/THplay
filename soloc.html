@@ -9,6 +9,13 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body { font-family: 'Poppins', sans-serif; }
+    .card-value { color: #4ade80 !important; font-weight: 700; }
+    .card-label { color: #d1d5db !important; }
+    @media (max-width: 420px) {
+      .match-card-flex { flex-direction: column !important; }
+      .match-card-flex > div { width: 100% !important; }
+      .match-card-join { justify-content: flex-end !important; }
+    }
   </style>
 </head>
 <body class="bg-[#111] text-white">
@@ -101,7 +108,7 @@
             collection: "soloc",
             title: data.title || "Classic Solo",
             entryFee: data.entryfees || 0,
-            prize: data.prize || 0,
+            prize: data.prize || "0",
             matchTime: data.matchtime || "--",
             map: data.map || "--",
             slot: data.slot || 0,
@@ -112,28 +119,47 @@
 
           matchDataMap[id] = match;
 
-          // Side-by-side info structure with green value
-          const makeRow = (left, value) => `
-            <div class="flex justify-between items-center py-1 text-base">
-              <span class="text-gray-300">${left}</span>
-              <span class="text-green-400 font-semibold">${value}</span>
-            </div>
-          `;
-
+          // Two-column layout for each row
           const card = document.createElement("div");
           card.className = "bg-gray-800 rounded-xl p-4 shadow-lg relative flex flex-col select-none";
+
           card.innerHTML = `
             <img src="${match.image}" class="w-full rounded mb-2" />
-            <h2 class="text-xl font-bold mb-2">${match.title}</h2>
-            ${makeRow("Entry Fee:", match.entryFee)}
-            ${makeRow("Prize:", match.prize)}
-            ${makeRow("Time:", match.matchTime)}
-            ${makeRow("Map:", match.map)}
-            ${makeRow("Slots Left:", match.slot)}
-            <button class="mt-6 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded w-full transition"
-              onclick="window.selectMatch('${id}')">
-              Join
-            </button>
+            <h2 class="text-xl font-bold mb-3">${match.title}</h2>
+            <!-- Row 1: Entry Fee | Prize -->
+            <div class="flex match-card-flex w-full gap-2 mb-1">
+              <div class="w-1/2 flex items-center">
+                <span class="card-label text-base">Entry Fee:</span>
+                <span class="card-value ml-1">${match.entryFee}</span>
+              </div>
+              <div class="w-1/2 flex items-center justify-end">
+                <span class="card-label text-base mr-1">Prize:</span>
+                <span class="card-value">${match.prize}</span>
+              </div>
+            </div>
+            <!-- Row 2: Time | Map -->
+            <div class="flex match-card-flex w-full gap-2 mb-1">
+              <div class="w-1/2 flex items-center">
+                <span class="card-label text-base">Time:</span>
+                <span class="card-value ml-1">${match.matchTime}</span>
+              </div>
+              <div class="w-1/2 flex items-center justify-end">
+                <span class="card-label text-base mr-1">Map:</span>
+                <span class="card-value">${match.map}</span>
+              </div>
+            </div>
+            <!-- Row 3: Slots Left | Join Button -->
+            <div class="flex match-card-flex items-center w-full gap-2 mt-2 match-card-join">
+              <div class="w-1/2 flex items-center">
+                <span class="card-label text-base">Slots Left:</span>
+                <span class="card-value ml-1">${match.slot}</span>
+              </div>
+              <div class="w-1/2 flex items-center justify-end">
+                <button class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-6 rounded transition" onclick="window.selectMatch('${id}')">
+                  Join
+                </button>
+              </div>
+            </div>
           `;
           container.appendChild(card);
         });
@@ -142,7 +168,7 @@
       });
     });
 
-    // Only "Join" button is clickable
+    // Only Join button is clickable
     window.selectMatch = (id) => {
       const match = matchDataMap[id];
       if (match) {
