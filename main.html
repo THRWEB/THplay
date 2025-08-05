@@ -15,6 +15,7 @@
     .modal-active .modal-fade { opacity: 1!important; transform: scale(1)!important; pointer-events: auto!important; }
     .fade-overlay { opacity: 0; transition: opacity 0.25s; background: rgba(24,24,27,0.32); pointer-events: none; }
     .modal-active .fade-overlay { opacity: 1!important; pointer-events: auto!important; }
+
     .es-main-section {
       background: linear-gradient(135deg, #261a36 0%, #180d25 100%);
       border-radius: 1.3rem;
@@ -26,6 +27,26 @@
     }
     .duo-section { border-left-color: #0ea5e9!important; }
     .squad-section { border-left-color: #fbbf24!important; }
+    .coming-badge {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 5;
+      font-size: 0.93rem;
+      font-weight: 600;
+      padding: 0.21rem 1.1rem;
+      border-radius: 1.25rem;
+      background: #0ea5e9;
+      color: #fff;
+      box-shadow: 0 4px 24px #0ea5e949;
+      letter-spacing: .04em;
+    }
+    .squad-section .coming-badge {
+      background: #fbbf24;
+      color: #222;
+      box-shadow: 0 2.5px 12px #fbbf2455;
+    }
+
     .es-head-title {
       color: #a78bfa;
       font-family: 'Creepster', cursive !important;
@@ -47,6 +68,7 @@
       .es-head-title { font-size: 1.37rem; }
       .es-section-title { font-size:1.09rem; }
       .es-section, .youtube-gradient { padding: 1rem .7rem .9rem 1.0rem; }
+      .coming-badge { right: 10px; top: 8px; font-size: 0.9rem; padding: 0.16rem 0.7rem;}
     }
   </style>
 </head>
@@ -85,7 +107,7 @@
   </div>
 </header>
 
-<!-- Each Mode Card is a separate line/section, each with its own border color -->
+<!-- Each Mode Card is now a separate line/section -->
 <main class="p-4 md:px-6 py-8 max-w-md mx-auto">
   <!-- SOLO CARD -->
   <section class="es-main-section mb-5">
@@ -97,14 +119,16 @@
     </div>
   </section>
   <!-- DUO CARD -->
-  <section class="es-main-section duo-section mb-5 pointer-events-none opacity-60">
+  <section class="es-main-section duo-section mb-5 pointer-events-none opacity-60" style="position:relative;">
+    <span class="coming-badge">Coming Soon</span>
     <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Duo" class="w-full h-40 object-cover rounded-2xl shadow-md border border-blue-400" />
     <div class="p-3 text-center">
       <h3 class="text-xl font-bold text-sky-400 mb-1 tracking-wide drop-shadow">Free Fire Duo</h3>
     </div>
   </section>
   <!-- SQUAD CARD -->
-  <section class="es-main-section squad-section mb-5 pointer-events-none opacity-60">
+  <section class="es-main-section squad-section mb-5 pointer-events-none opacity-60" style="position:relative;">
+    <span class="coming-badge">Coming Soon</span>
     <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Squad" class="w-full h-40 object-cover rounded-2xl shadow-md border border-yellow-400" />
     <div class="p-3 text-center">
       <h3 class="text-xl font-bold text-yellow-400 mb-1 tracking-wide drop-shadow">Free Fire Squad</h3>
