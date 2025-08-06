@@ -33,6 +33,23 @@
     .coming-badge {
       display: none;
     }
+    .es-head-title {
+      color: #a78bfa;
+      font-family: 'Creepster', cursive !important;
+      font-size: 2.2rem;
+      letter-spacing: 1.5px;
+      text-shadow: 0 2px 10px #9333ea55;
+      margin-bottom: 1rem;
+    }
+    .es-section-title { font-size: 1.35rem; font-weight: bold; letter-spacing: .5px; color: #fbbf24; margin-bottom: 0.3rem; text-shadow: 0 2px 7px #d977061a;}
+    .es-section { background: linear-gradient(95deg, #321b53dd 0%, #18142bcc 100%); border-radius: 1rem; box-shadow: 0 3px 16px 0 #18102744; margin-bottom: 1.3rem; padding: 1.1rem 1.1rem 1.1rem 1.3rem; border-left: 6px solid #fbbf24; }
+    .es-section.fair { border-left-color: #ef4444!important; }
+    .es-section.earn { border-left-color: #4ade80!important; }
+    .es-section .es-section-title { margin-bottom: 0.2rem;}
+    .youtube-gradient { background: linear-gradient(100deg, #11192a 60%, #3b1728  100%); border-left: 7px solid #ff0000;}
+    .youtube-icon-hover { transition: background 0.18s, border 0.18s; }
+    .youtube-icon-hover:hover { background: #ff0000 !important; border-color: #ff0000 !important; }
+    .youtube-icon-hover:hover svg { fill: #fff !important; }
     @media (max-width: 490px) {
       .es-head-title { font-size: 1.37rem; }
       .es-section-title { font-size:1.09rem; }
@@ -98,8 +115,55 @@
     </div>
   </section>
 
-  <!-- Info/YouTube sections omitted for brevity (keep from previous code if needed) -->
+  <section class="max-w-2xl mx-auto mt-8">
+    <div class="es-section">
+      <div class="es-section-title text-yellow-400 flex items-center gap-1">
+        <svg class="inline-block w-6 h-6" fill="#fbbf24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><text x="12" y="17" font-size="13" fill="#fff" font-family="sans-serif" text-anchor="middle">!</text></svg>
+        About THplay
+      </div>
+      <p class="text-gray-200 text-[1.03rem] tracking-wide mt-2">
+        THplay is India's next-level esports platform for Free Fire players. Enter tournaments, compete fairly, win cash, and grow your esports journey!
+      </p>
+    </div>
+    <div class="es-section fair">
+      <div class="es-section-title text-red-400 flex items-center gap-1">
+        <svg class="inline-block w-6 h-6" fill="#ef4444" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><text x="12" y="17" font-size="13" fill="#fff" font-family="sans-serif" text-anchor="middle">⚖</text></svg>
+        Fair Play
+      </div>
+      <p class="text-gray-200 text-[1.03rem] tracking-wide mt-2">
+        We stand for trust and honesty. Cheating, hacking, or exploiting is strictly banned. All matches are reviewed for fair play.
+      </p>
+    </div>
+    <div class="es-section earn">
+      <div class="es-section-title text-green-400 flex items-center gap-1">
+        <svg class="inline-block w-6 h-6" fill="#4ade80" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><text x="12" y="17" font-size="12" fill="#155e31" font-family="sans-serif" text-anchor="middle">₹</text></svg>
+        Earn Money
+      </div>
+      <p class="text-gray-200 text-[1.03rem] tracking-wide mt-2">
+        Top Free Fire players earn real cash prizes. Compete, climb the leaderboard, and withdraw your winnings instantly.
+      </p>
+    </div>
+  </section>
 
+  <section class="youtube-gradient max-w-md mx-auto mt-10 mb-16 rounded-2xl shadow-lg py-7 px-3 flex flex-col items-center text-center">
+    <h3 class="text-2xl font-bold text-red-500 mb-2 flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="#FF0000" viewBox="0 0 48 48" class="w-7 h-7"><path d="M44.16 12.44q-0.48-1.78-1.87-3.17t-3.17-1.87Q36.16 7 24 7T6.84 7.4q-1.78 0.48-3.17 1.87t-1.87 3.17Q1 15.85 1 24t0.8 11q0.48 1.78 1.87 3.17t3.17 1.87Q11.84 41 24 41t17.16-0.4q1.78-0.48 3.17-1.87t1.87-3.17Q47 32.15 47 24t-0.8-11ZM19 31V17l14 7Z"/></svg>
+      YouTube
+    </h3>
+    <p class="text-base text-gray-200 mb-4 max-w-xl">
+      You can see your gameplay there, watch live matches, event highlights, and much more.<br>
+      Join our channel and never miss the action!
+    </p>
+    <a href="https://youtube.com/@gaming_nur_7x?si=qZV2lkNtzgFmnthf"
+       target="_blank"
+       class="youtube-icon-hover inline-flex justify-center items-center border-4 border-red-600 bg-gray-900 p-4 transition rounded-full mb-2"
+       style="width:84px;height:84px;">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="#FF0000" viewBox="0 0 48 48" class="w-11 h-11">
+        <path d="M44.16 12.44q-0.48-1.78-1.87-3.17t-3.17-1.87Q36.16 7 24 7T6.84 7.4q-1.78 0.48-3.17 1.87t-1.87 3.17Q1 15.85 1 24t0.8 11q0.48 1.78 1.87 3.17t3.17 1.87Q11.84 41 24 41t17.16-0.4q1.78-0.48 3.17-1.87t1.87-3.17Q47 32.15 47 24t-0.8-11ZM19 31V17l14 7Z"/>
+      </svg>
+    </a>
+    <span class="text-base text-gray-300">Subscribe for updates and streams!</span>
+  </section>
 </main>
 
 <!-- Mode Popup Modal -->
@@ -217,6 +281,7 @@
     if (currentCard === 'solo') {
       window.location.href = "soloc.html";
     }
+    // Duo Classic: Redirect to duoc.html
     else if (currentCard === 'duo') {
       window.location.href = "duoc.html";
     }
@@ -228,6 +293,7 @@
     if (currentCard === 'solo') {
       window.location.href = "solocs.html";
     }
+    // Duo Clash Squad: Redirect to duocs.html
     else if (currentCard === 'duo') {
       window.location.href = "duocs.html";
     }
