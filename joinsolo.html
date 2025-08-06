@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Join Clash Squad Solo Match - THplay</title>
+  <title>Join Match - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
@@ -172,10 +172,11 @@
     </div>
   </div>
 
-  <!-- Join Form -->
+  <!-- Join Form (dynamically renders correct input fields) -->
   <div class="m-4 p-4 bg-gray-900 rounded max-w-md mx-auto">
-    <h3 class="text-lg font-semibold mb-2">Enter In-Game Name</h3>
-    <input id="inGameName" type="text" class="w-full p-2 rounded text-black" placeholder="Your Free Fire Name"/>
+    <h3 class="text-lg font-semibold mb-2">Enter In-Game Name(s)</h3>
+    <div id="nameFields"></div>
+    <p id="feeInfo" class="mt-2 text-lg font-semibold text-yellow-400"></p>
     <button id="joinBtn" class="mt-4 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded w-full">
       Join Match
     </button>
@@ -223,10 +224,7 @@
     const db = getFirestore(app);
     const auth = getAuth();
 
-    let currentUser = null,
-        entryFee = 0,
-        matchId = "",
-        matchCollection = "solocs";
+    let currentUser = null, entryFee = 0, matchId = "", matchCollection = "solocs", maxNames = 1;
 
     function showAddMoneyButton() {
       const wrapper = document.getElementById('addMoneyWrapper');
@@ -247,13 +245,37 @@
       if(walletBtn) walletBtn.onclick = () => window.location.href = "wallet.html";
     });
 
+    // RENDER THE INPUT FIELDS, DYNAMICALLY BASED ON MATCH MODE
+    function renderNameFields() {
+      const nameFieldsDiv = document.getElementById('nameFields');
+      nameFieldsDiv.innerHTML = '';
+      let fields = [];
+      for (let i=1; i<=maxNames; i++) {
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.id = `inGameName${i}`;
+        inp.placeholder = `Player Name ${i}${i===1?' (required)':' (optional)'}`;
+        inp.className = "w-full p-2 my-2 rounded text-black";
+        nameFieldsDiv.appendChild(inp);
+        fields.push(inp);
+        inp.addEventListener('input', updateFeeInfo);
+      }
+      return fields;
+    }
+    function updateFeeInfo() {
+      const fields = Array.from(document.querySelectorAll('#nameFields input'));
+      const filled = fields.filter(f => f.value.trim()).length;
+      document.getElementById("feeInfo").textContent =
+        `Total Entry Fee: ₹${entryFee * (filled || 1)}` +
+        (maxNames > 1 ? ` (${filled} slot${filled>1?'s':''})` : '');
+    }
+
     // ----- On Auth -----
     onAuthStateChanged(auth, async (user) => {
       if (!user) return window.location.href = "index.html";
       currentUser = user;
       const userDocRef = doc(db, "users", user.uid);
 
-      // Live wallet display
       onSnapshot(userDocRef, (snap) => {
         let amt = (snap.exists() ? snap.data().wallet : 0) || 0;
         document.getElementById("walletDisplay").textContent = "Wallet: ₹" + amt;
@@ -270,6 +292,12 @@
       matchCollection = match.collection || "solocs";
       entryFee = Number(match.entryFee) || 0;
 
+      // Decide mode/number of fields
+      if (["soloc", "solocs"].includes(matchCollection)) maxNames = 1;
+      else if (["duoc", "duocs"].includes(matchCollection)) maxNames = 2;
+      else if (["squadc", "squadcs"].includes(matchCollection)) maxNames = 4;
+      else maxNames = 1;
+
       document.getElementById("matchImage").src = match.image || "";
       document.getElementById("matchTitle").textContent = match.title || matchId;
       document.getElementById("matchEntryFee").textContent = match.entryFee || "--";
@@ -279,18 +307,26 @@
       document.getElementById("matchSlot").textContent = match.slot ?? "--";
       document.getElementById("loadingSpinner").style.display = "none";
 
+      // RENDER fields for this mode
+      const nameInputs = renderNameFields();
+      updateFeeInfo();
+
       // ------ JOIN BUTTON ------
       document.getElementById("joinBtn").addEventListener("click", async () => {
-        const name = document.getElementById("inGameName").value.trim();
         const msg = document.getElementById("message");
         hideAddMoneyButton();
         msg.textContent = "";
 
-        if (!name) {
-          msg.innerHTML = `<span class="text-red-500">Please enter your Free Fire name.</span>`;
+        // Gather names (remove empty)
+        let names = nameInputs.map(inp => inp.value.trim()).filter(n => n);
+        // Remove duplicates (case insensitive)
+        names = Array.from(new Set(names.map(n => n.toLowerCase()))).map(n =>
+          nameInputs.find(inp => inp.value.trim().toLowerCase() === n)?.value.trim()
+        );
+        if (names.length < 1) {
+          msg.innerHTML = `<span class="text-red-500">Please enter at least one in-game name.</span>`;
           return;
         }
-
         msg.innerHTML = `<span class="text-yellow-400">Processing...</span>`;
         document.getElementById("loadingSpinner").style.display = "flex";
         try {
@@ -300,10 +336,12 @@
             const matchSnap = await tx.get(matchRef);
             if (!matchSnap.exists()) throw new Error("Match not found.");
             let slots = matchSnap.data()?.slot ?? 0;
-            if (slots <= 0) throw new Error("No slots available.");
+            if (slots < names.length) throw new Error("Not enough slots available.");
             let joinedPlayers = matchSnap.data().joinedPlayers || [];
-            if (joinedPlayers.some(j => j.uid === currentUser.uid && j.name.toLowerCase() === name.toLowerCase())) {
-              throw new Error("You have already joined this match with this in-game name.");
+            for (const name of names) {
+              if (joinedPlayers.some(j => j.uid === currentUser.uid && j.name.toLowerCase() === name.toLowerCase())) {
+                throw new Error(`You have already joined this match with "${name}".`);
+              }
             }
 
             // 2. User doc (for wallet check & update)
@@ -311,35 +349,35 @@
             let userSnap = await tx.get(userDocRef);
             let wallet = 0;
             if (!userSnap.exists()) {
-              if (entryFee > 0) {
+              if (entryFee * names.length > 0) {
                 throw new Error("Please add money to your wallet before joining paid matches.");
               }
               await tx.set(userDocRef, { wallet: 0 });
               wallet = 0;
             } else {
               wallet = userSnap.data().wallet ?? 0;
-              if (wallet < entryFee) {
+              if (wallet < entryFee * names.length) {
                 throw new Error("Not enough wallet balance.");
               }
             }
 
             // 3. Update both: deduct fee, add join record to match doc
             tx.update(matchRef, {
-              slot: slots - 1,
-              joinedPlayers: arrayUnion({
+              slot: slots - names.length,
+              joinedPlayers: arrayUnion(...names.map(name => ({
                 uid: currentUser.uid,
-                name: name
-              })
+                name,
+              })))
             });
-            if (entryFee > 0) {
-              tx.update(userDocRef, { wallet: wallet - entryFee });
+            if (entryFee * names.length > 0) {
+              tx.update(userDocRef, { wallet: wallet - entryFee * names.length });
             }
           });
 
           document.getElementById("loadingSpinner").style.display = "none";
-          msg.innerHTML = `<span class="text-green-400">Joined successfully!${entryFee > 0 ? " ₹" + entryFee + " deducted." : ""}</span>`;
+          msg.innerHTML = `<span class="text-green-400">Joined successfully!${entryFee > 0 ? " ₹" + (entryFee * names.length) + " deducted." : ""}</span>`;
           let slotsNode = document.getElementById("matchSlot");
-          slotsNode.textContent = Math.max(0, (parseInt(slotsNode.textContent) || 1) - 1);
+          slotsNode.textContent = Math.max(0, (parseInt(slotsNode.textContent) || names.length) - names.length);
 
         } catch (err) {
           document.getElementById("loadingSpinner").style.display = "none";
