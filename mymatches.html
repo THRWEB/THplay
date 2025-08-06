@@ -161,6 +161,16 @@
     const loadingSpinner = document.getElementById('loadingSpinner');
     const TIMER_MINUTES = 30;
 
+    function getMatchImage(match) {
+      // Try various typical keys for maximum compatibility
+      return (
+        match.image ||
+        match.img ||
+        match.photo ||
+        'https://via.placeholder.com/120x80?text=Free+Fire'
+      );
+    }
+
     function createMatchCard(match, joinedName) {
       const div = document.createElement('div');
       div.className = "es-card";
@@ -193,8 +203,9 @@
         const timerId = setInterval(updateTimer, 1000);
       }
 
+      // Use getMatchImage for all match types
       div.innerHTML += `
-        <img class="es-match-image" src="${match.image || 'https://via.placeholder.com/120x80'}" alt="${match.title || ''}">
+        <img class="es-match-image" src="${getMatchImage(match)}" alt="${match.title || ''}">
         <div class="es-match-info">
           <div class="es-title">${match.title || match.id || 'Match'}</div>
           <div class="es-row"><span class="es-label">Your Name:</span> <span class="es-name">${joinedName}</span></div>
