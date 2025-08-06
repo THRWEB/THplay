@@ -15,7 +15,6 @@
     .modal-active .modal-fade { opacity: 1!important; transform: scale(1)!important; pointer-events: auto!important; }
     .fade-overlay { opacity: 0; transition: opacity 0.25s; background: rgba(24,24,27,0.32); pointer-events: none; }
     .modal-active .fade-overlay { opacity: 1!important; pointer-events: auto!important; }
-
     .es-main-section {
       background: linear-gradient(135deg, #261a36 0%, #180d25 100%);
       border-radius: 1.3rem;
@@ -24,29 +23,16 @@
       margin-bottom: 2rem;
       position: relative;
       overflow: hidden;
+      cursor: pointer;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      filter: none;
     }
     .duo-section { border-left-color: #0ea5e9!important; }
     .squad-section { border-left-color: #fbbf24!important; }
     .coming-badge {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-      z-index: 5;
-      font-size: 0.93rem;
-      font-weight: 600;
-      padding: 0.21rem 1.1rem;
-      border-radius: 1.25rem;
-      background: #0ea5e9;
-      color: #fff;
-      box-shadow: 0 4px 24px #0ea5e949;
-      letter-spacing: .04em;
+      display: none;
     }
-    .squad-section .coming-badge {
-      background: #fbbf24;
-      color: #222;
-      box-shadow: 0 2.5px 12px #fbbf2455;
-    }
-
     .es-head-title {
       color: #a78bfa;
       font-family: 'Creepster', cursive !important;
@@ -68,7 +54,6 @@
       .es-head-title { font-size: 1.37rem; }
       .es-section-title { font-size:1.09rem; }
       .es-section, .youtube-gradient { padding: 1rem .7rem .9rem 1.0rem; }
-      .coming-badge { right: 10px; top: 8px; font-size: 0.9rem; padding: 0.16rem 0.7rem;}
     }
   </style>
 </head>
@@ -107,35 +92,30 @@
   </div>
 </header>
 
-<!-- Each Mode Card is now a separate line/section -->
+<!-- All Cards Now Active! -->
 <main class="p-4 md:px-6 py-8 max-w-md mx-auto">
   <!-- SOLO CARD -->
-  <section class="es-main-section mb-5">
-    <div onclick="openModePopup('solo')" class="cursor-pointer">
-      <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Solo" class="w-full h-40 object-cover rounded-2xl shadow-md border border-purple-900" />
-      <div class="p-3 text-center">
-        <h3 class="text-xl font-bold text-purple-300 mb-1 tracking-wide drop-shadow">Free Fire Solo</h3>
-      </div>
+  <section class="es-main-section mb-5" onclick="openModePopup('solo')">
+    <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Solo" class="w-full h-40 object-cover rounded-2xl shadow-md border border-purple-900" />
+    <div class="p-3 text-center">
+      <h3 class="text-xl font-bold text-purple-300 mb-1 tracking-wide drop-shadow">Free Fire Solo</h3>
     </div>
   </section>
   <!-- DUO CARD -->
-  <section class="es-main-section duo-section mb-5 pointer-events-none opacity-60" style="position:relative;">
-    <span class="coming-badge">Coming Soon</span>
+  <section class="es-main-section duo-section mb-5" onclick="openModePopup('duo')">
     <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Duo" class="w-full h-40 object-cover rounded-2xl shadow-md border border-blue-400" />
     <div class="p-3 text-center">
       <h3 class="text-xl font-bold text-sky-400 mb-1 tracking-wide drop-shadow">Free Fire Duo</h3>
     </div>
   </section>
   <!-- SQUAD CARD -->
-  <section class="es-main-section squad-section mb-5 pointer-events-none opacity-60" style="position:relative;">
-    <span class="coming-badge">Coming Soon</span>
+  <section class="es-main-section squad-section mb-5" onclick="openModePopup('squad')">
     <img src="https://i.postimg.cc/1tKmhpTj/photostudio-1753465771327.jpg" alt="Squad" class="w-full h-40 object-cover rounded-2xl shadow-md border border-yellow-400" />
     <div class="p-3 text-center">
       <h3 class="text-xl font-bold text-yellow-400 mb-1 tracking-wide drop-shadow">Free Fire Squad</h3>
     </div>
   </section>
 
-  <!-- Info & Accent Sections: Unchanged -->
   <section class="max-w-2xl mx-auto mt-8">
     <div class="es-section">
       <div class="es-section-title text-yellow-400 flex items-center gap-1">
@@ -166,7 +146,7 @@
     </div>
   </section>
 
-  <!-- YouTube Section: Unchanged -->
+  <!-- YouTube Section -->
   <section class="youtube-gradient max-w-md mx-auto mt-10 mb-16 rounded-2xl shadow-lg py-7 px-3 flex flex-col items-center text-center">
     <h3 class="text-2xl font-bold text-red-500 mb-2 flex items-center gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" fill="#FF0000" viewBox="0 0 48 48" class="w-7 h-7"><path d="M44.16 12.44q-0.48-1.78-1.87-3.17t-3.17-1.87Q36.16 7 24 7T6.84 7.4q-1.78 0.48-3.17 1.87t-1.87 3.17Q1 15.85 1 24t0.8 11q0.48 1.78 1.87 3.17t3.17 1.87Q11.84 41 24 41t17.16-0.4q1.78-0.48 3.17-1.87t1.87-3.17Q47 32.15 47 24t-0.8-11ZM19 31V17l14 7Z"/></svg>
@@ -188,7 +168,7 @@
   </section>
 </main>
 
-<!-- Mode Popup Modal (keep unchanged) -->
+<!-- Mode Popup Modal -->
 <div id="modePopupWrapper" class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none modal-container">
   <div id="modeOverlay" class="absolute inset-0 fade-overlay" onclick="closeModePopup()"></div>
   <div id="modePopup" class="relative z-10 bg-gray-800 rounded-xl p-6 w-80 text-center modal-fade shadow-2xl">
@@ -302,17 +282,23 @@
   window.joinClassic = function () {
     if (currentCard === 'solo') {
       window.location.href = "soloc.html";
-    } else {
-      alert("Classic Mode Selected");
-      closeModePopup();
+    }
+    else if (currentCard === 'duo') {
+      window.location.href = "duoc.html";
+    }
+    else if (currentCard === 'squad') {
+      window.location.href = "squadc.html";
     }
   };
   window.joinClashSquad = function () {
     if (currentCard === 'solo') {
       window.location.href = "solocs.html";
-    } else {
-      alert("Clash Squad Mode Selected");
-      closeModePopup();
+    }
+    else if (currentCard === 'duo') {
+      window.location.href = "duocs.html";
+    }
+    else if (currentCard === 'squad') {
+      window.location.href = "squadcs.html";
     }
   };
   document.addEventListener('keydown', function(e) {
