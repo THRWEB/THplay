@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clash Squad Solo - THplay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .es-card {
+      background: linear-gradient(135deg, #261a36 0%, #180d25 100%);
+      border-radius: 1.3rem;
+      box-shadow: 0 8px 32px 0 rgba(58,28,113,0.25);
+      border-left: 6px solid #a21caf;
+      /* Mobile-friendly responsive width */
+      width: 100%;
+      max-width: 350px;
+      margin-left: auto;
+      margin-right: auto;
+
+      padding: 0.5rem 1rem 1.2rem 1rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .es-card .join-btn {
+      font-weight: bold;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, #ffe259 0%, #ffa751 100%);
+      color: #222;
+      letter-spacing: 0.03em;
+      margin-top: 1.1rem;
+      padding: .6rem 0;
+      width: 100%;
+      font-size: 1.14rem;
+      box-shadow: 0 2px 8px 0 rgba(255, 165, 81, 0.12);
+    }
+    .es-card .es-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.1rem;
+      margin-top: .7rem;
+    }
+    .es-card .es-label {
+      color: #a78bfa;
+      font-size: 1.09rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.33rem;
+    }
+    .es-card .es-value {
+      color: #4ade80;
+      font-weight: 800;
+      font-size: 1.10rem;
+      text-shadow: 0 0 10px #22d3ee11;
+      letter-spacing: 0.01em;
+    }
+    .es-card .match-title {
+      color: #f3f4f6;
+      font-size: 1.18rem;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+      margin-top: .6rem;
+      text-shadow: 0 2px 12px #08080866;
+      text-align: left;
+    }
+    .es-card .es-icon {
+      width: 20px; height: 20px; display: inline-block;
+      vertical-align: middle;
+      filter: drop-shadow(0 0 4px #9333ea55);
+    }
+    .es-card-info {
+      margin-top:0.2rem;
+      margin-bottom:0.1rem;
+    }
+    @media (max-width: 480px) {
+      .es-card {
+        max-width: 96vw;
+        padding: 0.6rem 0.5rem 1rem 0.7rem;
+      }
+      .es-card .es-label, .es-card .es-value { font-size: 1rem!important;}
+      .es-card .match-title { font-size: 1.03rem; }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-indigo-950 via-black to-zinc-900 min-h-screen text-white">
+  <!-- 🔄 Loading Spinner -->
+  <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+    <svg class="animate-spin h-10 w-10 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+    </svg>
+  </div>
+
+  <!-- Header -->
+  <div class="fixed top-0 w-full z-40 bg-gradient-to-r from-purple-900 via-indigo-900 to-gray-900 py-3 flex items-center justify-center shadow-md">
+    <div class="absolute left-4 cursor-pointer" onclick="window.location.href='main.html'">
+      <i data-lucide="home" class="text-white w-6 h-6"></i>
+    </div>
+    <h1 class="text-xl md:text-2xl font-bold text-purple-400 tracking-wide drop-shadow">THplay</h1>
+    <div id="walletDisplay" class="absolute right-4 bg-purple-700 hover:bg-purple-800 transition px-3 py-1 rounded-full text-sm font-semibold text-white cursor-pointer">
+      Wallet: ₹0
+    </div>
+  </div>
+
+  <!-- Match Grid -->
+  <div class="pt-20 grid grid-cols-1 gap-4 p-2 max-w-md mx-auto" id="matchesContainer">
+    <!-- Match cards will be injected here -->
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, doc, onSnapshot as docSnap } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcLtCEmRCkUTwO0TaMk4piYiIHcZfjJjk",
+      authDomain: "thplay-b3c68.firebaseapp.com",
+      projectId: "thplay-b3c68",
+      storageBucket: "thplay-b3c68.appspot.com",
+      messagingSenderId: "243301774162",
+      appId: "1:243301774162:web:be1d08fd88dd3edb90008b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore();
+    const matchDataMap = {};
+
+    const spinner = document.getElementById("loadingSpinner");
+    const walletDisplay = document.getElementById("walletDisplay");
+    const container = document.getElementById("matchesContainer");
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      const userRef = doc(db, "users", user.uid);
+
+      let walletLoaded = false;
+      let matchesLoaded = false;
+
+      const tryHideSpinner = () => {
+        if (walletLoaded && matchesLoaded) spinner.style.display = "none";
+      };
+
+      docSnap(userRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const wallet = docSnap.data().wallet || 0;
+          walletDisplay.textContent = `Wallet: ₹${wallet}`;
+        }
+        walletLoaded = true;
+        tryHideSpinner();
+      });
+
+      walletDisplay.onclick = () => {
+        window.location.href = "wallet.html";
+      };
+
+      // Load matches from "solocs" collection (all fields as small letter keys)
+      const matchCollection = collection(db, "solocs");
+
+      onSnapshot(matchCollection, (snapshot) => {
+        container.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const id = doc.id;
+          const match = {
+            id: id,
+            collection: "solocs",
+            title: data.title || "Clash Squad Solo",
+            entryFee: data.entryfees || 0,
+            prize: data.prize || "0",
+            matchTime: data.matchtime || "--",
+            map: data.map || "--",
+            slot: data.slot || 0,
+            image: data.image || "https://i.postimg.cc/RZy0cCMR/file-000000009478620a8a5907b0b1235c3e.png"
+          };
+
+          matchDataMap[id] = match;
+
+          // THE ESPORTS MODERN CARD DESIGN (matches soloc.html)
+          const card = document.createElement("div");
+          card.className = "es-card";
+
+          card.innerHTML = `
+            <div style="display:flex;align-items:center;gap:0.8rem;">
+              <img src="${match.image}" class="rounded-lg object-cover w-20 h-20 border-2 border-purple-800 shadow" style="flex-shrink:0;" />
+              <div class="match-title">${match.title}</div>
+            </div>
+            <div class="es-card-info">
+              <div class="es-row">
+                <span class="es-label">
+                  <svg class="es-icon" viewBox="0 0 21 21"><circle cx="10.5" cy="10.5" r="8" fill="#818cf8"/><text x="10.5" y="15" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">₹</text></svg>
+                  Entry Fee:
+                </span>
+                <span class="es-value">${match.entryFee}</span>
+              </div>
+              <div class="es-row">
+                <span class="es-label">
+                  <svg class="es-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="8" fill="#fbbf24"/><text x="11" y="15" text-anchor="middle" fill="#1c1917" font-size="10" font-weight="bold">🏆</text></svg>
+                  Prize:
+                </span>
+                <span class="es-value">${match.prize}</span>
+              </div>
+              <div class="es-row">
+                <span class="es-label">
+                  <svg class="es-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="8" fill="#4ade80"/><text x="11" y="15" text-anchor="middle" fill="#065f46" font-size="10" font-weight="bold">⏰</text></svg>
+                  Time:
+                </span>
+                <span class="es-value">${match.matchTime}</span>
+              </div>
+              <div class="es-row">
+                <span class="es-label">
+                  <svg class="es-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="8" fill="#0ea5e9"/><text x="11" y="15" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">🗺</text></svg>
+                  Map:
+                </span>
+                <span class="es-value">${match.map}</span>
+              </div>
+              <div class="es-row">
+                <span class="es-label">
+                  <svg class="es-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="8" fill="#f472b6"/><text x="11" y="15" text-anchor="middle" fill="#a21caf" font-size="10" font-weight="bold">👤</text></svg>
+                  Slots Left:
+                </span>
+                <span class="es-value">${match.slot}</span>
+              </div>
+            </div>
+            <button class="join-btn" onclick="window.selectMatch('${id}')">
+              Join
+            </button>
+          `;
+          container.appendChild(card);
+        });
+        matchesLoaded = true;
+        tryHideSpinner();
+      });
+    });
+
+    window.selectMatch = (id) => {
+      const match = matchDataMap[id];
+      if (match) {
+        localStorage.setItem("selectedMatch", JSON.stringify(match));
+        window.location.href = "joinsolo.html";
+      }
+    };
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
