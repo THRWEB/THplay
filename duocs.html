@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Clash Squad Solo - THplay</title>
+  <title>Clash Squad Duo - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -166,7 +166,7 @@
       };
 
       // Load matches from "solocs" collection (all fields as small letter keys)
-      const matchCollection = collection(db, "solocs");
+      const matchCollection = collection(db, "duocs");
 
       onSnapshot(matchCollection, (snapshot) => {
         container.innerHTML = "";
