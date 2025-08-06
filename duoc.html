@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Classic Solo - THplay</title>
+  <title>Classic Duo - THplay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -17,7 +17,7 @@
 
       /* Responsive, mobile-first width */
       width: 100%;
-      max-width: 350px;         /* max width for big screens */
+      max-width: 350px;
       margin-left: auto;
       margin-right: auto;
 
@@ -82,7 +82,7 @@
     }
     @media (max-width: 480px) {
       .es-card { 
-        max-width: 96vw; /* use almost full width of mobile screen */
+        max-width: 96vw;
         padding: 0.6rem 0.5rem 1rem 0.7rem;
       }
       .es-card .es-label, .es-card .es-value { font-size: 1rem!important;}
@@ -166,8 +166,8 @@
         window.location.href = "wallet.html";
       };
 
-      // Load matches from "soloc" collection (all fields as small letter keys)
-      const matchCollection = collection(db, "soloc");
+      // Load matches from "duoc" collection (the only change)
+      const matchCollection = collection(db, "duoc");
 
       onSnapshot(matchCollection, (snapshot) => {
         container.innerHTML = "";
@@ -176,8 +176,8 @@
           const id = doc.id;
           const match = {
             id: id,
-            collection: "soloc",
-            title: data.title || "Classic Solo",
+            collection: "duoc",
+            title: data.title || "Classic Duo",
             entryFee: data.entryfees || 0,
             prize: data.prize || "0",
             matchTime: data.matchtime || "--",
